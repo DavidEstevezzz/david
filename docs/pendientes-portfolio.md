@@ -36,4 +36,8 @@ Revisión visual del 7 de septiembre de 2026. Anotaciones para una siguiente ite
 - [ ] **Crear las portadas visuales de todos los proyectos.** Sustituir los marcadores tipográficos actuales de ECU, WiControl, Black Tides y Tagadona por composiciones o capturas representativas, manteniendo un sistema visual coherente y adaptado al formato de cada tarjeta.
 - [ ] Preparar también una portada específica para Bomberos que funcione como entrada visual a su ficha, además de la captura de calendario que se muestra actualmente.
 
+## Tagadona Racing
+
+- [ ] **Revisar la ficha de proyecto de Tagadona Racing.** El resultado actual no convence visualmente; replantear su composición, jerarquía, presentación del catálogo y forma de explicar el trabajo antes de darla por terminada.
+
 Estas tareas no implican rehacer la identidad visual ni modificar ahora las páginas.
