@@ -31,4 +31,9 @@ Revisión visual del 7 de septiembre de 2026. Anotaciones para una siguiente ite
 - [ ] Revisar afirmaciones absolutas y ajustar su precisión. Ejemplo: sustituir «una pestaña de fondo no gasta batería» por «el render se pausa para reducir el consumo».
 - [ ] Tras implementar los cambios, revisar legibilidad, longitud e interacción en escritorio y móvil, así como las alternativas sin movimiento.
 
+## Sección de proyectos en la portada
+
+- [ ] **Crear las portadas visuales de todos los proyectos.** Sustituir los marcadores tipográficos actuales de ECU, WiControl, Black Tides y Tagadona por composiciones o capturas representativas, manteniendo un sistema visual coherente y adaptado al formato de cada tarjeta.
+- [ ] Preparar también una portada específica para Bomberos que funcione como entrada visual a su ficha, además de la captura de calendario que se muestra actualmente.
+
 Estas tareas no implican rehacer la identidad visual ni modificar ahora las páginas.
