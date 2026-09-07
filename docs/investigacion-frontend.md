@@ -6,7 +6,7 @@ Este documento recoge referencias y propuestas. Ninguna de las experiencias desc
 
 ## Conclusión propuesta
 
-Desarrollar una portada narrativa con recorrido 3D guiado por el scroll y estaciones interactivas para mostrar proyectos. Conservar las fichas de proyectos y el contacto como páginas y enlaces accesibles directamente.
+La referencia principal aportada por el propietario es [Terminal Industries](https://terminal-industries.com/). Desarrollar una portada narrativa con recorrido 3D guiado por el scroll, cambios de perspectiva y transformación visual de procesos en sistemas digitales. Incluir estaciones interactivas para mostrar proyectos y conservar las fichas y el contacto como páginas y enlaces accesibles directamente.
 
 La base Astro + TypeScript sigue siendo válida. Three.js y GSAP con ScrollTrigger son las incorporaciones propuestas para una experiencia de este tipo. React es una opción de composición, no un requisito para dibujar una escena 3D.
 
@@ -16,6 +16,7 @@ Se consultaron páginas originales, documentación técnica y casos publicados p
 
 | Referencia | Qué estudiar | Fuente |
 | --- | --- | --- |
+| Terminal Industries, por REJOUICE — referencia principal del propietario | En la revisión visual se pasó de una vista lateral del camión a una perspectiva elevada del recinto con superposición de puntos y líneas, seguida de una composición técnica oscura y contenido comercial claro. El caso de REJOUICE acredita dirección artística, motion y visualización 3D, además del desarrollo web. | [Experiencia](https://terminal-industries.com/) · [Caso del estudio](https://www.rejouice.com/work/terminal-industries) |
 | Apple Vision Pro | Presentación por capítulos, jerarquía visual, grandes imágenes y relación entre explicación y detalle del producto. No se da por verificada una biblioteca concreta ni una implementación basada en secuencias de imágenes. | [Página original](https://www.apple.com/apple-vision-pro/) |
 | Igloo Inc, por Abeto y Bureaux | Recorrido de cámara, transiciones entre escenas y partículas que forman objetos. Abeto documenta animación en tiempo real y herramientas como Three.js y GSAP. | [Experiencia](https://www.igloo.inc/) · [Caso escrito por Abeto, 2024](https://www.awwwards.com/igloo-inc-case-study.html) |
 | Lusion | Composición de contenido editorial con una presentación 3D. La portada inspeccionada usa formas volumétricas y conserva navegación y contacto visibles. | [Página original](https://lusion.co/) |
@@ -24,6 +25,14 @@ Se consultaron páginas originales, documentación técnica y casos publicados p
 | Of The Oak, por Lusion | Geometría compleja entregada al navegador mediante exportación y compresión específicas e instancias WebGL. Referencia técnica para optimizar escenas. | [Caso del estudio](https://lusion.co/projects/of_the_oak/) |
 
 ## Técnicas que podríamos implementar
+
+### Lectura de Terminal Industries
+
+La referencia sugiere un relato continuo en el que el scroll cambia la perspectiva y revela la capa digital de una operación real. Para este portfolio proponemos aplicar ese mecanismo a procesos empresariales, sistemas de gestión, interfaces y automatizaciones.
+
+La inspección del DOM mostró un canvas y elementos de vídeo; esto no determina por sí solo qué renderer usa la portada ni cómo se genera cada efecto. Three.js, GSAP y las técnicas de este documento son propuestas para nuestra implementación, no afirmaciones verificadas sobre toda la tecnología de Terminal.
+
+Una técnica especialmente pertinente es la transición entre superficie sólida, malla de líneas y puntos: permite representar que se está descubriendo la estructura o la información de un sistema. Puede implementarse con variantes de materiales y una máscara de revelado sincronizada con el scroll. Si se utilizan imágenes prerenderizadas, esos estados se preparan previamente y el navegador controla su progresión.
 
 ### 1. Cámara que sigue un recorrido tridimensional
 
@@ -89,8 +98,8 @@ Referencia: [Portfolio de Bruno Simon](https://bruno-simon.com/).
 
 ### A. Recorrido por tus soluciones — recomendación principal
 
-1. Entrada con nombre, servicio principal y una escena abstracta reconocible.
-2. El scroll acerca la cámara a un conjunto de módulos que representa software de gestión. Aparece el caso de bomberos con contenido real pendiente de concretar.
+1. Entrada con nombre, servicio principal y una escena que representa una actividad o proceso empresarial.
+2. El scroll cambia la perspectiva y revela su estructura digital, mediante líneas, puntos o módulos conectados. Aparece el caso de bomberos con contenido real pendiente de concretar; la representación conceptual no atribuirá funciones al software que aún no se hayan confirmado.
 3. La cámara cambia de perspectiva y llega a pantallas que presentan los proyectos web.
 4. Un recorrido de conexiones conduce a una automatización que se puede probar con datos de ejemplo.
 5. Las piezas se reúnen en una composición final con acceso claro al contacto.
