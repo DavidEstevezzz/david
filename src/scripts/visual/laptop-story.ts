@@ -257,7 +257,9 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
       object.quaternion.copy(mesh.quaternion);
       // Only reveal readable HTML once the underlying curved surface has settled.
       element.style.opacity = String(smooth(phase(p, .64, .71)) * (1-smooth(phase(p, .78, .825))));
-      const cssWidth = 420;
+      // Rasterize the projected HTML at twice its display size, so perspective
+      // and fractional scroll positions downsample text instead of enlarging it.
+      const cssWidth = 840;
       const worldToCss = mesh.scale.x / cssWidth;
       element.style.width = `${cssWidth}px`;
       element.style.height = `${mesh.scale.y / worldToCss}px`;

@@ -75,7 +75,15 @@
 .project-surface { border-radius:8px; overflow:hidden; display:flex; flex-direction:column; padding:26px; color:#263624; margin-top:2rem; background:#edf0e7; }
 .project-surface--web { background:#cfdeb9; }
 .project-surface--automation { background:#d7e3eb; }
-.scene-source--projected .project-surface { width:420px; height:540px; margin:0; background:transparent; }
+.scene-source--projected .project-surface { width:840px; height:1080px; margin:0; padding:52px; border-radius:16px; background:transparent; }
+.scene-source--projected .surface-meta, .scene-source--projected .surface-bottom { gap:2rem; font-size:22px; }
+.scene-source--projected .surface-meta { padding-bottom:36px; border-bottom-width:2px; }
+.scene-source--projected .surface-meta > span:last-child { font-size:36px; }
+.scene-source--projected .surface-symbol { font-size:200px; padding:36px 0; }
+.scene-source--projected .surface-location { font-size:22px; }
+.scene-source--projected .project-surface h2 { font-size:92px; margin:24px 0; }
+.scene-source--projected .project-surface p { font-size:30px; max-width:1300px; }
+.scene-source--projected .surface-bottom { margin-top:48px; padding-top:32px; border-top-width:2px; }
 .surface-meta, .surface-bottom { display:flex; justify-content:space-between; gap:1rem; font:11px var(--font-mono); }
 .surface-meta { padding-bottom:18px; border-bottom:1px solid #22381d35; }
 .surface-meta > span:last-child { font-size:18px; }
@@ -168,6 +176,7 @@
   .scene-source:not(.scene-source--projected) .display-services > div + div { padding-left:0; border-left:0; border-top:1px solid #20351c25; }
   .scene-source:not(.scene-source--projected) .display-footer { padding:16px; gap:1rem; font-size:11px; }
   .project-surface h2 { font-size:40px; }
+  .scene-source--projected .project-surface h2 { font-size:80px; }
   .surface--portrait.surface--expanded h2 { font-size:130px; }
   .work-section { border-radius:24px 24px 0 0; padding-top:3rem; padding-bottom:4rem; }
   .work-section h2 { font-size:clamp(2.65rem,9.4vw,4.5rem); }
