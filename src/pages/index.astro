@@ -1,10 +1,11 @@
 ---
 import Shell from '../layouts/Shell.astro';
 const projects = [
-  { n: '01', title: 'Bomberos de Granada', kind: 'Software de gestión', text: 'Desarrollo de software para la gestión integral del parque de bomberos de Granada.', note: 'Una solución a medida para un entorno de trabajo real.' },
-  { n: '02', title: 'Taller de EQ', kind: 'Desarrollo web', text: 'Página web para un taller: llevar un negocio y sus servicios al entorno digital.', note: 'Presencia digital para una empresa de servicios.' },
-  { n: '03', title: 'Conversaciones que trabajan', kind: 'Automatización · WhatsApp', text: 'Automatización de bots de WhatsApp para conectar conversaciones y procesos.', note: 'Software que amplía lo que un equipo puede hacer.' },
-  { n: '04', title: 'Un lanzamiento al otro lado', kind: 'Web · Videojuegos', text: 'Desarrollo de la web de un videojuego con próximo lanzamiento en Estados Unidos.', note: 'Una experiencia digital al servicio de un lanzamiento.' },
+  { n: '01', title: 'Bomberos de Granada', kind: 'Software a medida', text: 'Guardias, cambios de turno, horas extras y recursos: una aplicación alrededor de la operativa del parque.', note: 'Coordinar personas y recursos.', href: '/proyectos/bomberos/', mark: '24 / 7' },
+  { n: '02', title: 'Taller ECU · JMReprocars', kind: 'Automatización · WhatsApp', text: 'De una conversación a una solicitud organizada, con datos del vehículo y transferencia a atención humana.', note: 'Automatización en desarrollo.', href: '/proyectos/taller-ecu/', mark: '↳ ECU' },
+  { n: '03', title: 'WiControl · Granjas conectadas', kind: 'Software · Dispositivos conectados', text: 'Gestión de granjas y dispositivos, seguimiento del peso y visualización de las condiciones ambientales.', note: 'Frontend y backend de una misma solución.', href: '', mark: '≈ Wi' },
+  { n: '04', title: 'Black Tides: Draga’s Wake', kind: 'Frontend · Web de videojuego', text: 'Una presentación cinematográfica por capítulos, con escenas visuales y una experiencia guiada por el scroll.', note: 'Experiencia web en desarrollo.', href: '', mark: 'BT /' },
+  { n: '05', title: 'Tagadona Racing', kind: 'Desarrollo web · Motor', text: 'Catálogo de motos, fichas de vehículos y una presencia digital orientada a la compraventa en Granada.', note: 'Conectar el catálogo con el cliente.', href: '', mark: '↗ TR' },
 ];
 ---
 <Shell title="David — Desarrollo web, software y automatización" description="Ingeniero informático en Granada. Desarrollo web, software de gestión y automatizaciones a medida para empresas.">
@@ -55,13 +56,15 @@ const projects = [
     <section class="work-section" id="proyectos" tabindex="-1">
       <div class="section-kicker"><span>03 — Trabajo seleccionado</span><span>Web / Software / Automatización</span></div>
       <div class="work-heading"><h2>Ideas que ya<br /><em>están en marcha.</em></h2><p>Cada proyecto parte de una necesidad distinta. La solución también.</p></div>
-      <div class="project-list">
-        {projects.map(project => <details class="project">
-          <summary><span class="project-number">{project.n}</span><h3>{project.title}</h3><span class="project-kind">{project.kind}</span><span class="project-plus" aria-hidden="true">+</span></summary>
-          <div class="project-body"><p>{project.text}</p><span>{project.note}{project.n === '01' && <><br /><a href="/proyectos/bomberos">Explorar el proyecto ↗</a></>}</span></div>
-        </details>)}
+      <div class="work-grid">
+        {projects.map(project => <article class="work-card">
+          <div class="work-card-meta"><span>{project.n} / {project.kind}</span><span aria-hidden="true">↗</span></div>
+          <div class="work-card-art" aria-hidden="true">{project.n === '01' ? <img src="/projects/bomberos/calendario.png" width="2880" height="1860" loading="lazy" alt="" /> : <span>{project.mark}</span>}</div>
+          <h3>{project.title}</h3><p>{project.text}</p>
+          <div class="work-card-foot"><span>{project.note}</span>{project.href && <a href={project.href}>Ver proyecto <span class="sr-only">{project.title}</span> ↗</a>}</div>
+        </article>)}
       </div>
-      <p class="work-note">Una selección de mi experiencia en desarrollo. Las fichas detalladas se incorporarán con el material de cada proyecto.</p>
+      <p class="work-note">Cinco proyectos, distintas formas de resolver una necesidad. Explora las primeras fichas de Bomberos y Taller ECU.</p>
     </section>
     <section class="contact-section" id="contacto" tabindex="-1">
       <div class="section-kicker"><span>El siguiente proyecto</span><span>Podría ser el tuyo ↙</span></div>
