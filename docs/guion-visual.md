@@ -1,46 +1,40 @@
-# Guion visual — de la forma a la función
+# Guion visual — de la idea al trabajo real
 
-## Alcance de esta entrega
+## Dirección aprobada
 
-Primero se implementa `/lab/morph`. Se detiene el trabajo antes de construir `/` para que David revise el shader y ScrollTrigger. Los tres momentos siguientes describen la futura portada; no están implementados todavía.
+Opción 2: portátil cerrado → apertura → entrada en pantalla → superficies de proyectos. La opción 3, un viaje al interior del ordenador, no se prepara. El rectángulo verde queda como prueba aislada en /lab/morph.
 
-## Momento 1 — una idea toma forma
+## Momento 1 — la idea es tuya
 
-- **Ve:** nombre, propuesta profesional y una superficie escultórica que parece una hoja de material técnico. La composición utiliza espacio vacío y una asimetría moderada.
-- **Entiende:** David desarrolla webs, software de gestión y automatizaciones para empresas.
-- **Texto propuesto:** «Software pensado para tu forma de trabajar». Apoyo: «Desarrollo web, software de gestión y automatizaciones. Desde Granada».
-- **Pieza:** una superficie contenida, ligeramente curvada, con luz rasante y un borde definido. Sin vídeo de fondo ni partículas ambientales gratuitas.
-- **Cámara:** encuadre frontal con profundidad; al avanzar, el objeto adquiere escala y se estabiliza.
-- **Móvil:** objeto más ancho respecto al dispositivo, recorrido más corto y menor desplazamiento en profundidad. Texto fuera de la zona del objeto.
-- **Movimiento reducido:** superficie plana y composición estable, con los mismos textos y enlaces.
+Titular: «La idea es tuya. Hagámosla real». Un portátil cerrado de aluminio grafito ocupa el espacio a la derecha y por debajo del titular. Presentación profesional y contacto accesibles desde el comienzo.
 
-## Momento 2 — la forma se convierte en una herramienta
+El scroll abre físicamente la tapa, centra el portátil y alinea la cámara con su pantalla. El texto «Abre nuevas posibilidades» acompaña la apertura y se retira antes del acercamiento.
 
-- **Ve:** la superficie se curva temporalmente, crece y termina perfectamente plana, en el lugar de un panel HTML real.
-- **Entiende:** la capacidad técnica se traduce en herramientas utilizables.
-- **Texto propuesto:** «De una necesidad concreta a una solución que funciona».
-- **Pieza:** curva suave que se propaga, con una pausa visual al resolverse; el acabado se vuelve idéntico al fondo del panel HTML antes del relevo.
-- **Cámara:** estable durante la entrega al DOM. La geometría realiza el gesto; no se añade un giro de cámara simultáneo que dificulte percibirlo.
-- **Móvil:** menor curvatura, panel más vertical y tramo de scroll reducido; no es un simple escalado del encuadre de escritorio.
-- **Movimiento reducido:** panel ya abierto y operable. El contenido nunca depende del canvas.
+Móvil: cámara más alejada, objeto completo bajo el titular. Movimiento reducido: se conserva la presentación con contenido HTML, sin recorrido obligatorio.
 
-## Momento 3 — evidencia y contacto
+## Momento 2 — entramos en la pantalla
 
-- **Ve:** la página pasa a una composición editorial de proyecto, explicación y enlace de contacto.
-- **Entiende:** qué experiencia tiene David, qué puede resolver y cómo iniciar una conversación.
-- **Texto propuesto:** «Software de gestión para el parque de bomberos de Granada». Descripción limitada por ahora a ese hecho aportado por el propietario; las funciones, resultados y capturas están pendientes.
-- **Pieza:** el panel es HTML seleccionable y navegable. La siguiente navegación conserva el shell y el canvas sin separarlo del documento.
-- **Cámara:** escena en reposo; el texto y los enlaces adquieren protagonismo.
-- **Móvil y movimiento reducido:** contenido completo en una columna y contacto disponible sin atravesar el recorrido.
+La pantalla muestra la propia propuesta profesional: «Lo que imaginas. Lo que construimos». Tres columnas presentan web, software y automatización.
 
-## El laboratorio que se construye primero
+La cámara se aproxima hasta que el marco desaparece. La superficie ajusta su proporción a la ventana —incluido móvil vertical— y el mismo HTML deja la perspectiva CSS3D para quedar nítido y seleccionable. No hay texto dibujado en canvas.
 
-El laboratorio usa geometría procedural sin modelos ni texturas y un panel HTML de prueba, identificado como tal. Permite observar el gesto, saltar a su resultado, volver al inicio y navegar por sus controles con teclado. No representa la interfaz del software de bomberos ni publica datos de clientes.
+## Momento 3 — la pantalla despliega trabajo real
 
-## Asunciones y pendientes
+La superficie se divide en tres piezas, se curva y se separa. Al asentarse aparecen presentaciones de:
+- Software de gestión para bomberos de Granada.
+- Web de Taller de EQ y web para un videojuego con lanzamiento en Estados Unidos.
+- Automatizaciones y bots de WhatsApp.
 
-- Marca personal visible: David; no se inventa una denominación comercial.
-- Idioma inicial: español.
-- No se inventa una dirección de correo profesional. Su configuración corresponde a la portada posterior.
-- Capturas, permiso para publicar el trabajo de bomberos y alcance de confidencialidad se solicitarán cuando se necesiten para la ficha real; no bloquean el laboratorio.
-- Las referencias indican calidad y ritmo; las composiciones y el shader de esta entrega son propios.
+La superficie de gestión se acerca y ocupa la ventana. La escena termina y el scroll continúa hacia las cuatro fichas desplegables y el contacto. En móvil las superficies forman una pila; únicamente se ve el texto delantero para evitar superposiciones. El resto de trabajos está en el listado HTML.
+
+## Límites del contenido
+
+No se inventan capturas, métricas ni funcionalidades. Las superficies son composiciones de portfolio, no reproducciones del software real. David ha pospuesto las capturas para una revisión posterior proyecto por proyecto.
+
+Contacto: david@estevezmartinez.com y WhatsApp +34 609662376. Se asume +34 por el contexto de Granada.
+
+## Criterios de esta entrega
+
+El recorrido debe poder avanzar y retroceder sin reiniciar una animación temporal. El portátil y su pantalla mantienen la misma proyección; los saltos al contenido funcionan con teclado. El contenido persiste sin JavaScript y ante pérdida del contexto WebGL.
+
+La calidad de materiales y ritmo podrá ajustarse sobre esta versión funcionando. Los FPS en dispositivos físicos y Safari se validarán aparte; una prueba en navegador emulado no los acredita.

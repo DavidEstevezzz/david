@@ -1,0 +1,30 @@
+---
+import '../styles/tokens.css';
+import '../styles/global.css';
+import '../styles/morph.css';
+import '../styles/home.css';
+interface Props { title: string; description: string; }
+const { title, description } = Astro.props;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#f5f6f3" />
+    <link rel="preload" href="/fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <!-- This node is never replaced by the opt-in page router. -->
+    <div id="visual-shell" aria-hidden="true"><canvas id="visual-canvas" aria-hidden="true"></canvas></div>
+    <main id="page" data-app-page tabindex="-1"><slot /></main>
+    <div id="route-announcement" class="sr-only" role="status" aria-live="polite"></div>
+    <script>
+      import '../scripts/app';
+    </script>
+  </body>
+</html>

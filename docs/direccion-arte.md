@@ -1,25 +1,13 @@
-# Dirección de arte — precisión y transformación
+# Dirección de arte — una herramienta que abre posibilidades
 
-La identidad presenta a un ingeniero que convierte complejidad en herramientas claras. La composición combina una tipografía de proporciones técnicas con superficies escultóricas y una lectura editorial tranquila. El gesto nace de una transformación de material, no de un escenario industrial copiado.
+La pieza central es ahora reconocible y relacionada con el trabajo: un portátil. Su función narrativa es abrir una ventana al software que David desarrolla. Se reemplazan la cinta abstracta y las partículas del primer ensayo.
 
-## Sistema visual
+- **Tipografía:** Archivo Variable autoalojada, subset latino WOFF2 y licencia OFL incluida. Titulares compactos, cuerpo legible y metadatos monoespaciados discretos. Tokens generales en src/styles/tokens.css.
+- **Paleta:** grafito #111512, blanco frío #edf0e7 y lima #dcf89c para señalización/contacto. Superficies web y automatización en verdes y azules muy claros. El laboratorio conserva su acabado experimental.
+- **Portátil:** aluminio grafito, cantos pulidos, teclado y altavoces instanciados, trackpad, webcam y bisagra real. Geometría procedural, sin marca de fabricante, modelos descargados ni texturas.
+- **Iluminación:** tres fuentes direccionales y ambiente; reflejo frío lateral y luz principal neutra. Sin sombras en tiempo real ni postprocesado pesado.
+- **Composición:** titular a la izquierda, portátil a la derecha al inicio; encuadre centrado durante la apertura y frontal durante la entrada en pantalla.
+- **Superficies:** bordes redondeados discretos y curvatura espacial de corta duración. El texto aparece cuando las piezas se asientan; no se deforma para obligar a leerlo en movimiento.
+- **Móvil:** encuadre más abierto, portada vertical, pantalla que crece en altura y pila de superficies con un texto delantero. Ningún proyecto desaparece del listado posterior.
 
-- **Tipografía:** Archivo Variable, autoalojada, subset latino WOFF2 de Fontsource, pesos 100–900; licencia OFL incluida con el recurso. El subset latino contiene los caracteres españoles. No se consulta Google Fonts durante la visita.
-- **Escala:** cuerpo 16–18 px; lectura de apoyo 20–24 px; titulares fluidos hasta 112 px. Metadatos secundarios de 12–14 px. Valores definidos en `src/styles/tokens.css`.
-- **Paleta:** tinta verdosa muy oscura, papel blanco frío y acento bermellón. La pequeña nota cálida sirve para señalización y progreso, sin degradados decorativos.
-- **Espaciado:** módulo de 4 px, con ritmo principal de 8 px. Márgenes amplios y alineaciones deliberadas.
-- **Radios:** contenidos editoriales casi rectos; el objeto tiene radios animables. La diferencia explica qué es estructura y qué es materia transformable.
-- **Material:** grafito mate en el laboratorio, luz rasante y líneas finas que permiten leer la curvatura. El resultado del gesto comparte exactamente el color de fondo del panel HTML.
-- **Luz:** un relieve procedural ligero dentro del shader, sin mapas HDR ni postprocesado. El sombreado desaparece antes del relevo al HTML para evitar un salto de color.
-
-## Por qué representa a David
-
-El objeto termina siendo utilizable. La secuencia relaciona la exploración visual con el resultado práctico de desarrollar software. El portfolio posterior aportará evidencia de gestión, web y automatización; este laboratorio valida el lenguaje visual sin atribuir funcionalidades ni resultados a un cliente.
-
-## Móvil
-
-Marco ancho, menos altura vacía y trayectoria de 1,45 pantallas frente a 2,2 en escritorio. Menor amplitud de curva y menor resolución inicial. Sin partículas ni postprocesado. El panel se organiza en una columna cuando sea necesario.
-
-## Criterios de juicio
-
-El gesto debe poder recorrerse en ambos sentidos, detenerse sin vibración, llegar a un panel seleccionable y conservar su significado con movimiento reducido o sin JavaScript. El laboratorio es deliberadamente sobrio: aún no es la portada ni una presentación final de proyectos.
+Las tres referencias inspiran continuidad de cámara, ritmo y fluidez. Esta entrega usa un relato propio: la idea se abre y se convierte en proyectos. No se incluyen escenarios de hardware interior ni preparación para una tercera opción.

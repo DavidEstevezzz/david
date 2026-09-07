@@ -1,0 +1,73 @@
+---
+import Shell from '../layouts/Shell.astro';
+const projects = [
+  { n: '01', title: 'Bomberos de Granada', kind: 'Software de gestión', text: 'Desarrollo de software para la gestión integral del parque de bomberos de Granada.', note: 'Una solución a medida para un entorno de trabajo real.' },
+  { n: '02', title: 'Taller de EQ', kind: 'Desarrollo web', text: 'Página web para un taller: llevar un negocio y sus servicios al entorno digital.', note: 'Presencia digital para una empresa de servicios.' },
+  { n: '03', title: 'Conversaciones que trabajan', kind: 'Automatización · WhatsApp', text: 'Automatización de bots de WhatsApp para conectar conversaciones y procesos.', note: 'Software que amplía lo que un equipo puede hacer.' },
+  { n: '04', title: 'Un lanzamiento al otro lado', kind: 'Web · Videojuegos', text: 'Desarrollo de la web de un videojuego con próximo lanzamiento en Estados Unidos.', note: 'Una experiencia digital al servicio de un lanzamiento.' },
+];
+---
+<Shell title="David — Desarrollo web, software y automatización" description="Ingeniero informático en Granada. Desarrollo web, software de gestión y automatizaciones a medida para empresas.">
+  <div class="home" data-home>
+    <div class="journey" data-journey>
+    <section class="story-stage" data-story-stage aria-label="De la idea a tus proyectos">
+    <header class="home-nav">
+      <a class="home-brand" href="/" data-nav aria-label="David, inicio">d<span>↗</span></a>
+      <span class="nav-caption">David / Ingeniero informático</span>
+      <nav aria-label="Principal"><a href="#proyectos" data-skip-story>Proyectos</a><a href="#contacto" data-skip-story>Hablemos <span aria-hidden="true">↗</span></a></nav>
+    </header>
+    <a class="story-skip" href="#proyectos" data-skip-story>Saltar a proyectos ↗</a>
+      <div class="home-hero" id="contenido" tabindex="-1" data-hero-copy>
+        <div class="hero-topline"><span><i></i> Desarrollo independiente</span><span>Granada, España · Para cualquier lugar</span></div>
+        <h1>La idea es tuya.<br /><span>Hagámosla</span><br />real<span class="accent">.</span></h1>
+        <div class="hero-bottom"><p>Desarrollo web, software de gestión<br />y automatizaciones a medida.</p><span class="round-link"><span>Desplaza. Esto empieza contigo.</span><b aria-hidden="true">↓</b></span></div>
+      </div>
+      <div class="opening-copy" data-opening-copy aria-hidden="true"><span class="eyebrow">De la idea a la experiencia</span><p>Abre nuevas<br /> <em>posibilidades.</em></p></div>
+      <div class="story-guide" aria-hidden="true"><div class="story-guide__line"><span data-story-progress></span></div><ol><li data-story-label data-active>01 <span>Una idea</span></li><li data-story-label>02 <span>Todo un mundo</span></li><li data-story-label>03 <span>Trabajo real</span></li></ol></div>
+    </section>
+    <div class="scene-source" data-scene-source>
+      <article class="laptop-display" data-laptop-screen>
+        <div class="display-toolbar"><span class="display-brand">d↗</span><span>Software con sentido.</span><span>Granada / España</span></div>
+        <div class="display-body"><span class="display-eyebrow">Diseñado para tu forma de trabajar</span><h2>Lo que imaginas.<br /><em>Lo que construimos.</em></h2><p>Del primer boceto a la herramienta<br />que usas cada día.</p>
+          <div class="display-services"><div><span>01 / WEB</span><strong>Experiencias<br />que conectan.</strong></div><div><span>02 / SOFTWARE</span><strong>Tu equipo.<br />Tus herramientas.</strong></div><div><span>03 / AUTOMATIZACIÓN</span><strong>Menos tareas.<br />Más posibilidades.</strong></div></div>
+        </div><div class="display-footer"><span>David · Ingeniería informática</span><span>Explora el trabajo ↓</span></div>
+      </article>
+      <article class="project-surface project-surface--management" data-project-surface>
+        <div class="surface-meta"><span>01 / SOFTWARE A MEDIDA</span><span>↗</span></div>
+        <div class="surface-symbol" aria-hidden="true">&#123;<span>G</span>&#125;</div>
+        <div class="surface-copy"><span class="surface-location">Granada, España</span><h2>Bomberos<br />de Granada.</h2><p>Software para la gestión integral del parque de bomberos de Granada.</p></div>
+        <div class="surface-bottom"><span>Organizar. Conectar. Resolver.</span><span>01 — 03</span></div>
+      </article>
+      <article class="project-surface project-surface--web" data-project-surface>
+        <div class="surface-meta"><span>02 / DESARROLLO WEB</span><span>↗</span></div>
+        <div class="surface-symbol" aria-hidden="true">&lt;<span>/</span>&gt;</div>
+        <div class="surface-copy"><span class="surface-location">Negocios y nuevas experiencias</span><h2>Una ventana<br />a tu mundo.</h2><p>La web de Taller de EQ y la de un videojuego con próximo lanzamiento en Estados Unidos.</p></div>
+        <div class="surface-bottom"><span>De Granada a cualquier lugar.</span><span>02 — 03</span></div>
+      </article>
+      <article class="project-surface project-surface--automation" data-project-surface>
+        <div class="surface-meta"><span>03 / AUTOMATIZACIÓN</span><span>↗</span></div>
+        <div class="surface-symbol" aria-hidden="true">[<span>↗</span>]</div>
+        <div class="surface-copy"><span class="surface-location">Herramientas que se entienden</span><h2>Haz espacio<br />para lo demás.</h2><p>Automatizaciones y bots de WhatsApp que conectan conversaciones y procesos.</p></div>
+        <div class="surface-bottom"><span>Conectar también es construir.</span><span>03 — 03</span></div>
+      </article>
+    </div>
+    </div>
+    <section class="work-section" id="proyectos" tabindex="-1">
+      <div class="section-kicker"><span>03 — Trabajo seleccionado</span><span>Web / Software / Automatización</span></div>
+      <div class="work-heading"><h2>Ideas que ya<br /><em>están en marcha.</em></h2><p>Cada proyecto parte de una necesidad distinta. La solución también.</p></div>
+      <div class="project-list">
+        {projects.map(project => <details class="project">
+          <summary><span class="project-number">{project.n}</span><h3>{project.title}</h3><span class="project-kind">{project.kind}</span><span class="project-plus" aria-hidden="true">+</span></summary>
+          <div class="project-body"><p>{project.text}</p><span>{project.note}</span></div>
+        </details>)}
+      </div>
+      <p class="work-note">Una selección de mi experiencia en desarrollo. Las fichas detalladas se incorporarán con el material de cada proyecto.</p>
+    </section>
+    <section class="contact-section" id="contacto" tabindex="-1">
+      <div class="section-kicker"><span>El siguiente proyecto</span><span>Podría ser el tuyo ↙</span></div>
+      <h2>¿Qué tienes<br /><em>en mente?</em></h2>
+      <div class="contact-bottom"><p>Soy David, ingeniero informático.<br />Cuéntame qué necesitas construir.</p><div class="contact-channels"><a class="contact-link" href="mailto:david@estevezmartinez.com">david@estevezmartinez.com <span aria-hidden="true">↗</span></a><a href="https://wa.me/34609662376" class="whatsapp-link" target="_blank" rel="noopener noreferrer">Hablamos por WhatsApp ↗</a></div></div>
+    </section>
+    <footer class="home-footer"><span>David © {new Date().getFullYear()}</span><a href="/lab/morph" data-nav>Laboratorio de movimiento ↗</a><button class="text-button" data-motion-toggle hidden>Usar vista estática</button><span>Hecho desde Granada.</span></footer>
+  </div>
+</Shell>
