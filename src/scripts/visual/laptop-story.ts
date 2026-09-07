@@ -15,7 +15,7 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 function projectSurface(color: string) {
   return new Mesh(new PlaneGeometry(1, 1, 48, 24), new ShaderMaterial({
     transparent: true, side: DoubleSide,
-    uniforms: { uBend: { value: 0 }, uColor: { value: new Color(color) }, uOpacity: { value: 1 } },
+    uniforms: { uBend: { value: 0 }, uColor: { value: new Color(color) }, uOpacity: { value: 1 }, uRadius: { value: .018 } },
     vertexShader: `
       uniform float uBend; varying vec2 vUv; varying float vSlope;
       void main() {
@@ -25,10 +25,10 @@ function projectSurface(color: string) {
         gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.);
       }`,
     fragmentShader: `
-      uniform vec3 uColor; uniform float uOpacity; varying vec2 vUv; varying float vSlope;
+      uniform vec3 uColor; uniform float uOpacity; uniform float uRadius; varying vec2 vUv; varying float vSlope;
       void main() {
-        vec2 q = abs(vUv - .5) - vec2(.482);
-        float d = length(max(q, 0.)) + min(max(q.x,q.y),0.) - .018;
+        vec2 q = abs(vUv - .5) - vec2(.5 - uRadius);
+        float d = length(max(q, 0.)) + min(max(q.x,q.y),0.) - uRadius;
         float alpha = 1. - smoothstep(-.001, .001, d);
         if (alpha < .001) discard;
         vec3 col = uColor * (1. + vSlope * .15);
@@ -43,6 +43,7 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
   if (!candidate) return null;
   const root: HTMLElement = candidate;
   const stage = root.querySelector<HTMLElement>('[data-story-stage]')!;
+  const work = root.querySelector<HTMLElement>('#proyectos')!;
   const source = root.querySelector<HTMLElement>('[data-scene-source]')!;
   const screenElement = source.querySelector<HTMLElement>('[data-laptop-screen]')!;
   const cardElements = Array.from(source.querySelectorAll<HTMLElement>('[data-project-surface]'));
@@ -109,6 +110,9 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
   let last = '', lastStep = -1;
   let width = 0, height = 0, pad = 0, viewportWorldHeight = 0, zoomDistance = 0;
   const screenCenter = new Vector3(), screenRotation = new Quaternion(), screenScale = new Vector3();
+  const screenNormal = new Vector3(), toCamera = new Vector3();
+  const surfaceColors = colors.map(color => new Color(color));
+  const workColor = new Color('#edf0e7');
   const portalCenter = new Vector3(0, 1.63, -1.305);
   const aspect = () => {
     width = document.documentElement.clientWidth; height = document.documentElement.clientHeight; pad = Math.round(height * .15);
@@ -146,7 +150,7 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
       active = false; releaseFlat(); trigger?.kill(true); timeline.kill();
       root.removeAttribute('data-enhanced'); root.removeAttribute('data-chapter');
       source.classList.remove('scene-source--projected');
-      gsap.set([hero, intro, nav], { clearProps: 'all' });
+      gsap.set([hero, intro, nav, work], { clearProps: 'all' });
       surface.canvas.style.opacity = '0'; dom.domElement.style.visibility = 'hidden';
       surface.clear(); restoreContent(); last = ''; lastStep = -1;
     };
@@ -170,7 +174,9 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
     if (!active || document.hidden) return;
     const stageRect = stage.getBoundingClientRect();
     if (stageRect.bottom <= 0 || stageRect.top >= height) {
-      dom.domElement.style.visibility = 'hidden'; surface.canvas.style.opacity = '0'; last = ''; return;
+      dom.domElement.style.visibility = 'hidden'; flatViewport.style.visibility = 'hidden'; surface.canvas.style.opacity = '0';
+      work.style.transform = ''; work.style.opacity = stageRect.bottom <= 0 ? '1' : '0';
+      last = ''; return;
     }
     const p = state.p;
     const renderKey = `${p.toFixed(5)}|${scrollY}|${width}|${height}`;
@@ -181,7 +187,8 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
     const zoom = smooth(phase(p, .25, .48));
     const expand = smooth(phase(p, .39, .49));
     const unfold = smooth(phase(p, .53, .71));
-    const select = smooth(phase(p, .78, .95));
+    const merge = smooth(phase(p, .78, .94));
+    const reveal = smooth(phase(p, .93, .985));
     const step = p < .25 ? 0 : p < .53 ? 1 : 2;
     if (step !== lastStep) {
       lastStep = step; root.dataset.chapter = String(step);
@@ -207,14 +214,18 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
     camera.lookAt(look);
     scene.updateMatrixWorld(true);
     laptop.screen.matrixWorld.decompose(screenCenter, screenRotation, screenScale);
+    // CSS3D does not share WebGL's depth buffer: explicitly cull the screen
+    // when the camera sees the back of the lid, including grazing angles.
+    screenNormal.set(0, 0, 1).applyQuaternion(screenRotation);
+    const facing = screenNormal.dot(toCamera.copy(camera.position).sub(screenCenter).normalize());
     display.position.copy(screenCenter);
     display.quaternion.copy(screenRotation);
     // The same HTML plane grows into a full viewport, including portrait layouts.
     const displayHeight = lerp(660, 1100 * height / width, expand);
     screenElement.style.height = `${displayHeight}px`;
     screenElement.classList.toggle('display--portrait', mobile && expand > .5);
-    screenElement.style.opacity = String(1 - smooth(phase(p, .525, .575)));
-    display.visible = open > .07 && p < .58;
+    screenElement.style.opacity = String(smooth(phase(facing, .06, .18)) * (1 - smooth(phase(p, .525, .575))));
+    display.visible = facing > .06 && p < .58;
     display.scale.setScalar(4.42 / 1100);
     if (p >= .48) { display.position.copy(portalCenter); display.quaternion.identity(); }
 
@@ -225,41 +236,37 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
       const startX = offset * 1.47;
       const targetX = mobile ? -.2 + i * .25 : offset * 1.52;
       const targetY = mobile ? -.15 * i : Math.abs(offset) * -.1;
-      const chosen = i === 0;
       const w = lerp(1.47, cardW, unfold);
       const h = lerp(viewportWorldHeight, cardH, unfold);
       mesh.position.set(lerp(startX, targetX, unfold), portalCenter.y + targetY * unfold, portalCenter.z - (mobile ? i * .35 : Math.abs(offset) * .35) * unfold);
       mesh.rotation.set(0, lerp(0, mobile ? offset * -.07 : offset * -.16, unfold), offset * -.055 * unfold);
       mesh.scale.set(w, h, 1);
-      if (chosen) {
-        mesh.position.lerp(portalCenter, select); mesh.rotation.x *= 1 - select; mesh.rotation.y *= 1 - select; mesh.rotation.z *= 1 - select;
-        mesh.scale.x = lerp(w, 4.42, select); mesh.scale.y = lerp(h, viewportWorldHeight, select);
-      } else {
-        mesh.position.x += offset === 0 ? select * 6 : select * 8;
-        mesh.position.z -= select * 2;
-      }
-      mesh.material.uniforms.uBend.value = Math.sin(unfold * Math.PI) * .7 * (i % 2 ? -1 : 1) + Math.sin(select * Math.PI) * (chosen ? .35 : 0);
-      mesh.visible = p > .53;
-      object.visible = p > .60 && (!mobile || chosen);
+      // Each service becomes an equal third of the next section. No card wins
+      // the camera: the three surfaces join edge-to-edge in the centre.
+      mesh.position.lerp(new Vector3(offset * 4.42 / 3, portalCenter.y, portalCenter.z), merge);
+      mesh.rotation.x *= 1-merge; mesh.rotation.y *= 1-merge; mesh.rotation.z *= 1-merge;
+      mesh.scale.x = lerp(w, 4.42 / 3 + .006, merge);
+      mesh.scale.y = lerp(h, viewportWorldHeight, merge);
+      mesh.material.uniforms.uBend.value = Math.sin(unfold * Math.PI) * .7 * (i % 2 ? -1 : 1) + Math.sin(merge * Math.PI) * .35 * (i-1);
+      mesh.material.uniforms.uRadius.value = .018 * (1-merge);
+      mesh.material.uniforms.uColor.value.copy(surfaceColors[i]).lerp(workColor, merge);
+      mesh.material.uniforms.uOpacity.value = 1-reveal;
+      mesh.visible = p > .53 && reveal < 1;
+      object.visible = p > .60 && p < .835 && (!mobile || i === 0);
       object.position.copy(mesh.position); object.position.z += .008;
       object.quaternion.copy(mesh.quaternion);
       // Only reveal readable HTML once the underlying curved surface has settled.
-      element.style.opacity = String(smooth(phase(p, .64, .71)));
-      const cssWidth = chosen ? lerp(420, 1100, select) : 420;
+      element.style.opacity = String(smooth(phase(p, .64, .71)) * (1-smooth(phase(p, .78, .825))));
+      const cssWidth = 420;
       const worldToCss = mesh.scale.x / cssWidth;
       element.style.width = `${cssWidth}px`;
       element.style.height = `${mesh.scale.y / worldToCss}px`;
-      element.classList.toggle('surface--expanded', chosen && select > .5);
       element.classList.toggle('surface--portrait', mobile);
-      if (chosen) {
-        element.style.padding = `${lerp(26, mobile ? 80 : 65, select)}px`;
-        element.querySelector<HTMLElement>('h2')!.style.fontSize = `${lerp(mobile ? 40 : 46, mobile ? 130 : 96, select)}px`;
-        element.querySelector<HTMLElement>('p')!.style.fontSize = `${lerp(15, mobile ? 44 : 22, select)}px`;
-      }
       object.scale.setScalar(worldToCss);
     });
 
     dom.domElement.style.visibility = 'visible';
+    flatViewport.style.visibility = 'visible';
     const sourceTop = source.getBoundingClientRect().top + scrollY;
     dom.domElement.style.transform = `translate3d(0, ${scrollY - sourceTop - pad}px, 0)`;
     surface.canvas.style.opacity = '1';
@@ -267,7 +274,7 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
     dom.render(domScene, camera);
     // At the two flat endpoints the exact same element leaves CSS perspective.
     // Browser layout (zoom, not a bitmap/transform) keeps the final text sharp.
-    const settled = p >= .49 && p <= .525 ? screenElement : p >= .95 ? cardElements[0] : null;
+    const settled = p >= .49 && p <= .525 ? screenElement : null;
     if (settled) {
       flatElement = settled; projectedTransform = settled.style.transform;
       flatViewport.style.width = `${width}px`; flatViewport.style.height = `${height}px`;
@@ -276,6 +283,11 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
       settled.style.transform = 'none'; settled.style.zoom = String(width / 1100);
       settled.classList.add('surface--settled');
     }
+    // Reveal the actual following section at its final font size. It stays in
+    // document flow, so scrolling past the pin continues without a duplicate.
+    const remaining = Math.max(0, (trigger?.end ?? 0) - scrollY);
+    work.style.transform = `translate3d(0, ${-remaining * reveal}px, 0)`;
+    work.style.opacity = String(reveal);
   }
 
   return {

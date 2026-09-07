@@ -46,6 +46,7 @@
 .flat-scene-content .surface--settled, .flat-scene-content .surface--settled * { pointer-events:auto !important; user-select:text !important; }
 .laptop-display { background:#e9edde; color:#1b2a20; border-radius:8px; overflow:hidden; display:flex; flex-direction:column; }
 .scene-source--projected .laptop-display { width:1100px; height:660px; }
+.scene-source--projected .laptop-display { backface-visibility:hidden; }
 .display-toolbar { display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #20351c25; padding:20px 40px; font-size:15px; }
 .display-brand { font-size:30px; font-weight:650; letter-spacing:-.1em; }
 .display-body { flex:1; padding:30px 48px 20px; display:flex; flex-direction:column; justify-content:center; }
@@ -102,6 +103,7 @@
 .section-kicker { text-transform:uppercase; margin-bottom:4rem; }
 .work-section, .contact-section { position:relative; z-index:4; padding:5rem var(--gutter); }
 .work-section { background:#edf0e7; color:#19221f; border-radius:32px 32px 0 0; padding-bottom:6rem; }
+.home[data-enhanced] .work-section { margin-top:-100svh; opacity:0; }
 .work-section h2, .contact-section h2 { font-size:clamp(3rem,6.5vw,7rem); font-weight:430; line-height:1.02; letter-spacing:-.06em; }
 .work-section h2 em, .contact-section h2 em { font-style:normal; color:#67705f; }
 .work-heading { display:flex; justify-content:space-between; align-items:end; gap:3rem; margin-bottom:4rem; }
