@@ -14,6 +14,8 @@ Fase de definición técnica. Todavía no hay una aplicación ejecutable.
 
 Las decisiones y propuestas se recogen en [docs/arquitectura.md](docs/arquitectura.md).
 
+Las referencias visuales, técnicas de animación y alternativas de navegación se recogen en [docs/investigacion-frontend.md](docs/investigacion-frontend.md).
+
 ## Próximos pasos
 
 1. Definir la estructura de páginas, los proyectos destacados y una primera experiencia interactiva.
