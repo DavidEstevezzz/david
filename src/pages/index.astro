@@ -58,7 +58,7 @@ const projects = [
       <div class="project-list">
         {projects.map(project => <details class="project">
           <summary><span class="project-number">{project.n}</span><h3>{project.title}</h3><span class="project-kind">{project.kind}</span><span class="project-plus" aria-hidden="true">+</span></summary>
-          <div class="project-body"><p>{project.text}</p><span>{project.note}</span></div>
+          <div class="project-body"><p>{project.text}</p><span>{project.note}{project.n === '01' && <><br /><a href="/proyectos/bomberos">Explorar el proyecto ↗</a></>}</span></div>
         </details>)}
       </div>
       <p class="work-note">Una selección de mi experiencia en desarrollo. Las fichas detalladas se incorporarán con el material de cada proyecto.</p>
