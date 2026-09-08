@@ -1,6 +1,7 @@
 ---
 import Shell from '../../layouts/Shell.astro';
 import '../../styles/case.css';
+import EcuWebProposal from '../../components/EcuWebProposal.astro';
 const steps = [
   {n:'01',title:'Recibir la consulta',text:'El flujo identifica al cliente y registra el mensaje. Los mensajes repetidos se detectan para evitar duplicar la solicitud.'},
   {n:'02',title:'Completar la información',text:'Extrae los datos del vehículo y del servicio solicitado. Si falta información, prepara la siguiente pregunta para completar la solicitud.'},
@@ -12,7 +13,10 @@ const steps = [
   <article class="case case--ecu" id="contenido">
     <nav class="case-nav"><a href="/#proyectos">d↗ / Volver a proyectos</a><a href="mailto:david@estevezmartinez.com">Hablemos ↗</a></nav>
     <header class="case-intro"><p class="case-label">02 / Automatización · Motor</p><h1>Una conversación.<br/><em>Todo en su sitio.</em></h1><div class="case-lead"><h2>Taller ECU · JMReprocars</h2><p>Un sistema para convertir consultas sobre reprogramaciones y centralitas en solicitudes organizadas, listas para que el taller continúe la atención.</p></div><div class="case-tags"><span>n8n + IA</span><span>Fastify + PostgreSQL</span><span>Proyecto en desarrollo</span></div></header>
-    <section class="ecu-demo" aria-label="Ejemplo ilustrativo de una solicitud automatizada">
+    <section class="case-context"><p class="case-label">La web pública / Propuesta</p><h2>Del escaparate<br/>a la conversación.</h2><p>Una propuesta local para presentar los servicios, explicar cómo iniciar una consulta y conectar la web con la atención automatizada. El repositorio revisado todavía no contiene la web pública definitiva.</p></section>
+    <EcuWebProposal />
+    <p class="case-note">Diseño propuesto para el portfolio. Identidad, imágenes y datos comerciales del taller pendientes de confirmar.</p>
+    <section class="ecu-demo ecu-web-proposal" aria-label="Ejemplo ilustrativo de una solicitud automatizada">
       <div class="ecu-demo-top"><span>JM / Solicitudes conectadas</span><span>Ejemplo con datos ficticios</span></div>
       <div class="ecu-demo-grid"><div class="ecu-chat"><p class="case-label">La conversación</p><p class="ecu-bubble">Hola, quería consultar una reprogramación para mi coche.</p><p class="ecu-bubble ecu-bubble--reply">Claro. ¿Qué marca, modelo, año y motor tiene?</p><p class="ecu-bubble">Un Volkswagen Golf de 2017, 2.0 TDI.</p><p class="ecu-chat-note">Información que llega en mensajes.<br/>Contexto que el sistema organiza.</p></div><div class="ecu-record"><p class="case-label">La información estructurada</p><h2>Solicitud de<br/>reprogramación<span>↗</span></h2><dl><div><dt>Vehículo</dt><dd>Volkswagen Golf</dd></div><div><dt>Año / Motor</dt><dd>2017 / 2.0 TDI</dd></div><div><dt>Servicio</dt><dd>Reprogramación</dd></div><div><dt>Estado de ejemplo</dt><dd>Recogiendo información</dd></div></dl><p>Cliente + vehículo + conversación<br/><strong>Un mismo contexto.</strong></p></div></div>
     </section>

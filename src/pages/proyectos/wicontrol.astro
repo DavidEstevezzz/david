@@ -1,0 +1,120 @@
+---
+import Shell from '../../layouts/Shell.astro';
+import '../../styles/case.css';
+const menu = [
+  { label: 'Dashboard', icon: '▦', sub: false, active: true },
+  { label: 'Análisis de peso por granja', icon: '⚖', sub: true, active: false },
+  { label: 'Análisis de peso por camada', icon: '◍', sub: true, active: true },
+  { label: 'Monitoreo de temperatura', icon: '◐', sub: true, active: false },
+  { label: 'Monitoreo de actividad', icon: '↗', sub: true, active: false },
+  { label: 'Monitoreo de luz', icon: '☀', sub: true, active: false },
+  { label: 'Dispositivos', icon: '▤', sub: false, active: false },
+  { label: 'Empresas', icon: '▫', sub: false, active: false },
+  { label: 'Granjas', icon: '⌂', sub: false, active: false },
+  { label: 'Camadas', icon: '≡', sub: false, active: false },
+  { label: 'Usuarios', icon: '◎', sub: false, active: false },
+];
+const devices = [
+  { serie: 'WC-0142', id: '142', ip: '10.14.2.31', fw: '3.4.1', hw: 'v2', bat: 92, estado: 'Activo', tone: 'ok', msg: '07/09/2026 08:12' },
+  { serie: 'WC-0143', id: '143', ip: '10.14.2.32', fw: '3.4.1', hw: 'v2', bat: 61, estado: 'Calibrando', tone: 'warn', msg: '07/09/2026 08:11' },
+  { serie: 'WC-0157', id: '157', ip: '10.14.3.08', fw: '3.3.9', hw: 'v2', bat: 24, estado: 'Sin señal', tone: 'off', msg: '05/09/2026 19:40' },
+  { serie: 'WC-0161', id: '161', ip: '10.14.3.11', fw: '3.4.1', hw: 'v3', bat: 88, estado: 'Activo', tone: 'ok', msg: '07/09/2026 08:12' },
+];
+const sensors = ['Carga · gr', 'Presencia', 'Luminosidad · lux', 'Temperatura ambiente · °C', 'Humedad ambiente · %', 'Presión atmosférica', 'CO₂', 'TVOC', 'Temperatura de yacija', 'Humedad de suelo'];
+---
+<Shell title="WiControl · Granjas conectadas — David" description="Plataforma de gestión de granjas y dispositivos: ingesta de sensores, análisis de peso, ambiente y actividad en una sola aplicación.">
+  <article class="case case--wi" id="contenido">
+    <nav class="case-nav"><a href="/#proyectos">d↗ / Volver a proyectos</a><a href="mailto:david@estevezmartinez.com">Hablemos ↗</a></nav>
+
+    <header class="case-intro">
+      <p class="case-label">03 / Software · Dispositivos conectados</p>
+      <h1>Cada medida cuenta.<br /><em>Una sola pantalla.</em></h1>
+      <div class="case-lead"><h2>WiControl · Granjas conectadas</h2><p>Los dispositivos instalados en las naves miden sin descanso. La plataforma recoge esas medidas y las convierte en peso, ambiente y actividad que se leen de un vistazo.</p></div>
+      <div class="case-tags"><span>React + Vite</span><span>Laravel 12 + Sanctum</span><span>Dispositivos IoT</span></div>
+    </header>
+
+    <details class="wi-expand"><summary>Ampliar panel completo ↗</summary><a href="/projects/covers/wicontrol-full.png" target="_blank" rel="noopener">Abrir la vista completa en alta resolución ↗</a><p>Vista de demostración con datos ficticios.</p></details>
+    <section class="wi-app" aria-label="Recreación de la interfaz de WiControl">
+      <div class="wi-bar"><span class="wi-brand"><b>≈</b> WiControl</span><span class="wi-bar-right"><span class="wi-bar-pill">Modo claro</span><span>Ana R. · Responsable de zona</span></span></div>
+      <div class="wi-body">
+        <aside class="wi-side"><p class="wi-side-title">Menú</p><ul>{menu.map(item => <li class={`${item.sub ? 'is-sub' : ''} ${item.active ? 'is-active' : ''}`}><span aria-hidden="true">{item.icon}</span>{item.label}</li>)}</ul></aside>
+        <div class="wi-main">
+          <div class="wi-filters">
+            <label>Empresa<span class="wi-select">Avícola del Sur, S.L. <i aria-hidden="true">▾</i></span></label>
+            <label>Granja<span class="wi-select">Los Álamos (ES07·0142·N2) <i aria-hidden="true">▾</i></span></label>
+            <label>Camada<span class="wi-select">Camada 24 · Cobb 500 <i aria-hidden="true">▾</i></span></label>
+          </div>
+          <div class="wi-tabs"><span>Información general</span><span>Peso por granja</span><span class="is-active">Peso por camada</span><span>Temperatura</span><span>Actividad</span><span>Luz</span></div>
+          <div class="wi-kpis">
+            <div class="wi-kpi"><p>Total pesadas</p><strong>1.248</strong></div>
+            <div class="wi-kpi"><p>Aceptadas / Rechazadas</p><strong class="wi-split"><span class="is-ok">1.106</span><i aria-hidden="true">/</i><span class="is-bad">142</span></strong></div>
+            <div class="wi-kpi"><p>Peso medio aceptadas</p><strong class="is-blue">2.184 g</strong><small>Objetivo 2.210 g · mixto</small></div>
+            <div class="wi-kpi"><p>Edad de la camada</p><strong class="is-purple">32 días</strong></div>
+            <div class="wi-kpi wi-gauge">
+              <svg viewBox="0 0 110 62" role="img" aria-label="Coeficiente de variación: 9,4 por ciento"><path d="M11 52a44 44 0 0 1 88 0" fill="none" stroke="#e4e8ee" stroke-width="9" stroke-linecap="round"/><path d="M11 52a44 44 0 0 1 88 0" fill="none" stroke="#10b981" stroke-width="9" stroke-linecap="round" stroke-dasharray="65 139"/><text x="55" y="48" text-anchor="middle" class="wi-gauge-v">9,4%</text></svg>
+              <p>Coef. variación</p><small class="is-ok">Buena homogeneidad</small>
+            </div>
+            <div class="wi-kpi wi-gauge">
+              <svg viewBox="0 0 110 62" role="img" aria-label="Uniformidad: 84,2 por ciento"><path d="M11 52a44 44 0 0 1 88 0" fill="none" stroke="#e4e8ee" stroke-width="9" stroke-linecap="round"/><path d="M11 52a44 44 0 0 1 88 0" fill="none" stroke="#3b82f6" stroke-width="9" stroke-linecap="round" stroke-dasharray="116 139"/><text x="55" y="48" text-anchor="middle" class="wi-gauge-v">84,2%</text></svg>
+              <p>Uniformidad</p><small class="is-blue">Buena uniformidad</small>
+            </div>
+          </div>
+          <figure class="wi-chart">
+            <figcaption><span>Peso medio diario frente a la curva de referencia</span><span class="wi-legend"><i class="is-real" aria-hidden="true"></i>Lote<i class="is-ref" aria-hidden="true"></i>Cobb 500</span></figcaption>
+            <svg viewBox="0 0 940 300" role="img" aria-label="Gráfica del peso medio del lote comparado con la curva de referencia Cobb 500 entre los días 14 y 34 de crianza">
+              <defs><linearGradient id="wiFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b82f6" stop-opacity=".16"/><stop offset="1" stop-color="#3b82f6" stop-opacity="0"/></linearGradient></defs>
+              <g class="wi-grid"><line x1="44" y1="242.4" x2="926" y2="242.4"/><line x1="44" y1="178.3" x2="926" y2="178.3"/><line x1="44" y1="114.2" x2="926" y2="114.2"/><line x1="44" y1="50.1" x2="926" y2="50.1"/></g>
+              <g class="wi-axis-y"><text x="36" y="245.4">500</text><text x="36" y="181.3">1.000</text><text x="36" y="117.2">1.500</text><text x="36" y="53.1">2.000</text></g>
+              <g class="wi-axis-x"><text x="44" y="288">día 14</text><text x="308.6" y="288">día 20</text><text x="573.2" y="288">día 26</text><text x="926" y="288" text-anchor="end">día 34</text></g>
+              <path class="wi-area" d="M44.0,251.3 C63.4,248.8 93.4,245.9 132.2,239.8 C171.0,233.8 181.6,231.0 220.4,223.8 C259.2,216.6 269.8,214.7 308.6,207.1 C347.4,199.5 358.0,197.7 396.8,189.2 C435.6,180.7 446.2,178.1 485.0,168.6 C523.8,159.1 534.4,156.6 573.2,146.2 C612.0,135.8 622.6,132.5 661.4,121.2 C700.2,109.9 710.8,106.5 749.6,94.9 C788.4,83.3 799.0,80.6 837.8,68.6 C876.6,56.6 906.6,46.6 926.0,40.4 L926.0,268 L44.0,268 Z"/>
+              <path class="wi-line-ref" d="M44.0,247.5 C63.4,244.4 93.4,240.2 132.2,233.4 C171.0,226.6 181.6,224.3 220.4,216.7 C259.2,209.1 269.8,207.0 308.6,198.8 C347.4,190.6 358.0,188.3 396.8,179.5 C435.6,170.7 446.2,168.3 485.0,159.0 C523.8,149.7 534.4,147.1 573.2,137.2 C612.0,127.3 622.6,124.6 661.4,114.2 C700.2,103.8 710.8,100.5 749.6,89.8 C788.4,79.1 799.0,76.4 837.8,65.4 C876.6,54.4 906.6,45.4 926.0,39.8"/>
+              <path class="wi-line-real" d="M44.0,251.3 C63.4,248.8 93.4,245.9 132.2,239.8 C171.0,233.8 181.6,231.0 220.4,223.8 C259.2,216.6 269.8,214.7 308.6,207.1 C347.4,199.5 358.0,197.7 396.8,189.2 C435.6,180.7 446.2,178.1 485.0,168.6 C523.8,159.1 534.4,156.6 573.2,146.2 C612.0,135.8 622.6,132.5 661.4,121.2 C700.2,109.9 710.8,106.5 749.6,94.9 C788.4,83.3 799.0,80.6 837.8,68.6 C876.6,56.6 906.6,46.6 926.0,40.4"/>
+              <g class="wi-dots"><circle cx="44.0" cy="251.3" r="2.6"/><circle cx="132.2" cy="239.8" r="2.6"/><circle cx="220.4" cy="223.8" r="2.6"/><circle cx="308.6" cy="207.1" r="2.6"/><circle cx="396.8" cy="189.2" r="2.6"/><circle cx="485.0" cy="168.6" r="2.6"/><circle cx="573.2" cy="146.2" r="2.6"/><circle cx="661.4" cy="121.2" r="2.6"/><circle cx="749.6" cy="94.9" r="2.6"/><circle cx="837.8" cy="68.6" r="2.6"/><circle cx="926.0" cy="40.4" r="2.6"/></g>
+            </svg>
+          </figure>
+        </div>
+      </div>
+    </section>
+    <p class="case-note">Recreación de la interfaz programada para esta ficha a partir del código del proyecto, con datos ficticios. No es una captura de una instalación real ni muestra información de ningún cliente.</p>
+
+    <section class="case-context"><p class="case-label">El reto</p><h2>Medir es fácil.<br />Entender lo medido, no.</h2><p>Cada dispositivo envía peso, temperatura, humedad, luz, actividad y calidad del aire durante toda la crianza. El volumen crece solo. El trabajo real es organizar esas medidas por empresa, granja y camada, descartar las lecturas que no sirven y dejar a la vista lo que permite decidir a tiempo.</p></section>
+
+    <section class="case-chapter">
+      <div><p class="case-label">01 / El lote</p><h2>Peso, día<br />a día.</h2><p>Las pesadas se filtran por homogeneidad, se calcula el peso medio aceptado y se compara con la curva de referencia de la estirpe. Uniformidad y coeficiente de variación indican si el lote crece parejo o se está abriendo.</p></div>
+      <div class="case-chapter"><div><p class="case-label">02 / El ambiente</p><h2>Lo que rodea<br />al animal.</h2><p>Temperatura, humedad, luz y actividad, con máximos, mínimos y alertas por franja. Los índices de estrés calórico y temperatura-humedad resumen en un valor las condiciones de la nave.</p></div></div>
+    </section>
+
+    <section class="wi-devices" aria-label="Recreación de la gestión de dispositivos">
+      <div class="wi-devices-top"><p class="case-label">03 / El parque de dispositivos</p><span>Datos ficticios</span></div>
+      <h2>Cada equipo,<br />bajo control.</h2>
+      <div class="wi-table-wrap">
+        <table class="wi-table">
+          <thead><tr><th>Dispositivo</th><th>Red</th><th>Versiones</th><th>Batería</th><th>Estado</th><th>Último mensaje</th></tr></thead>
+          <tbody>{devices.map(d => <tr><td><strong>{d.serie}</strong><small>ID: {d.id}</small></td><td>{d.ip}</td><td>FW {d.fw}<small>HW {d.hw}</small></td><td><span class="wi-bat"><i style={`--w:${d.bat}%`}></i></span>{d.bat}%</td><td><span class={`wi-badge is-${d.tone}`}>{d.estado}</span></td><td>{d.msg}</td></tr>)}</tbody>
+        </table>
+      </div>
+      <p>Alta y baja de equipos, calibración remota, configuración de qué sensores envía cada uno y reinicio programado. Las acciones se dejan pendientes y el dispositivo las recoge en su siguiente aviso de vida.</p>
+    </section>
+
+    <section class="wi-proto" aria-label="Cómo se comunica un dispositivo con la plataforma">
+      <p class="case-label">Del sensor a la pantalla / El protocolo</p>
+      <h2>El dispositivo pregunta.<br />El servidor responde.</h2>
+      <ol class="wi-process"><li><b>01 / Sensor</b><span>Recoge las medidas.</span></li><li><b>02 / Plataforma</b><span>Las organiza por granja y camada.</span></li><li><b>03 / Análisis</b><span>Permite comparar y detectar desviaciones.</span></li><li><b>04 / Acción</b><span>Ayuda a decidir qué revisar.</span></li></ol><details class="case-tech"><summary>Ver el protocolo de comunicación ↗</summary><div class="wi-proto-grid">
+        <div class="wi-code"><span class="wi-code-tag">El dispositivo habla</span><code>GET /receive.php?&#123;"dev":"WC-0142","sen":6,"val":24.8&#125;</code><code>GET /heartbeat.php?&#123;"dev":"WC-0142"&#125;</code><p>Cada medida viaja como un JSON dentro de la propia URL, varias por envío. El aviso de vida periódico actualiza la fecha del último mensaje y pregunta si hay algo pendiente.</p></div>
+        <div class="wi-code"><span class="wi-code-tag">El servidor contesta</span><code>@&#123;"dev":"WC-0142","cal":1,"sen":2&#125;@</code><code>@&#123;"dev":"WC-0142","rst":1&#125;@</code><p>Calibración pendiente o reinicio programado. Sin canal permanente abierto: la orden viaja en la respuesta y el equipo la ejecuta al recogerla.</p></div>
+      </div>
+      </details><div class="wi-sensors"><p class="case-label">Lo que llega en cada envío</p><div>{sensors.map(s => <span>{s}</span>)}</div></div>
+    </section>
+
+    <section class="case-brief wi-usecase"><p class="case-label">Un día de trabajo / Ejemplo ilustrativo</p><h2>Una desviación.<br/>Las preguntas adecuadas.</h2><p>El responsable observa que el peso medio del lote se separa de su curva de referencia. Revisa la evolución de la temperatura y la humedad, y comprueba cuándo comunicó por última vez el dispositivo.</p><p>Con ese contexto puede decidir si necesita comprobar el sensor o revisar las condiciones de la nave. La plataforma reúne la información para investigar; una desviación por sí sola no determina la causa.</p></section>
+    <section class="case-brief">
+      <p class="case-label">Briefing / De la necesidad a la solución</p>
+      <h2>Una plataforma completa,<br />de la antena al informe.</h2>
+      <p>El proyecto abarca las dos mitades. Un backend en Laravel que mantiene la compatibilidad con el protocolo que ya hablaban los dispositivos instalados, guarda cada medida, la asocia a su granja y camada, y expone una API para consultar la información desde el frontend.</p>
+      <p>Y un frontend en React que convierte esos registros en trabajo diario: gestión de empresas, granjas, camadas, usuarios y dispositivos; análisis de peso contra las curvas de referencia de cada estirpe —Cobb, Ross, reproductores y tres líneas de pavo—; monitoreo de temperatura, humedad, luz y actividad con alertas; pronóstico de crecimiento y exportación a Excel.</p>
+      <p>La navegación por empresa, granja y camada reúne las consultas en un mismo lugar y facilita el seguimiento del lote.</p>
+    </section>
+
+    <footer class="case-end"><p class="case-label">Tus datos, trabajando para ti.</p><h2>¿Tienes datos<br />que nadie mira?</h2><a href="mailto:david@estevezmartinez.com">Cuéntame tu caso ↗</a><a href="/#proyectos">Volver a los proyectos ←</a></footer>
+  </article>
+</Shell>

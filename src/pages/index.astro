@@ -1,11 +1,11 @@
 ---
 import Shell from '../layouts/Shell.astro';
 const projects = [
-  { n: '01', title: 'Bomberos de Granada', kind: 'Software a medida', text: 'Guardias, cambios de turno, horas extras y recursos: una aplicación alrededor de la operativa del parque.', note: 'Coordinar personas y recursos.', href: '/proyectos/bomberos/', mark: '24 / 7' },
-  { n: '02', title: 'Taller ECU · JMReprocars', kind: 'Automatización · WhatsApp', text: 'De una conversación a una solicitud organizada, con datos del vehículo y transferencia a atención humana.', note: 'Automatización en desarrollo.', href: '/proyectos/taller-ecu/', mark: '↳ ECU' },
-  { n: '03', title: 'WiControl · Granjas conectadas', kind: 'Software · Dispositivos conectados', text: 'Gestión de granjas y dispositivos, seguimiento del peso y visualización de las condiciones ambientales.', note: 'Frontend y backend de una misma solución.', href: '', mark: '≈ Wi' },
-  { n: '04', title: 'Black Tides: Draga’s Wake', kind: 'Frontend · Web de videojuego', text: 'Una presentación cinematográfica por capítulos, con escenas visuales y una experiencia guiada por el scroll.', note: 'Experiencia web en desarrollo.', href: '', mark: 'BT /' },
-  { n: '05', title: 'Tagadona Racing', kind: 'Desarrollo web · Motor', text: 'Catálogo de motos, fichas de vehículos y una presencia digital orientada a la compraventa en Granada.', note: 'Conectar el catálogo con el cliente.', href: '', mark: '↗ TR' },
+  { n: '01', title: 'Bomberos de Granada', kind: 'Software a medida', text: 'Guardias, cambios de turno, horas extras y recursos: una aplicación alrededor de la operativa del parque.', note: 'Coordinar personas y recursos.', href: '/proyectos/bomberos/', cover: 'bomberos' },
+  { n: '02', title: 'Taller ECU · JMReprocars', kind: 'Web · Automatización', text: 'De una conversación a una solicitud organizada, con datos del vehículo y transferencia a atención humana.', note: 'Automatización en desarrollo.', href: '/proyectos/taller-ecu/', cover: 'ecu' },
+  { n: '03', title: 'WiControl · Granjas conectadas', kind: 'Software · Dispositivos conectados', text: 'Gestión de granjas y dispositivos, seguimiento del peso y visualización de las condiciones ambientales.', note: 'Frontend y backend de una misma solución.', href: '/proyectos/wicontrol/', cover: 'wicontrol' },
+  { n: '04', title: 'Black Tides: Draga’s Wake', kind: 'Frontend · Web de videojuego', text: 'Una presentación cinematográfica por capítulos, con escenas visuales y una experiencia guiada por el scroll.', note: 'Experiencia web en desarrollo.', href: '/proyectos/black-tides/', cover: 'black-tides' },
+  { n: '05', title: 'Tagadona Racing', kind: 'Desarrollo web · Motor', text: 'Catálogo de motos, fichas de vehículos y una presencia digital orientada a la compraventa en Granada.', note: 'Conectar el catálogo con el cliente.', href: '/proyectos/tagadona/', cover: 'tagadona' },
 ];
 ---
 <Shell title="David — Desarrollo web, software y automatización" description="Ingeniero informático en Granada. Desarrollo web, software de gestión y automatizaciones a medida para empresas.">
@@ -59,12 +59,12 @@ const projects = [
       <div class="work-grid">
         {projects.map(project => <article class="work-card">
           <div class="work-card-meta"><span>{project.n} / {project.kind}</span><span aria-hidden="true">↗</span></div>
-          <div class="work-card-art" aria-hidden="true">{project.n === '01' ? <img src="/projects/bomberos/calendario.png" width="2880" height="1860" loading="lazy" alt="" /> : <span>{project.mark}</span>}</div>
+          <div class="work-card-art" aria-hidden="true"><img src={`/projects/covers/${project.cover}.jpg`} width="3200" height="2000" loading="lazy" alt="" /></div>
           <h3>{project.title}</h3><p>{project.text}</p>
           <div class="work-card-foot"><span>{project.note}</span>{project.href && <a href={project.href}>Ver proyecto <span class="sr-only">{project.title}</span> ↗</a>}</div>
         </article>)}
       </div>
-      <p class="work-note">Cinco proyectos, distintas formas de resolver una necesidad. Explora las primeras fichas de Bomberos y Taller ECU.</p>
+      <p class="work-note">Cinco proyectos, distintas formas de resolver una necesidad. Todas las fichas están abiertas: entra en la que te interese.</p>
     </section>
     <section class="contact-section" id="contacto" tabindex="-1">
       <div class="section-kicker"><span>El siguiente proyecto</span><span>Podría ser el tuyo ↙</span></div>

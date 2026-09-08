@@ -1,20 +1,6 @@
 ---
 import Shell from '../../layouts/Shell.astro';
 import '../../styles/case.css';
-const rutas = [
-  { path: '/', label: 'Portada' },
-  { path: '/catalogo/', label: 'Catálogo completo' },
-  { path: '/motos/…/', label: 'Ficha de cada moto' },
-  { path: '/motos-125-segunda-mano-granada/', label: 'Landing · 125' },
-  { path: '/motos-a2-segunda-mano-granada/', label: 'Landing · A2' },
-  { path: '/scooters-segunda-mano-granada/', label: 'Landing · scooters' },
-  { path: '/motos-carnet-b-granada/', label: 'Landing · carnet B' },
-  { path: '/motos-segunda-mano-granada/', label: 'Landing · genérica' },
-  { path: '/motos-para-reparar-granada/', label: 'Venta tal cual' },
-  { path: '/vender-moto-granada/', label: 'Tasación y venta' },
-  { path: '/blog/', label: 'Contenido y guías' },
-  { path: '/contacto/', label: 'Contacto y horario' },
-];
 const facturas = [
   { fecha: '12/08/2026', num: 'RB2026-014', moto: 'Yamaha MT-07', cliente: 'Laura M.', tipo: 'REBU', tone: 'rebu', total: '6.450,00 €' },
   { fecha: '09/08/2026', num: 'FA2026-007', moto: 'Honda CB500F', cliente: 'Talleres Vega S.L.', tipo: 'IVA 21%', tone: 'iva', total: '7.139,00 €' },
@@ -37,7 +23,7 @@ const pasos = [
       <div class="case-tags"><span>Astro + Supabase</span><span>SEO local</span><span>Proyecto propio</span></div>
     </header>
 
-    <figure class="case-hero"><a href="/projects/tagadona/tagadona-home.jpg" target="_blank" rel="noopener" aria-label="Ampliar la portada del sitio"><img src="/projects/tagadona/tagadona-home.jpg" width="2560" height="1600" alt="Portada de tagadonaracing.es con el logotipo, el titular y los accesos al catálogo y a la venta de motos" fetchpriority="high" /></a><figcaption>01 — Portada <span>tagadonaracing.es · sitio en producción</span></figcaption></figure>
+    <figure class="case-hero"><a href="/projects/tagadona/tagadona-home.jpg" target="_blank" rel="noopener" aria-label="Ampliar la portada del sitio"><img src="/projects/tagadona/tagadona-home.jpg" width="2880" height="1800" alt="Portada de tagadonaracing.es con el logotipo, el titular y los accesos al catálogo y a la venta de motos" fetchpriority="high" /></a><figcaption>01 — Portada <span>tagadonaracing.es · sitio en producción</span></figcaption></figure>
 
     <section class="case-context"><p class="case-label">El reto</p><h2>Un anuncio no basta.<br />Hace falta un negocio.</h2><p>Publicar motos en un portal ajeno es alquilar la clientela. La web propia tenía que hacer dos trabajos a la vez: aparecer cuando alguien busca una moto concreta en Granada, y sostener la parte que nadie ve —facturas, gastos y margen— sin depender de hojas de cálculo sueltas.</p></section>
 
@@ -46,27 +32,12 @@ const pasos = [
       <div class="case-chapter"><div><p class="case-label">02 / La ficha</p><h2>Todo lo que hay<br />que saber antes de venir.</h2><p>Galería, precio, datos técnicos y descripción escrita a mano. Con la llamada y el mensaje siempre a un toque, y la tasación de la moto usada como parte del pago.</p></div></div>
     </section>
 
-    <figure class="case-image"><a href="/projects/tagadona/tagadona-catalogo.jpg" target="_blank" rel="noopener" aria-label="Ampliar el catálogo"><img src="/projects/tagadona/tagadona-catalogo.jpg" width="2560" height="1564" loading="lazy" alt="Catálogo con la barra de filtros por tipo, carnet y precio, y tres motos disponibles con su precio y kilómetros" /></a><figcaption>02 — Catálogo y filtros <span>Abrir imagen para ampliar ↗</span></figcaption></figure>
+    <figure class="case-image"><a href="/projects/tagadona/tagadona-catalogo.jpg" target="_blank" rel="noopener" aria-label="Ampliar el catálogo"><img src="/projects/tagadona/tagadona-catalogo.jpg" width="2880" height="2454" loading="lazy" alt="Catálogo con la barra de filtros por tipo, carnet y precio, y tres motos disponibles con su precio y kilómetros" /></a><figcaption>02 — Catálogo y filtros <span>Abrir imagen para ampliar ↗</span></figcaption></figure>
 
-    <figure class="case-image tg-moto-image"><a href="/projects/tagadona/tagadona-moto.jpg" target="_blank" rel="noopener" aria-label="Ampliar la ficha de una moto"><img src="/projects/tagadona/tagadona-moto.jpg" width="2560" height="1671" loading="lazy" alt="Ficha de una Harley-Davidson Sportster 1200 Nightster con galería de fotos, precio, cilindrada, potencia y botones de contacto" /></a><figcaption>03 — Ficha de moto <span>Abrir imagen para ampliar ↗</span></figcaption></figure>
-
-    <section class="tg-routes" aria-label="Arquitectura de páginas del sitio" hidden>
-      <div class="tg-routes-top"><p class="case-label">03 / La captación</p><span>Doce entradas al mismo catálogo</span></div>
-      <h2>Cada búsqueda,<br />su propia página.</h2>
-      <div class="tg-routes-grid">
-        <ul>{rutas.map(r => <li><code>{r.path}</code><span>{r.label}</span></li>)}</ul>
-        <div class="tg-routes-side">
-          <p>Quien busca «scooter de segunda mano en Granada» y quien busca «moto A2 barata» no buscan lo mismo. Cada intención tiene su landing, con su titular, sus preguntas frecuentes y su recorte del catálogo, generadas por un mismo componente.</p>
-          <p>Las fichas de moto y los artículos salen de los datos, no se escriben a mano. Cada página publica sus datos estructurados —producto, miga de pan, preguntas frecuentes y ficha del negocio— para que el buscador entienda qué hay dentro.</p>
-          <ul class="tg-checks"><li>Un solo archivo con los datos del negocio: teléfono, dirección y horario viven en un sitio y se propagan a toda la web</li><li>Validación antes de publicar: slugs repetidos, precios mal escritos o fotos que no existen paran la subida</li><li>Sección aparte para las motos que se venden tal cual, con sus desperfectos listados uno a uno</li></ul>
-        </div>
-      </div>
-    </section>
-
-    <figure class="case-image tg-landing-image" hidden><a href="/projects/tagadona/tagadona-landing.jpg" target="_blank" rel="noopener" aria-label="Ampliar una landing de categoría"><img src="/projects/tagadona/tagadona-landing.jpg" width="2560" height="1564" loading="lazy" alt="Landing de motos A2 de segunda mano en Granada, con el titular, la explicación del carnet y las preguntas frecuentes" /></a><figcaption>04 — Una landing por intención de búsqueda <span>Mismo componente, distinto contenido</span></figcaption></figure>
+    <figure class="case-image tg-moto-image"><a href="/projects/tagadona/tagadona-moto.jpg" target="_blank" rel="noopener" aria-label="Ampliar la ficha de una moto"><img src="/projects/tagadona/tagadona-moto.jpg" width="2880" height="1754" loading="lazy" alt="Ficha de una Harley-Davidson Sportster 1200 Nightster con galería de fotos, precio, cilindrada, potencia y botones de contacto" /></a><figcaption>03 — Ficha de moto <span>Abrir imagen para ampliar ↗</span></figcaption></figure>
 
     <section class="tg-admin" aria-label="El panel privado de facturación">
-      <div class="tg-admin-head"><p class="case-label">04 / La trastienda</p><h2>El panel que<br />nadie ve.</h2><p>Detrás de un acceso privado, la parte administrativa del negocio: facturación, gastos, proveedores y la rentabilidad real de cada moto vendida.</p></div>
+      <div class="tg-admin-head"><p class="case-label">03 / La trastienda</p><h2>El panel que<br />nadie ve.</h2><p>Detrás de un acceso privado, la parte administrativa del negocio: facturación, gastos, proveedores y la rentabilidad real de cada moto vendida.</p></div>
       <div class="tg-panel">
         <div class="tg-panel-bar"><span>Panel de facturas</span><span class="tg-panel-user">Sesión iniciada · Cerrar sesión</span></div>
         <div class="tg-panel-tabs"><span class="is-active">Ventas</span><span>Gastos</span><span>Rentabilidad</span><span>Proveedores</span></div>
@@ -77,12 +48,12 @@ const pasos = [
           <tbody>{facturas.map(f => <tr><td>{f.fecha}</td><td><code>{f.num}</code></td><td>{f.moto}</td><td>{f.cliente}</td><td><span class={`tg-tag is-${f.tone}`}>{f.tipo}</span></td><td class="tg-total">{f.total}</td></tr>)}</tbody>
         </table></div>
       </div>
-      <p class="case-note">El panel es privado, así que esta pieza es una recreación de su estructura programada para esta ficha, con motos, clientes e importes ficticios. Las cuatro capturas anteriores sí son del sitio público, tal y como está publicado.</p>
+      <p class="case-note">El panel es privado, así que esta pieza es una recreación de su estructura programada para esta ficha, con motos, clientes e importes ficticios. Las tres capturas anteriores sí son del sitio público, tal y como está publicado.</p>
       <p class="tg-legal">Cada factura sale en PDF con su numeración por serie y su nota legal: las de particular llevan el régimen especial de bienes usados; las de empresa, el 21 % desglosado.</p>
     </section>
 
     <section class="tg-flow" aria-label="Lectura automática de facturas de gasto">
-      <p class="case-label">05 / La automatización</p>
+      <p class="case-label">04 / La automatización</p>
       <h2>Una foto del papel.<br />El resto lo pone el sistema.</h2>
       <div class="tg-flow-grid">{pasos.map(p => <article><span>{p.n}</span><h3>{p.title}</h3><p>{p.text}</p></article>)}</div>
       <p class="tg-flow-note">Con los gastos ya cargados, la pestaña de rentabilidad cruza cada venta con lo que costó dejar la moto lista y muestra el margen que realmente dejó.</p>
@@ -99,4 +70,3 @@ const pasos = [
     <footer class="case-end"><p class="case-label">Vender es solo la mitad.</p><h2>¿Tu web trabaja<br />para tu negocio?</h2><a href="mailto:david@estevezmartinez.com">Hablemos de lo tuyo ↗</a><a href="https://tagadonaracing.es" target="_blank" rel="noopener">Ver el sitio en vivo ↗</a><a href="/#proyectos">Volver a los proyectos ←</a></footer>
   </article>
 </Shell>
-<style>.case--tg .tg-routes,.case--tg img[src*="tagadona-landing"]{display:none}</style>
