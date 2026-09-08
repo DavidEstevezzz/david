@@ -23,9 +23,9 @@ Revisión inicial del 7 de septiembre de 2026. Actualizado el 8 de septiembre de
 
 ## Taller ECU · JMReprocars
 
-- [x] Añadir la parte web al caso del taller: propuesta local programada con servicios, proceso de consulta y preguntas frecuentes, identificada como propuesta. El repositorio sigue sin contener una web pública definitiva.
-- [ ] Completar la web definitiva del taller y su contacto real cuando se confirme si existe en otra URL/repositorio. No se ha publicado ni modificado una web externa.
-- [ ] Confirmar identidad final, imágenes, teléfono/WhatsApp, dirección y horario del taller. Pregunta enviada al usuario; no se han inventado datos comerciales.
+- [x] Añadir la parte web al caso del taller con una captura real de `web/src/pages/conceptos/reprogramacion-codex.astro`, obtenida del repositorio actualizado `taller-ecu` (commit `58909d4`). Sustituida la propuesta anterior también en la portada del proyecto.
+- [x] Revisar la nueva implementación web y actualizar el estado del caso: Astro + React, acceso y resumen del panel privado; despliegue e integración completa pendientes según la documentación del repositorio.
+- [ ] Confirmar el diseño definitivo cuando el usuario cierre su elección. Por ahora identifica este concepto como el probable diseño final; la ficha lo presenta como dirección visual en desarrollo.
 
 ## Ambas fichas
 
@@ -45,4 +45,4 @@ Implementación autorizada por el usuario el 8 de septiembre. Se conserva la ide
 
 Validación: compilación correcta; revisión visual a 1440 y 390 px sin desbordamientos ni imágenes rotas. Reproducción de vídeo, estado pausado con movimiento reducido y ampliación del panel verificadas. Separación entre catálogo y ficha: unos 130 px en escritorio y 70 px en móvil.
 
-Materiales: Black Tides utiliza derivados presentes en la carpeta local del proyecto (vídeo, póster, pasillo y crecimiento orgánico). Portadas creadas con composiciones HTML y capturas; ECU y WiControl emplean vistas demostrativas. Las capturas de Tagadona proceden del sitio público del 8 de septiembre.
+Materiales: Black Tides utiliza derivados presentes en la carpeta local del proyecto (vídeo, póster, pasillo y crecimiento orgánico). Portadas creadas con composiciones HTML y capturas. ECU muestra una captura real del concepto web actualizado, conservando la demostración ilustrativa de automatización; WiControl emplea una vista demostrativa. Las capturas de Tagadona proceden del sitio público del 8 de septiembre.
