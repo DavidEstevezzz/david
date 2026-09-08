@@ -9,6 +9,8 @@ Revisión inicial del 7 de septiembre de 2026. Actualizado el 8 de septiembre de
 
 ## Black Tides
 
+- [x] Reorientar la ficha al trabajo frontend por indicación del usuario: retirado el vídeo del estudio, las imágenes aisladas del juego y las muestras de color. Incorporadas tres capturas reales de la web local (portada, Infection y comparador de producción), ampliables y con explicación de la aportación web. Actualizada la portada del listado. Esta selección sustituye la propuesta audiovisual anterior.
+
 - [x] Traducir los detalles de implementación a beneficios para el cliente: fluidez, adaptación al dispositivo y accesibilidad. Conservar driver de scroll, registro de GSAP y demás detalles en un apartado técnico desplegable.
 - [x] Resumir la presentación de los siete capítulos en tres momentos visuales: entrada, exploración y transformación. Reducir la longitud de la ficha, especialmente en móvil.
 - [x] Simplificar la paleta: menos muestras y códigos, más ejemplos de aplicación visual.
