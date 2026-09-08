@@ -51,11 +51,11 @@ export async function mountMorph(surface: SurfaceRenderer): Promise<MorphStudy |
     root.dataset.handoff = 'html';
   }
 
-  media.add({ reduced: '(prefers-reduced-motion: reduce)', mobile: '(max-width: 700px)', desktop: '(min-width: 701px)' }, (context) => {
+  media.add({ reduced: '(prefers-reduced-motion: reduce)', mobile: '(max-width: 820px)', desktop: '(min-width: 821px)', compact: '(max-width: 820px) and (max-height: 739px)' }, (context) => {
     if (context.conditions?.reduced) return;
     const mobile = Boolean(context.conditions?.mobile);
     // A landscape/zoomed viewport may not fit the readable panel: keep full HTML.
-    if (innerHeight < 620) return;
+    if (context.conditions?.compact || innerHeight < 620) return;
     root.setAttribute('data-enhanced', '');
     const startScale = mobile ? .72 : .48;
     Object.assign(state, { bend: mobile ? -.22 : -.38, flat: 0, radius: mobile ? 18 : 28 });
@@ -112,6 +112,8 @@ export async function mountMorph(surface: SurfaceRenderer): Promise<MorphStudy |
       trigger.getTween()?.progress(1);
       timeline.progress(1);
       if (!handed) handoff();
+    } else {
+      panel.scrollIntoView({ block: 'start', behavior: 'instant' });
     }
     panel.focus({ preventScroll: true });
   };

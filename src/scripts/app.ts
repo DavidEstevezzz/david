@@ -1,7 +1,11 @@
-type VisualRuntime = ReturnType<typeof import('./visual/runtime').createRuntime>;
+import '../styles/home-mobile.css';
+type VisualRuntime = ReturnType<typeof import('./visual/runtime').createRuntime> | ReturnType<typeof import('./mobile-home').createMobileRuntime>;
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const mobileViewport = matchMedia('(max-width: 820px)');
+const shortViewport = matchMedia('(max-height: 499px)');
 const canvas = document.querySelector<HTMLCanvasElement>('#visual-canvas')!;
 let runtime: VisualRuntime | undefined;
+let runtimeKind: 'mobile' | 'webgl' | undefined;
 let disabled = new URL(location.href).searchParams.get('render') === 'html';
 let starting: Promise<void> | undefined;
 let pendingFetch: AbortController | undefined;
@@ -25,12 +29,24 @@ function updateButton() {
 async function start() {
   if (disposed || disabled || reduceMotion.matches || canvas.dataset.context === 'lost') { updateButton(); return; }
   if (starting) return starting;
+  // Case pages have no animated scene. Avoid creating an idle GPU renderer.
+  const isHome = Boolean(document.querySelector('[data-home]'));
+  if (!isHome && !document.querySelector('[data-morph-page]')) {
+    runtime?.dispose(); runtime = undefined; runtimeKind = undefined;
+    canvas.style.display = 'none'; updateButton(); return;
+  }
   const activation = ++activationId;
   starting = (async () => {
     try {
-      const { createRuntime } = await import('./visual/runtime');
+      const kind = isHome && mobileViewport.matches ? 'mobile' : 'webgl';
+      canvas.style.display = kind === 'mobile' ? 'none' : 'block';
+      const createRuntime = kind === 'mobile'
+        ? (await import('./mobile-home')).createMobileRuntime
+        : (await import('./visual/runtime')).createRuntime;
       if (disposed || disabled || reduceMotion.matches || activation !== activationId) return;
+      if (runtimeKind !== kind) { runtime?.dispose(); runtime = undefined; }
       runtime ??= createRuntime();
+      runtimeKind = kind;
       await runtime.mount();
       if (disposed || disabled || reduceMotion.matches || activation !== activationId) return;
       document.documentElement.dataset.runtime = 'ready';
@@ -66,6 +82,19 @@ function onMotionChange() {
   }
 }
 reduceMotion.addEventListener('change', onMotionChange, options);
+function onViewportModeChange() {
+  if (disabled || reduceMotion.matches || navigating || disposed) return;
+  void (async () => {
+    const activation = ++activationId;
+    await starting;
+    if (activation !== activationId) return;
+    runtime?.dispose(); runtime = undefined; runtimeKind = undefined;
+    document.documentElement.dataset.runtime = 'html';
+    if (!disabled && !navigating && !disposed) await start();
+  })();
+}
+mobileViewport.addEventListener('change', onViewportModeChange, options);
+shortViewport.addEventListener('change', onViewportModeChange, options);
 canvas.addEventListener('surface-unavailable', () => { void stop(); }, options);
 canvas.addEventListener('surface-error', () => { void stop(); }, options);
 canvas.addEventListener('surface-restored', () => {
