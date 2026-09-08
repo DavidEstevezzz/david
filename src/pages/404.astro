@@ -1,0 +1,21 @@
+---
+import Shell from '../layouts/Shell.astro';
+import '../styles/case.css';
+---
+<Shell title="Página no encontrada — David Estévez" description="La página que buscabas no existe o ha cambiado de dirección." noindex={true}>
+  <article class="case" id="contenido">
+    <nav class="case-nav"><a href="/">d↗ / Volver al inicio</a><a href="mailto:david@estevezmartinez.es">Hablemos ↗</a></nav>
+    <header class="case-intro">
+      <p class="case-label">Error 404</p>
+      <h1>Esta página<br /><em>no existe.</em></h1>
+      <div class="case-lead"><h2>Puede que la dirección haya cambiado</h2><p>O que el enlace que has seguido esté roto. Desde el inicio llegas a todo: los proyectos, los servicios y la forma de contactar conmigo.</p></div>
+    </header>
+    <footer class="case-end">
+      <p class="case-label">Sigamos.</p>
+      <h2>¿Empezamos<br />por el principio?</h2>
+      <a href="/">Ir al inicio ←</a>
+      <a href="/#proyectos">Ver los proyectos ↗</a>
+      <a href="mailto:david@estevezmartinez.es">Escríbeme ↗</a>
+    </footer>
+  </article>
+</Shell>

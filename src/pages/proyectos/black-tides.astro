@@ -1,14 +1,21 @@
 ---
 import Shell from '../../layouts/Shell.astro';
+import { projectSchema } from '../../lib/schema';
 import '../../styles/case.css';
 const moments = [
  {title:'El scroll marca el ritmo', image:'web-infection.jpg', width:2880, height:2000, label:'02 / Navegación por estados', text:'El capítulo de la infección sincroniza el cambio de imágenes con el avance de la página. El título, los indicadores y la navegación mantienen el contexto mientras cambia la atmósfera.'},
  {title:'Una interfaz para explorar el proceso', image:'web-production.jpg', width:2628, height:1822, label:'03 / Comparador visual', text:'El apartado de producción incorpora controles para alternar vistas y una revelación con el puntero. El trabajo mostrado aquí es la interfaz del comparador y su interacción; las escenas son material del estudio.'},
 ];
 ---
-<Shell title="Black Tides: Draga’s Wake — David" description="Una web cinematográfica para presentar un videojuego, con recorrido por capítulos y una experiencia adaptada a distintos dispositivos.">
+<Shell
+  title="Web cinematográfica para un videojuego — David Estévez"
+  description="Presentación web por capítulos para un videojuego: experiencia guiada por el scroll, escenas WebGL opcionales y un núcleo que no castiga el dispositivo."
+  type="article"
+  image="/projects/covers/black-tides.jpg"
+  schema={projectSchema({ name: 'Black Tides: Draga’s Wake', description: 'Presentación web por capítulos para un videojuego: experiencia guiada por el scroll, escenas WebGL opcionales y un núcleo que no castiga el dispositivo.', path: '/proyectos/black-tides/', image: '/projects/covers/black-tides.jpg', categoria: 'Desarrollo frontend' })}
+>
 <article class="case case--bt" id="contenido">
-<nav class="case-nav"><a href="/#proyectos">d↗ / Volver a proyectos</a><a href="mailto:david@estevezmartinez.com">Hablemos ↗</a></nav>
+<nav class="case-nav"><a href="/#proyectos">d↗ / Volver a proyectos</a><a href="mailto:david@estevezmartinez.es">Hablemos ↗</a></nav>
 <header class="case-intro"><p class="case-label">04 / Frontend · Web de videojuego</p><h1>No se lee.<br/><em>Se desciende.</em></h1><div class="case-lead"><h2>Black Tides: Draga’s Wake</h2><p>Una presentación por capítulos para el juego de Strange Creature Factory. Atmósfera, escenarios y narrativa unidos en una experiencia de navegación.</p></div><div class="case-tags"><span>React + Three.js</span><span>Dirección de movimiento</span><span>Proyecto en desarrollo</span></div></header>
 <figure class="bt-feature bt-web-shot">
  <a href="/projects/black-tides/web-hero.jpg" target="_blank" rel="noopener" aria-label="Ampliar la captura de la portada de Black Tides"><img src="/projects/black-tides/web-hero.jpg" width="2880" height="2000" alt="Portada real de la web Black Tides con su titular, navegación por capítulos y llamadas a la acción" fetchpriority="high" /></a>
@@ -21,5 +28,5 @@ const moments = [
 <details class="case-tech"><summary>Dentro del desarrollo ↗</summary><p>Una fuente central de progreso de scroll coordina las escenas. Las animaciones de GSAP se agrupan para poder desmontarlas, y un canvas compartido evita crear un renderizador por capítulo. La capa gráfica se carga de forma diferida y el render se pausa al ocultar la pestaña para reducir el consumo.</p></details>
 
 <section class="case-brief"><p class="case-label">Briefing / De la necesidad a la solución</p><h2>Un juego con identidad.<br/>Una web que la transmite.</h2><p>La necesidad era presentar el universo y la propuesta del juego mediante una web narrativa. Desarrollé la base del recorrido por capítulos, la coordinación de animaciones y una capa gráfica que se adapta a las capacidades del dispositivo.</p><p>El proyecto sigue en desarrollo. La ficha muestra capturas de la web local y decisiones de desarrollo; no representa el lanzamiento definitivo del juego.</p></section>
-<footer class="case-end"><p class="case-label">Una idea también se presenta.</p><h2>¿Tienes algo<br/>que enseñar al mundo?</h2><a href="mailto:david@estevezmartinez.com">Cuéntame tu proyecto ↗</a><a href="/#proyectos">Volver a los proyectos ←</a></footer>
+<footer class="case-end"><p class="case-label">Una idea también se presenta.</p><h2>¿Tienes algo<br/>que enseñar al mundo?</h2><a href="mailto:david@estevezmartinez.es">Cuéntame tu proyecto ↗</a><a href="/#proyectos">Volver a los proyectos ←</a></footer>
 </article></Shell>

@@ -1,5 +1,6 @@
 ---
 import Shell from '../../layouts/Shell.astro';
+import { projectSchema } from '../../lib/schema';
 import '../../styles/case.css';
 const menu = [
   { label: 'Dashboard', icon: '▦', sub: false, active: true },
@@ -22,9 +23,15 @@ const devices = [
 ];
 const sensors = ['Carga · gr', 'Presencia', 'Luminosidad · lux', 'Temperatura ambiente · °C', 'Humedad ambiente · %', 'Presión atmosférica', 'CO₂', 'TVOC', 'Temperatura de yacija', 'Humedad de suelo'];
 ---
-<Shell title="WiControl · Granjas conectadas — David" description="Plataforma de gestión de granjas y dispositivos: ingesta de sensores, análisis de peso, ambiente y actividad en una sola aplicación.">
+<Shell
+  title="Plataforma IoT para granjas conectadas — David Estévez"
+  description="Plataforma que recoge los datos de dispositivos instalados en granjas y los convierte en análisis de peso, ambiente y actividad. Frontend y backend a medida."
+  type="article"
+  image="/projects/covers/wicontrol.jpg"
+  schema={projectSchema({ name: 'WiControl · Granjas conectadas', description: 'Plataforma que recoge los datos de dispositivos instalados en granjas y los convierte en análisis de peso, ambiente y actividad. Frontend y backend a medida.', path: '/proyectos/wicontrol/', image: '/projects/covers/wicontrol.jpg', categoria: 'Software a medida y dispositivos conectados' })}
+>
   <article class="case case--wi" id="contenido">
-    <nav class="case-nav"><a href="/#proyectos">d↗ / Volver a proyectos</a><a href="mailto:david@estevezmartinez.com">Hablemos ↗</a></nav>
+    <nav class="case-nav"><a href="/#proyectos">d↗ / Volver a proyectos</a><a href="mailto:david@estevezmartinez.es">Hablemos ↗</a></nav>
 
     <header class="case-intro">
       <p class="case-label">03 / Software · Dispositivos conectados</p>
@@ -115,6 +122,6 @@ const sensors = ['Carga · gr', 'Presencia', 'Luminosidad · lux', 'Temperatura 
       <p>La navegación por empresa, granja y camada reúne las consultas en un mismo lugar y facilita el seguimiento del lote.</p>
     </section>
 
-    <footer class="case-end"><p class="case-label">Tus datos, trabajando para ti.</p><h2>¿Tienes datos<br />que nadie mira?</h2><a href="mailto:david@estevezmartinez.com">Cuéntame tu caso ↗</a><a href="/#proyectos">Volver a los proyectos ←</a></footer>
+    <footer class="case-end"><p class="case-label">Tus datos, trabajando para ti.</p><h2>¿Tienes datos<br />que nadie mira?</h2><a href="mailto:david@estevezmartinez.es">Cuéntame tu caso ↗</a><a href="/#proyectos">Volver a los proyectos ←</a></footer>
   </article>
 </Shell>

@@ -1,5 +1,6 @@
 ---
 import Shell from '../layouts/Shell.astro';
+import { homeSchema } from '../lib/schema';
 const projects = [
   { n: '01', title: 'Bomberos de Granada', kind: 'Software a medida', text: 'Guardias, cambios de turno, horas extras y recursos: una aplicación alrededor de la operativa del parque.', note: 'Coordinar personas y recursos.', href: '/proyectos/bomberos/', cover: 'bomberos' },
   { n: '02', title: 'Taller ECU · JMReprocars', kind: 'Web · Automatización', text: 'De una conversación a una solicitud organizada, con datos del vehículo y transferencia a atención humana.', note: 'Automatización en desarrollo.', href: '/proyectos/taller-ecu/', cover: 'ecu' },
@@ -8,7 +9,11 @@ const projects = [
   { n: '05', title: 'Tagadona Racing', kind: 'Desarrollo web · Motor', text: 'Catálogo de motos, fichas de vehículos y una presencia digital orientada a la compraventa en Granada.', note: 'Conectar el catálogo con el cliente.', href: '/proyectos/tagadona/', cover: 'tagadona' },
 ];
 ---
-<Shell title="David — Desarrollo web, software y automatización" description="Ingeniero informático en Granada. Desarrollo web, software de gestión y automatizaciones a medida para empresas.">
+<Shell
+  title="Desarrollo web y software a medida en Granada — David Estévez"
+  description="Ingeniero informático freelance en Granada. Webs, aplicaciones de gestión y automatizaciones a medida para empresas. Cuéntame qué necesitas construir."
+  schema={homeSchema()}
+>
   <div class="home" data-home>
     <div class="journey" data-journey>
     <section class="story-stage" data-story-stage aria-label="De la idea a tus proyectos">
@@ -69,8 +74,8 @@ const projects = [
     <section class="contact-section" id="contacto" tabindex="-1">
       <div class="section-kicker"><span>El siguiente proyecto</span><span>Podría ser el tuyo ↙</span></div>
       <h2>¿Qué tienes<br /><em>en mente?</em></h2>
-      <div class="contact-bottom"><p>Soy David, ingeniero informático.<br />Cuéntame qué necesitas construir.</p><div class="contact-channels"><a class="contact-link" href="mailto:david@estevezmartinez.com">david@estevezmartinez.com <span aria-hidden="true">↗</span></a><a href="https://wa.me/34609662376" class="whatsapp-link" target="_blank" rel="noopener noreferrer">Hablamos por WhatsApp ↗</a></div></div>
+      <div class="contact-bottom"><p>Soy David, ingeniero informático.<br />Cuéntame qué necesitas construir.</p><div class="contact-channels"><a class="contact-link" href="mailto:david@estevezmartinez.es">david@estevezmartinez.es <span aria-hidden="true">↗</span></a><a href="https://wa.me/34609662376" class="whatsapp-link" target="_blank" rel="noopener noreferrer">Hablamos por WhatsApp ↗</a></div></div>
     </section>
-    <footer class="home-footer"><span>David © {new Date().getFullYear()}</span><a href="/lab/morph" data-nav>Laboratorio de movimiento ↗</a><button class="text-button" data-motion-toggle hidden>Usar vista estática</button><span>Hecho desde Granada.</span></footer>
+    <footer class="home-footer"><span>David © {new Date().getFullYear()}</span><a href="/lab/morph/" data-nav rel="nofollow">Laboratorio de movimiento ↗</a><button class="text-button" data-motion-toggle hidden>Usar vista estática</button><span>Hecho desde Granada.</span></footer>
   </div>
 </Shell>

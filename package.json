@@ -8,10 +8,13 @@
     "build": "astro check && astro build",
     "preview": "astro preview --host 127.0.0.1",
     "check": "astro check",
-    "measure": "node scripts/measure-build.mjs"
+    "measure": "node scripts/measure-build.mjs",
+    "pack": "powershell -NoProfile -Command \"Compress-Archive -Path dist/* -DestinationPath dist.zip -Force\"",
+    "deploy": "npm run build && npm run pack"
   },
   "dependencies": {
     "@astrojs/mdx": "8.0.0",
+    "@astrojs/sitemap": "^3.7.0",
     "astro": "7.3.1",
     "gsap": "3.15.0",
     "lenis": "1.3.26",

@@ -1,5 +1,6 @@
 ---
 import Shell from '../../layouts/Shell.astro';
+import { projectSchema } from '../../lib/schema';
 import '../../styles/case.css';
 const facturas = [
   { fecha: '12/08/2026', num: 'RB2026-014', moto: 'Yamaha MT-07', cliente: 'Laura M.', tipo: 'REBU', tone: 'rebu', total: '6.450,00 €' },
@@ -12,9 +13,15 @@ const pasos = [
   { n: '03', title: 'El formulario llega relleno', text: 'Los campos aparecen cumplimentados y solo hay que revisarlos. Si el servicio falla o se agota la cuota, la lectura ocurre en el propio navegador: baja la precisión, no se rompe nada.' },
 ];
 ---
-<Shell title="Tagadona Racing — David" description="Web de compraventa de motos en Granada: catálogo con datos validados, arquitectura SEO por categorías y un panel privado de facturación con lectura de facturas por IA.">
+<Shell
+  title="Web de compraventa de motos en Granada — David Estévez"
+  description="Catálogo de motos con datos validados, una landing por intención de búsqueda y un panel privado de facturación con lectura de facturas por IA."
+  type="article"
+  image="/projects/covers/tagadona.jpg"
+  schema={projectSchema({ name: 'Tagadona Racing', description: 'Catálogo de motos con datos validados, una landing por intención de búsqueda y un panel privado de facturación con lectura de facturas por IA.', path: '/proyectos/tagadona/', image: '/projects/covers/tagadona.jpg', categoria: 'Desarrollo web y SEO local' })}
+>
   <article class="case case--tg" id="contenido">
-    <nav class="case-nav"><a href="/#proyectos">d↗ / Volver a proyectos</a><a href="mailto:david@estevezmartinez.com">Hablemos ↗</a></nav>
+    <nav class="case-nav"><a href="/#proyectos">d↗ / Volver a proyectos</a><a href="mailto:david@estevezmartinez.es">Hablemos ↗</a></nav>
 
     <header class="case-intro">
       <p class="case-label">05 / Desarrollo web · Motor</p>
@@ -67,6 +74,6 @@ const pasos = [
       <p>Es mi propio negocio, así que también es el banco de pruebas: lo que funciona aquí —el patrón de acceso, la validación de datos, la arquitectura de landings— acaba en los proyectos de clientes.</p>
     </section>
 
-    <footer class="case-end"><p class="case-label">Vender es solo la mitad.</p><h2>¿Tu web trabaja<br />para tu negocio?</h2><a href="mailto:david@estevezmartinez.com">Hablemos de lo tuyo ↗</a><a href="https://tagadonaracing.es" target="_blank" rel="noopener">Ver el sitio en vivo ↗</a><a href="/#proyectos">Volver a los proyectos ←</a></footer>
+    <footer class="case-end"><p class="case-label">Vender es solo la mitad.</p><h2>¿Tu web trabaja<br />para tu negocio?</h2><a href="mailto:david@estevezmartinez.es">Hablemos de lo tuyo ↗</a><a href="https://tagadonaracing.es" target="_blank" rel="noopener">Ver el sitio en vivo ↗</a><a href="/#proyectos">Volver a los proyectos ←</a></footer>
   </article>
 </Shell>

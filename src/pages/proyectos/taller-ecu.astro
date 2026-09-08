@@ -1,5 +1,6 @@
 ---
 import Shell from '../../layouts/Shell.astro';
+import { projectSchema } from '../../lib/schema';
 import '../../styles/case.css';
 
 const steps = [
@@ -9,9 +10,15 @@ const steps = [
   {n:'04',title:'Dar paso a una persona',text:'Cuando la información está completa o el cliente solicita atención humana, marca la solicitud para el equipo y desactiva el bot en esa conversación.'},
 ];
 ---
-<Shell title="Taller ECU · JMReprocars — David" description="Automatización de solicitudes para un taller de centralitas: conversaciones, datos del vehículo y atención humana conectados.">
+<Shell
+  title="Automatización de WhatsApp para un taller — David Estévez"
+  description="Cómo convertir las consultas de WhatsApp de un taller de centralitas en solicitudes organizadas, con los datos del vehículo y el traspaso a una persona."
+  type="article"
+  image="/projects/covers/ecu.jpg"
+  schema={projectSchema({ name: 'Taller ECU · JMReprocars', description: 'Cómo convertir las consultas de WhatsApp de un taller de centralitas en solicitudes organizadas, con los datos del vehículo y el traspaso a una persona.', path: '/proyectos/taller-ecu/', image: '/projects/covers/ecu.jpg', categoria: 'Automatización de procesos' })}
+>
   <article class="case case--ecu" id="contenido">
-    <nav class="case-nav"><a href="/#proyectos">d↗ / Volver a proyectos</a><a href="mailto:david@estevezmartinez.com">Hablemos ↗</a></nav>
+    <nav class="case-nav"><a href="/#proyectos">d↗ / Volver a proyectos</a><a href="mailto:david@estevezmartinez.es">Hablemos ↗</a></nav>
     <header class="case-intro"><p class="case-label">02 / Desarrollo web · Automatización</p><h1>Una conversación.<br/><em>Todo en su sitio.</em></h1><div class="case-lead"><h2>Taller ECU · JMReprocars</h2><p>Un sistema para convertir consultas sobre reprogramaciones y centralitas en solicitudes organizadas, listas para que el taller continúe la atención.</p></div><div class="case-tags"><span>Astro + React</span><span>n8n + IA</span><span>Fastify + PostgreSQL</span><span>Proyecto en desarrollo</span></div></header>
     <section class="case-context"><p class="case-label">La web / Dirección visual en desarrollo</p><h2>Que responda.<br/>También en la web.</h2><p>Una página de reprogramación centrada en lo que busca el conductor: respuesta, recuperación y entrega. Fotografía nocturna, tipografía expresiva y un recorrido que conecta sensaciones, configuraciones y consulta del vehículo.</p></section>
     <figure class="case-image"><a href="/projects/ecu/reprogramacion-codex.jpg" target="_blank" rel="noopener" aria-label="Ampliar la captura de la web de reprogramación"><img src="/projects/ecu/reprogramacion-codex.jpg" width="2880" height="2000" alt="Web de JM Repro Cars: Que responda cuando lo pides, sobre la fotografía de un coche en un túnel, con detalles en cobre" loading="lazy" /></a><figcaption>01 — Web de reprogramación <span>Captura del concepto en desarrollo · Ampliar ↗</span></figcaption></figure>
@@ -25,6 +32,6 @@ const steps = [
     <section class="ecu-flow" aria-label="Cómo funciona la automatización"><p class="case-label">Del mensaje a la solicitud / Explora cada paso</p>{steps.map((step)=><details open={step.n==='01'}><summary><span>{step.n}</span><h2>{step.title}</h2><span aria-hidden="true">+</span></summary><p>{step.text}</p></details>)}</section>
     <section class="case-brief"><p class="case-label">Briefing / La solución</p><h2>Automatizar la recogida.<br/>Conservar el trato humano.</h2><p>El sistema conecta la lógica conversacional de n8n con un backend que guarda clientes, vehículos, mensajes y solicitudes. La extracción de información ayuda a identificar qué datos faltan; el traspaso a una persona permite que el equipo retome la consulta con contexto.</p><p>El alcance contempla consultas de reprogramación, reparación y clonación de centralitas, además de otras peticiones. El flujo también registra los errores para facilitar su seguimiento.</p></section>
     <section class="ecu-status"><p class="case-label">Estado del proyecto</p><h2>Una base implementada.<br/>La conexión real, siguiente paso.</h2><div><p><strong>Validado con pruebas de texto simuladas.</strong> Recepción, extracción de datos, persistencia y paso a atención humana, según la documentación del proyecto.</p><p><strong>Pendiente de integración real.</strong> Conexión con la cuenta de WhatsApp del taller y validación de multimedia y estados de entrega. La web ya está implementada en Astro y el repositorio incluye el acceso y el resumen del panel privado; el despliegue y la integración completa siguen pendientes.</p></div></section>
-    <footer class="case-end"><p class="case-label">Menos tareas repetidas. Más atención.</p><h2>¿Qué proceso<br/>podríamos automatizar?</h2><a href="mailto:david@estevezmartinez.com">Hablemos de tu negocio ↗</a><a href="/#proyectos">Volver a los proyectos ←</a></footer>
+    <footer class="case-end"><p class="case-label">Menos tareas repetidas. Más atención.</p><h2>¿Qué proceso<br/>podríamos automatizar?</h2><a href="mailto:david@estevezmartinez.es">Hablemos de tu negocio ↗</a><a href="/#proyectos">Volver a los proyectos ←</a></footer>
   </article>
 </Shell>
