@@ -153,9 +153,10 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
     if (track) {
       storyTravel = stage.clientHeight * 3.2;
       exitStart = storyTravel * .89;
-      // One pixel of native scroll moves the departing scene one pixel.
-      // A short landing then gives the project introduction room to be read.
-      travel = exitStart + height * 1.55;
+      // One pixel of native scroll moves the departing scene one pixel. The exit
+      // ramp consumes exactly one viewport; anything past that is scroll that
+      // moves nothing, so the landing is only a rounding buffer.
+      travel = exitStart + height * 1.05;
       track.style.height = `${stage.clientHeight + travel}px`;
       track.dataset.storyTravel = String(storyTravel);
       track.dataset.exitStart = String(exitStart);
@@ -213,7 +214,9 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
       surface.clear(); restoreContent(); last = ''; lastStep = -1;
     };
   });
-  const onResize = () => { aspect(); };
+  // A retracting address bar changes only the height. Re-measuring the track
+  // mid-scroll would move the story clock and the parked section under the finger.
+  const onResize = () => { if (mobile && track && document.documentElement.clientWidth === width) return; aspect(); };
   addEventListener('resize', onResize);
   const jump = (event: Event) => {
     if (!active) return;
@@ -234,7 +237,7 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
     if (stageRect.bottom <= 0 || stageRect.top >= height) {
       dom.domElement.style.visibility = 'hidden'; flatViewport.style.visibility = 'hidden'; surface.canvas.style.opacity = '0';
       chapters.rows.style.visibility = 'hidden';
-      work.style.transform = ''; work.style.opacity = stageRect.bottom <= 0 ? '1' : '0';
+      work.style.transform = ''; work.style.visibility = ''; work.style.opacity = stageRect.bottom <= 0 ? '1' : '0';
       last = ''; return;
     }
     const distance = scrollY - start;
@@ -413,8 +416,19 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
     // Reveal the actual following section at its final font size. It stays in
     // document flow, so scrolling past the pin continues without a duplicate.
     const remaining = Math.max(0, (mobile ? start + travel : trigger?.end ?? 0) - scrollY);
-    const workOffset = mobile ? height * (1 - mobileExit) - remaining : -remaining * reveal;
-    work.style.transform = `translate3d(0, ${workOffset}px, 0)`;
+    // Before the exit the section already sits a full viewport below the fold on
+    // its own. Compensating the scroll there would apply a transform a frame late
+    // and flash its top edge at the bottom of the screen while the finger moves.
+    if (mobile && mobileExit <= 0) {
+      work.style.transform = ''; work.style.visibility = 'hidden';
+    } else {
+      // Park it past the lowest edge the screen can reach: the layout box is the
+      // small viewport, but a retracted address bar shows more than that.
+      const parked = Math.max(height, innerHeight, visualViewport?.height ?? 0) + 2;
+      const workOffset = mobile ? parked * (1 - mobileExit) - remaining : -remaining * reveal;
+      work.style.visibility = '';
+      work.style.transform = `translate3d(0, ${workOffset}px, 0)`;
+    }
     work.style.opacity = mobile ? '1' : String(reveal);
   }
 
