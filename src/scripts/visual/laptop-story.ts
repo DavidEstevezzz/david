@@ -7,6 +7,8 @@ import type { SurfaceRenderer } from './renderer';
 import type { MorphStudy } from './morph';
 
 gsap.registerPlugin(ScrollTrigger);
+// A collapsing mobile address bar must not re-measure the pin mid-scroll.
+ScrollTrigger.config({ ignoreMobileResize: true });
 const clamp = (n: number) => Math.max(0, Math.min(1, n));
 const phase = (p: number, a: number, b: number) => clamp((p - a) / (b - a));
 const smooth = (n: number) => n * n * (3 - 2 * n);

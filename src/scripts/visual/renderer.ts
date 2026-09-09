@@ -3,6 +3,13 @@ import { morphFragment, morphVertex } from './shaders';
 
 export interface SurfaceState { bend: number; flat: number; radius: number; }
 
+/** iOS Safari shrinks innerHeight as its toolbar collapses mid-scroll, while the
+ *  layout viewport stays put. The CSS3D layer is sized and offset from the layout
+ *  viewport, so the canvas has to read the same box or the two drift apart every
+ *  frame: the projected screen sits off its 3D frame and the scene trembles. */
+const viewportWidth = () => document.documentElement.clientWidth;
+const viewportHeight = () => document.documentElement.clientHeight;
+
 export class SurfaceRenderer {
   readonly canvas: HTMLCanvasElement;
   readonly renderer: WebGLRenderer;
@@ -11,6 +18,7 @@ export class SurfaceRenderer {
   private mesh?: Mesh<PlaneGeometry, ShaderMaterial>;
   private pad = 0;
   private last = '';
+  private applied = '';
   private lost = false;
   private cleared = true;
   private disposed = false;
@@ -21,7 +29,7 @@ export class SurfaceRenderer {
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
-    this.pixelRatio = Math.min(devicePixelRatio, innerWidth < 700 ? 1.5 : 2);
+    this.pixelRatio = Math.min(devicePixelRatio, viewportWidth() < 700 ? 1.5 : 2);
     this.renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
     this.renderer.outputColorSpace = SRGBColorSpace;
     this.renderer.toneMapping = NoToneMapping;
@@ -45,7 +53,7 @@ export class SurfaceRenderer {
 
   private onRestored = () => {
     this.lost = false;
-    this.last = '';
+    this.last = ''; this.applied = '';
     this.resize();
     this.canvas.dataset.context = 'restored';
     // Content remains HTML until a new mount compiles and restores the surface.
@@ -54,11 +62,18 @@ export class SurfaceRenderer {
 
   private resize = () => {
     if (this.disposed || this.lost) return;
-    this.pad = Math.round(innerHeight * 0.15);
-    const height = innerHeight + 2 * this.pad;
-    const distance = innerHeight * 1.6;
+    const width = viewportWidth();
+    const viewport = viewportHeight();
+    // iOS fires resize continuously while the toolbar collapses. Re-allocating the
+    // drawing buffer mid-scroll is expensive and visibly shimmers, so bail when
+    // the layout box has not actually moved.
+    const applied = `${width}x${viewport}x${this.pixelRatio}`;
+    if (applied === this.applied) return;
+    this.applied = applied;
+    this.pad = Math.round(viewport * 0.15);
+    const height = viewport + 2 * this.pad;
+    const distance = viewport * 1.6;
     this.camera.fov = 2 * Math.atan(height / (2 * distance)) * 180 / Math.PI;
-    const width = document.documentElement.clientWidth;
     this.camera.aspect = width / height;
     this.camera.near = 1;
     this.camera.far = distance * 4;
@@ -93,7 +108,7 @@ export class SurfaceRenderer {
     if (this.lost || this.disposed || !this.mesh || document.hidden) return;
     // Read DOM geometry before writing canvas styles. DOM is the layout authority.
     const rect = frame.getBoundingClientRect();
-    if (rect.bottom < -this.pad || rect.top > innerHeight + this.pad) { this.clear(); return; }
+    if (rect.bottom < -this.pad || rect.top > viewportHeight() + this.pad) { this.clear(); return; }
     const scroll = scrollY;
     const key = [rect.x, rect.y, rect.width, rect.height, scroll, state.bend, state.flat, state.radius].map(v => v.toFixed(3)).join('|');
     if (key === this.last) return;
@@ -103,7 +118,7 @@ export class SurfaceRenderer {
     // An absolute canvas scrolls with the document between compositor updates.
     // Rebase its origin every tick; overscan absorbs the inter-frame movement.
     this.canvas.style.transform = `translate3d(0, ${scroll - this.pad}px, 0)`;
-    this.mesh.position.set(rect.left + rect.width / 2 - innerWidth / 2, innerHeight / 2 - rect.top - rect.height / 2, 0);
+    this.mesh.position.set(rect.left + rect.width / 2 - viewportWidth() / 2, viewportHeight() / 2 - rect.top - rect.height / 2, 0);
     const u = this.mesh.material.uniforms;
     u.uSize.value.set(rect.width, rect.height);
     u.uRadius.value = state.radius;
@@ -132,7 +147,7 @@ export class SurfaceRenderer {
 
   drawScene(scene: Scene, camera: PerspectiveCamera, deltaMs: number) {
     if (this.lost || this.disposed || document.hidden) return;
-    camera.aspect = document.documentElement.clientWidth / (innerHeight + 2 * this.pad);
+    camera.aspect = viewportWidth() / (viewportHeight() + 2 * this.pad);
     camera.updateProjectionMatrix();
     this.canvas.style.transform = `translate3d(0, ${scrollY - this.pad}px, 0)`;
     this.renderer.render(scene, camera);

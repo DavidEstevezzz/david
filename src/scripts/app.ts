@@ -4,9 +4,12 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const mobileViewport = matchMedia('(max-width: 820px)');
 const shortViewport = matchMedia('(max-height: 499px)');
 const canvas = document.querySelector<HTMLCanvasElement>('#visual-canvas')!;
+const params = new URL(location.href).searchParams;
+// Phase 2 flag: ?render=webgl runs the real story on a phone, ?render=html disables motion.
+const renderMode = params.get('render');
 let runtime: VisualRuntime | undefined;
 let runtimeKind: 'mobile' | 'webgl' | undefined;
-let disabled = new URL(location.href).searchParams.get('render') === 'html';
+let disabled = renderMode === 'html';
 let starting: Promise<void> | undefined;
 let pendingFetch: AbortController | undefined;
 let navigationId = 0;
@@ -38,7 +41,8 @@ async function start() {
   const activation = ++activationId;
   starting = (async () => {
     try {
-      const kind = isHome && mobileViewport.matches ? 'mobile' : 'webgl';
+      const kind = isHome && mobileViewport.matches && renderMode !== 'webgl' ? 'mobile' : 'webgl';
+      document.documentElement.dataset.runtimeKind = kind;
       canvas.style.display = kind === 'mobile' ? 'none' : 'block';
       const createRuntime = kind === 'mobile'
         ? (await import('./mobile-home')).createMobileRuntime
@@ -198,6 +202,8 @@ function queueVisual() {
 try { paintObserver?.observe({ type: 'largest-contentful-paint', buffered: true }); } catch { /* Unsupported: use the load fallback. */ }
 if (document.readyState === 'complete') fallbackTimer = setTimeout(queueVisual, 150);
 else addEventListener('load', () => { fallbackTimer = setTimeout(queueVisual, 150); }, { ...options, once: true });
+// iOS Safari has no remote console from Windows: ?probe=1 paints the numbers instead.
+if (params.get('probe') === '1') void import('./probe').then(module => module.mountProbe());
 updateButton();
 history.scrollRestoration = 'manual';
 rememberScroll();
