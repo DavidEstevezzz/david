@@ -11,6 +11,7 @@ const viewportWidth = () => document.documentElement.clientWidth;
 const viewportHeight = () => document.documentElement.clientHeight;
 
 export class SurfaceRenderer {
+  viewportFixed = false;
   readonly canvas: HTMLCanvasElement;
   readonly renderer: WebGLRenderer;
   private scene = new Scene();
@@ -147,9 +148,8 @@ export class SurfaceRenderer {
 
   drawScene(scene: Scene, camera: PerspectiveCamera, deltaMs: number) {
     if (this.lost || this.disposed || document.hidden) return;
-    camera.aspect = viewportWidth() / (viewportHeight() + 2 * this.pad);
-    camera.updateProjectionMatrix();
-    this.canvas.style.transform = `translate3d(0, ${scrollY - this.pad}px, 0)`;
+    // The story owns the projection shared with CSS3D. Do not change it here.
+    this.canvas.style.transform = `translate3d(0, ${(this.viewportFixed ? 0 : scrollY) - this.pad}px, 0)`;
     this.renderer.render(scene, camera);
     this.cleared = false;
     this.slowTicks = deltaMs > 28 && deltaMs < 150 ? this.slowTicks + 1 : Math.max(0, this.slowTicks - 1);

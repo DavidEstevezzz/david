@@ -3,6 +3,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AmbientLight, Color, DirectionalLight, DoubleSide, Mesh, PerspectiveCamera, PlaneGeometry, Quaternion, Scene, ShaderMaterial, Vector3 } from 'three';
 import { CSS3DObject, CSS3DRenderer } from 'three/addons/renderers/CSS3DRenderer.js';
 import { createLaptop } from './laptop';
+import { createMobileChapters, mobileCardRects } from './mobile-chapters';
+import { createScramble } from './scramble';
 import type { SurfaceRenderer } from './renderer';
 import type { MorphStudy } from './morph';
 
@@ -54,6 +56,10 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
   const intro = root.querySelector<HTMLElement>('[data-opening-copy]')!;
   const labels = Array.from(root.querySelectorAll<HTMLElement>('[data-story-label]'));
   const progressBar = root.querySelector<HTMLElement>('[data-story-progress]')!;
+  const shell = surface.canvas.parentElement!;
+  let track: HTMLElement | undefined;
+  let travel = 1, start = 0;
+  let storyTravel = 1, exitStart = 0;
   const scene = new Scene(), domScene = new Scene();
   const camera = new PerspectiveCamera(38, 1, .06, 80);
   const laptop = createLaptop(); scene.add(laptop.group);
@@ -81,8 +87,30 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
     const object = new CSS3DObject(element); domScene.add(object);
     return { element, mesh, object };
   });
+  const scrambles = cardElements.map((element, i) => createScramble(element.querySelector('h2')!, i));
   const flatViewport = document.createElement('div');
   flatViewport.className = 'flat-scene-content'; source.append(flatViewport);
+  const chapters = createMobileChapters(screenElement, source);
+  let flatCards = false;
+  const releaseCards = () => {
+    scrambles.forEach(effect => effect.reset());
+    if (!flatCards) return;
+    flatCards = false;
+    cards.forEach(({ element, object }) => { domScene.add(object); element.removeAttribute('style'); });
+    chapters.rows.style.visibility = 'hidden';
+  };
+  let mobileFlat = false, mobileProjectedTransform = '';
+  const releaseMobileFlat = () => {
+    if (!mobileFlat) return;
+    chapters.reset();
+    mobileFlat = false;
+    domScene.add(display);
+    screenElement.style.transform = mobileProjectedTransform;
+    screenElement.classList.remove('display--entry');
+    screenElement.style.removeProperty('--entry');
+    screenElement.style.removeProperty('transform-origin');
+    screenElement.style.removeProperty('border-radius');
+  };
   let flatElement: HTMLElement | null = null, projectedTransform = '';
   const releaseFlat = () => {
     if (!flatElement) return;
@@ -100,11 +128,11 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
   try { await surface.renderer.compileAsync(scene, camera); }
   catch (error) {
     originals.forEach(({ element, marker }) => { marker.replaceWith(element); });
-    dom.domElement.remove(); flatViewport.remove(); materialResources(); throw error;
+    dom.domElement.remove(); flatViewport.remove(); chapters.dispose(); materialResources(); throw error;
   }
   if (!root.isConnected) {
     originals.forEach(({ element, marker }) => marker.replaceWith(element));
-    dom.domElement.remove(); flatViewport.remove(); materialResources(); return null;
+    dom.domElement.remove(); flatViewport.remove(); chapters.dispose(); materialResources(); return null;
   }
   const media = gsap.matchMedia();
   const state = { p: 0 };
@@ -122,6 +150,18 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
     dom.setSize(width, height + pad * 2);
     viewportWorldHeight = 4.42 * height / width;
     zoomDistance = 4.42 / (2 * Math.tan(camera.fov * Math.PI / 360) * camera.aspect);
+    if (track) {
+      storyTravel = stage.clientHeight * 3.2;
+      exitStart = storyTravel * .89;
+      // One pixel of native scroll moves the departing scene one pixel.
+      // A short landing then gives the project introduction room to be read.
+      travel = exitStart + height * 1.55;
+      track.style.height = `${stage.clientHeight + travel}px`;
+      track.dataset.storyTravel = String(storyTravel);
+      track.dataset.exitStart = String(exitStart);
+      track.dataset.exitTravel = String(height);
+      start = track.getBoundingClientRect().top + scrollY;
+    }
     last = '';
   };
   aspect();
@@ -130,26 +170,42 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
     element.classList.remove('display--portrait', 'surface--expanded', 'surface--portrait');
     element.querySelectorAll<HTMLElement>('[style]').forEach(child => child.removeAttribute('style'));
   });
-  media.add({ mobile: '(max-width: 700px)', desktop: '(min-width: 701px)', reduced: '(prefers-reduced-motion: reduce)', short: '(max-height: 579px)' }, context => {
+  media.add({ mobile: '(max-width: 820px)', desktop: '(min-width: 821px)', reduced: '(prefers-reduced-motion: reduce)', short: '(max-height: 579px)' }, context => {
     if (context.conditions?.reduced || context.conditions?.short) { restoreContent(); return; }
     mobile = Boolean(context.conditions?.mobile);
     root.dataset.enhanced = '';
     originals.forEach(({ element }) => { element.style.position = 'absolute'; element.style.pointerEvents = 'none'; element.style.userSelect = 'text'; element.style.left = '0'; element.style.top = '0'; });
     // The stage owns the scroll duration; native wheel, touch and keyboard remain.
-    const timeline = gsap.timeline({ scrollTrigger: {
+    if (mobile) {
+      track = document.createElement('div');
+      track.className = 'native-story-track';
+      stage.before(track); track.append(stage);
+      root.dataset.nativeStory = '';
+      shell.style.position = 'fixed';
+      surface.viewportFixed = true;
+      dom.domElement.style.position = 'fixed';
+      flatViewport.style.position = 'fixed';
+      aspect();
+    }
+    const timeline = mobile ? undefined : gsap.timeline({ scrollTrigger: {
       id: 'laptop-story', trigger: stage, start: 'top top',
       end: () => `+=${document.documentElement.clientHeight * (mobile ? 4.8 : 5.6)}`,
       pin: true, scrub: .45, anticipatePin: 1, invalidateOnRefresh: true,
       onRefresh: aspect,
     } });
-    timeline.to(state, { p: 1, duration: 1, ease: 'none' });
-    trigger = timeline.scrollTrigger;
+    timeline?.to(state, { p: 1, duration: 1, ease: 'none' });
+    trigger = timeline?.scrollTrigger;
     active = true; surface.canvas.style.opacity = '1';
     source.classList.add('scene-source--projected');
     surface.canvas.dataset.context = 'ready';
     ScrollTrigger.refresh();
     return () => {
-      active = false; releaseFlat(); trigger?.kill(true); timeline.kill();
+      active = false; releaseFlat(); releaseMobileFlat(); releaseCards(); trigger?.kill(true); timeline?.kill();
+      if (track) { track.before(stage); track.remove(); track = undefined; }
+      delete root.dataset.nativeStory;
+      delete root.dataset.lightStory;
+      shell.style.removeProperty('position'); surface.viewportFixed = false;
+      dom.domElement.style.position = 'absolute'; flatViewport.style.position = 'absolute';
       root.removeAttribute('data-enhanced'); root.removeAttribute('data-chapter');
       source.classList.remove('scene-source--projected');
       gsap.set([hero, intro, nav, work], { clearProps: 'all' });
@@ -160,13 +216,13 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
   const onResize = () => { aspect(); };
   addEventListener('resize', onResize);
   const jump = (event: Event) => {
-    if (!active || !trigger) return;
+    if (!active) return;
     event.preventDefault();
     const anchor = event.currentTarget as HTMLAnchorElement;
     const target = document.querySelector<HTMLElement>(anchor.hash);
     if (!target) return;
-    window.scrollTo({ top: trigger.end + height, behavior: 'instant' });
-    ScrollTrigger.update(); trigger.getTween()?.progress(1); state.p = 1;
+    window.scrollTo({ top: (mobile ? start + travel : trigger!.end) + height, behavior: 'instant' });
+    ScrollTrigger.update(); trigger?.getTween()?.progress(1); state.p = 1;
     target.scrollIntoView({ behavior: 'instant' }); target.focus({ preventScroll: true });
   };
   const jumpers = Array.from(root.querySelectorAll<HTMLAnchorElement>('[data-skip-story]'));
@@ -177,21 +233,32 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
     const stageRect = stage.getBoundingClientRect();
     if (stageRect.bottom <= 0 || stageRect.top >= height) {
       dom.domElement.style.visibility = 'hidden'; flatViewport.style.visibility = 'hidden'; surface.canvas.style.opacity = '0';
+      chapters.rows.style.visibility = 'hidden';
       work.style.transform = ''; work.style.opacity = stageRect.bottom <= 0 ? '1' : '0';
       last = ''; return;
     }
-    const p = state.p;
+    const distance = scrollY - start;
+    const mobileExit = clamp((distance - exitStart) / height);
+    const p = mobile ? (distance <= exitStart ? clamp(distance / storyTravel) : .89 + .11 * mobileExit) : state.p;
+    if (mobile) root.toggleAttribute('data-light-story', p >= .49);
     const renderKey = `${p.toFixed(5)}|${scrollY}|${width}|${height}`;
     if (renderKey === last) return;
     last = renderKey;
     releaseFlat();
-    const open = smooth(phase(p, .015, .25));
-    const zoom = smooth(phase(p, .25, .48));
+    const opening = phase(p, mobile ? 0 : .015, .25);
+    const open = mobile ? lerp(opening, smooth(opening), .35) : smooth(opening);
+    // Reach a front-facing screen before handing its exact rectangle to 2D.
+    const zoom = smooth(phase(p, .25, mobile ? .36 : .48));
+    const entry = smooth(phase(p, .36, .49));
+    const useMobileFlat = mobile && p >= .36 && p < .85;
+    const useCards = mobile && p >= .66 && p < 1;
+    if (!useCards) releaseCards();
+    if (!useMobileFlat) releaseMobileFlat();
     const expand = smooth(phase(p, .39, .49));
     const unfold = smooth(phase(p, .53, .71));
     const merge = smooth(phase(p, .78, .94));
     const reveal = smooth(phase(p, .93, .985));
-    const step = p < .25 ? 0 : p < .53 ? 1 : 2;
+    const step = p < .25 ? 0 : p < (mobile ? .68 : .53) ? 1 : 2;
     if (step !== lastStep) {
       lastStep = step; root.dataset.chapter = String(step);
       labels.forEach((label, i) => label.toggleAttribute('data-active', i === step));
@@ -207,11 +274,12 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
     laptop.group.position.set(lerp(mobile ? 0 : 1.35, 0, open), lerp(mobile ? -.9 : -.5, 0, open), 0);
     laptop.group.rotation.set(0, lerp(-.36, 0, open), 0);
     laptop.lid.rotation.x = lerp(Math.PI / 2, 0, open);
-    laptop.group.visible = p < .505;
+    laptop.group.visible = p < (mobile ? .43 : .505);
     const startCamera = mobile ? new Vector3(0, 8, 29) : new Vector3(0, 4.8, 11.8);
     const openCamera = new Vector3(0, 2.2, mobile ? 25 : 8.7);
     camera.position.copy(startCamera).lerp(openCamera, open);
-    camera.position.lerp(new Vector3(0, portalCenter.y, portalCenter.z + zoomDistance), zoom);
+    const entryDistance = mobile ? zoomDistance / lerp(.9, 1, smooth(phase(p, .49, .53))) : zoomDistance;
+    camera.position.lerp(new Vector3(0, portalCenter.y, portalCenter.z + entryDistance), zoom);
     const look = new Vector3(mobile ? 0 : -.2, mobile ? 1.2 : .45, 0).lerp(portalCenter, open);
     camera.lookAt(look);
     scene.updateMatrixWorld(true);
@@ -223,17 +291,21 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
     display.position.copy(screenCenter);
     display.quaternion.copy(screenRotation);
     // The same HTML plane grows into a full viewport, including portrait layouts.
-    const displayHeight = lerp(660, 1100 * height / width, expand);
+    const displayHeight = mobile ? lerp(660, 1100 * height / width, entry) : lerp(660, 1100 * height / width, expand);
     screenElement.style.height = `${displayHeight}px`;
-    screenElement.classList.toggle('display--portrait', mobile && expand > .5);
-    screenElement.style.opacity = String(smooth(phase(facing, .06, .18)) * (1 - smooth(phase(p, .525, .575))));
-    display.visible = facing > .06 && p < .58;
+    screenElement.classList.remove('display--portrait');
+    screenElement.style.opacity = String(smooth(phase(facing, .06, .18)) * (1 - smooth(phase(p, mobile ? .80 : .525, mobile ? .85 : .575))));
+    display.visible = facing > .06 && p < (mobile ? .85 : .58);
     display.scale.setScalar(4.42 / 1100);
-    if (p >= .48) { display.position.copy(portalCenter); display.quaternion.identity(); }
+    if (!mobile && p >= .48) { display.position.copy(portalCenter); display.quaternion.identity(); }
 
     const cardW = mobile ? 3.65 : 1.34;
     const cardH = mobile ? Math.min(viewportWorldHeight * .68, 5.3) : Math.min(viewportWorldHeight * .7, 1.75);
     cards.forEach(({ element, mesh, object }, i) => {
+      if (mobile) {
+        mesh.visible = false; object.visible = false;
+        return;
+      }
       const offset = i - 1;
       const startX = offset * 1.47;
       const targetX = mobile ? -.2 + i * .25 : offset * 1.52;
@@ -271,41 +343,93 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
 
     dom.domElement.style.visibility = 'visible';
     flatViewport.style.visibility = 'visible';
-    const sourceTop = source.getBoundingClientRect().top + scrollY;
-    dom.domElement.style.transform = `translate3d(0, ${scrollY - sourceTop - pad}px, 0)`;
-    surface.canvas.style.opacity = '1';
+    const sourceTop = mobile ? 0 : source.getBoundingClientRect().top + scrollY;
+    const layerY = mobile ? 0 : scrollY - sourceTop;
+    dom.domElement.style.transform = `translate3d(0, ${layerY - pad}px, 0)`;
+    surface.canvas.style.opacity = String(mobile && p < .53 ? 1 - smooth(phase(p, .36, .43)) : 1);
     surface.drawScene(scene, camera, delta);
+    if (useMobileFlat && !mobileFlat) {
+      mobileFlat = true;
+      mobileProjectedTransform = screenElement.style.transform;
+      domScene.remove(display);
+      flatViewport.append(screenElement);
+      screenElement.classList.add('display--entry');
+    }
     dom.render(domScene, camera);
+    if (useCards) {
+      if (!flatCards) {
+        flatCards = true;
+        cards.forEach(({ element, object }) => { domScene.remove(object); element.removeAttribute('style'); chapters.rows.append(element); });
+      }
+      chapters.rows.style.visibility = 'visible';
+      chapters.rows.style.opacity = '1';
+      chapters.rows.style.width = `${width}px`;
+      chapters.rows.style.height = `${height}px`;
+      chapters.rows.style.backgroundColor = `rgba(233,237,222,${smooth(phase(p, .80, .85))})`;
+      chapters.rows.style.transform = `translate3d(0, ${-height * mobileExit}px, 0)`;
+    }
+    if (useMobileFlat) {
+      // Same 1100px element, same glyphs, same scale at the handoff. No clone,
+      // crossfade of headings or portrait class that can change line breaks.
+      const scale = width / 1100 * lerp(.9, 1, entry);
+      const x = width * .05 * (1 - entry);
+      const y = (height - width * .9 * 660 / 1100) / 2 * (1 - entry);
+      flatViewport.style.width = `${width}px`; flatViewport.style.height = `${height}px`;
+      flatViewport.style.transform = 'none';
+      screenElement.style.display = '';
+      screenElement.style.transformOrigin = '0 0';
+      screenElement.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
+      screenElement.style.setProperty('--entry', String(entry));
+      screenElement.style.borderRadius = `${8 * (1 - entry)}px`;
+      chapters.spread(p, width, height);
+    }
+    if (useCards) {
+      cards.forEach(({ element }, i) => {
+        // Both surfaces follow the same rectangle throughout the expansion.
+        // Content changes inside that surface, rather than arriving from below.
+        const rect = p < .81 ? chapters.rectangles[i] : mobileCardRects(width, height)[i];
+        const grow = smooth(phase(p, .70, .72));
+        element.style.opacity = String(grow);
+        scrambles[i].update(p < .70 ? -1 : (p - .70) / .10);
+        element.style.setProperty('--copy-reveal', String(smooth(phase(p, .74, .80))));
+        if (rect) {
+          element.style.position = 'absolute';
+          element.style.left = `${rect.x}px`; element.style.top = `${rect.y}px`;
+          element.style.width = `${rect.w}px`; element.style.height = `${rect.h}px`;
+        }
+      });
+    }
     // At the two flat endpoints the exact same element leaves CSS perspective.
     // Browser layout (zoom, not a bitmap/transform) keeps the final text sharp.
-    const settled = p >= .49 && p <= .525 ? screenElement : null;
+    const settled = !mobile && p >= .49 && p <= .525 ? screenElement : null;
     if (settled) {
       flatElement = settled; projectedTransform = settled.style.transform;
       flatViewport.style.width = `${width}px`; flatViewport.style.height = `${height}px`;
-      flatViewport.style.transform = `translate3d(0, ${scrollY - sourceTop}px, 0)`;
+      flatViewport.style.transform = `translate3d(0, ${layerY}px, 0)`;
       flatViewport.append(settled);
       settled.style.transform = 'none'; settled.style.zoom = String(width / 1100);
       settled.classList.add('surface--settled');
     }
     // Reveal the actual following section at its final font size. It stays in
     // document flow, so scrolling past the pin continues without a duplicate.
-    const remaining = Math.max(0, (trigger?.end ?? 0) - scrollY);
-    work.style.transform = `translate3d(0, ${-remaining * reveal}px, 0)`;
-    work.style.opacity = String(reveal);
+    const remaining = Math.max(0, (mobile ? start + travel : trigger?.end ?? 0) - scrollY);
+    const workOffset = mobile ? height * (1 - mobileExit) - remaining : -remaining * reveal;
+    work.style.transform = `translate3d(0, ${workOffset}px, 0)`;
+    work.style.opacity = mobile ? '1' : String(reveal);
   }
 
   return {
     draw: render,
     finish() { document.getElementById('proyectos')?.scrollIntoView(); },
     destroy() {
-      releaseFlat(); media.revert(); removeEventListener('resize', onResize);
+      releaseFlat(); releaseMobileFlat(); releaseCards(); media.revert(); removeEventListener('resize', onResize);
       jumpers.forEach(anchor => anchor.removeEventListener('click', jump));
       originals.forEach(({ element, marker }) => {
         element.removeAttribute('style'); element.classList.remove('display--portrait', 'surface--expanded', 'surface--portrait');
         element.querySelectorAll<HTMLElement>('[style]').forEach(child => child.removeAttribute('style'));
         marker.replaceWith(element);
       });
-      dom.domElement.remove(); flatViewport.remove(); materialResources(); surface.clear();
+      dom.domElement.remove(); flatViewport.remove(); chapters.dispose(); materialResources(); surface.clear();
     },
   };
 }

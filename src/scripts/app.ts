@@ -1,14 +1,13 @@
 import '../styles/home-mobile.css';
-type VisualRuntime = ReturnType<typeof import('./visual/runtime').createRuntime> | ReturnType<typeof import('./mobile-home').createMobileRuntime>;
+type VisualRuntime = ReturnType<typeof import('./visual/runtime').createRuntime>;
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const mobileViewport = matchMedia('(max-width: 820px)');
 const shortViewport = matchMedia('(max-height: 499px)');
 const canvas = document.querySelector<HTMLCanvasElement>('#visual-canvas')!;
 const params = new URL(location.href).searchParams;
-// Phase 2 flag: ?render=webgl runs the real story on a phone, ?render=html disables motion.
+// WebGL is the single animated experience. Keep the explicit static fallback.
 const renderMode = params.get('render');
 let runtime: VisualRuntime | undefined;
-let runtimeKind: 'mobile' | 'webgl' | undefined;
 let disabled = renderMode === 'html';
 let starting: Promise<void> | undefined;
 let pendingFetch: AbortController | undefined;
@@ -35,22 +34,17 @@ async function start() {
   // Case pages have no animated scene. Avoid creating an idle GPU renderer.
   const isHome = Boolean(document.querySelector('[data-home]'));
   if (!isHome && !document.querySelector('[data-morph-page]')) {
-    runtime?.dispose(); runtime = undefined; runtimeKind = undefined;
+    runtime?.dispose(); runtime = undefined;
     canvas.style.display = 'none'; updateButton(); return;
   }
   const activation = ++activationId;
   starting = (async () => {
     try {
-      const kind = isHome && mobileViewport.matches && renderMode !== 'webgl' ? 'mobile' : 'webgl';
-      document.documentElement.dataset.runtimeKind = kind;
-      canvas.style.display = kind === 'mobile' ? 'none' : 'block';
-      const createRuntime = kind === 'mobile'
-        ? (await import('./mobile-home')).createMobileRuntime
-        : (await import('./visual/runtime')).createRuntime;
+      document.documentElement.dataset.runtimeKind = 'webgl';
+      canvas.style.display = 'block';
+      const { createRuntime } = await import('./visual/runtime');
       if (disposed || disabled || reduceMotion.matches || activation !== activationId) return;
-      if (runtimeKind !== kind) { runtime?.dispose(); runtime = undefined; }
       runtime ??= createRuntime();
-      runtimeKind = kind;
       await runtime.mount();
       if (disposed || disabled || reduceMotion.matches || activation !== activationId) return;
       document.documentElement.dataset.runtime = 'ready';
@@ -92,7 +86,7 @@ function onViewportModeChange() {
     const activation = ++activationId;
     await starting;
     if (activation !== activationId) return;
-    runtime?.dispose(); runtime = undefined; runtimeKind = undefined;
+    runtime?.dispose(); runtime = undefined;
     document.documentElement.dataset.runtime = 'html';
     if (!disabled && !navigating && !disposed) await start();
   })();
