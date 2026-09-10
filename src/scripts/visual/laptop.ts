@@ -1,9 +1,10 @@
 import {
-  BoxGeometry, BufferGeometry, CircleGeometry, CylinderGeometry, Group,
+  BufferGeometry, CircleGeometry, CylinderGeometry, Group,
   InstancedMesh, Material, Mesh, MeshBasicMaterial, MeshStandardMaterial,
   Object3D, PlaneGeometry, BufferAttribute, CanvasTexture, SRGBColorSpace,
 } from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { brandMark } from '../../lib/brand';
 
 export interface Laptop {
   group: Group;
@@ -43,7 +44,7 @@ export function createLaptop(): Laptop {
     color: '#939c9f', metalness: .78, roughness: .34,
   }));
   const edgeMaterial = keepMaterial(new MeshStandardMaterial({
-    color: '#b9c1c2', metalness: .92, roughness: .2,
+    color: '#b9c1c2', metalness: .86, roughness: .3,
   }));
   const graphite = keepMaterial(new MeshStandardMaterial({
     color: '#11181a', metalness: .32, roughness: .43,
@@ -65,7 +66,7 @@ export function createLaptop(): Laptop {
   // Round in the two broad dimensions before compressing the thickness. This
   // preserves the chassis silhouette instead of limiting its corner radius to
   // half the thickness of a conventional rounded box.
-  function plate(width: number, height: number, depth: number, radius: number, segments = 3) {
+  function plate(width: number, height: number, depth: number, radius: number, segments = 5) {
     const fullDepth = Math.max(radius * 2, depth);
     const geometry = new RoundedBoxGeometry(width, height, fullDepth, segments, radius);
     geometry.scale(1, 1, depth / fullDepth);
@@ -240,12 +241,20 @@ export function createLaptop(): Laptop {
   part(lid, 'camera-sensor', sensor, insetMaterial, -.11, 2.89, .065);
   part(lid, 'camera-indicator', sensor, graphite, .11, 2.89, .065);
 
-  // A modest, abstract pair of cuts gives the lid an identity without branding.
-  const emblemGeometry = keepGeometry(new BoxGeometry(.052, .35, .003));
-  for (const x of [-.07, .07]) {
-    const stroke = part(lid, 'lid-geometric-mark', emblemGeometry, edgeMaterial, x, 1.5, -.062);
-    stroke.rotation.z = -.31;
-  }
+  // The same small signature as the interface, etched onto the aluminium lid.
+  const emblemCanvas = document.createElement('canvas');
+  emblemCanvas.width = 512; emblemCanvas.height = 256;
+  const emblemContext = emblemCanvas.getContext('2d')!;
+  emblemContext.translate(24, 36); emblemContext.scale(4, 4);
+  emblemContext.strokeStyle = '#58655d';
+  emblemContext.lineWidth = brandMark.strokeWidth;
+  emblemContext.lineCap = 'square'; emblemContext.lineJoin = 'round';
+  brandMark.paths.forEach(path => emblemContext.stroke(new Path2D(path)));
+  const emblemTexture = new CanvasTexture(emblemCanvas);
+  emblemTexture.colorSpace = SRGBColorSpace;
+  const emblemMaterial = keepMaterial(new MeshStandardMaterial({map:emblemTexture,transparent:true,depthWrite:false,roughness:.65,metalness:.25}));
+  const emblem = part(lid, 'lid-dem-signature', keepGeometry(new PlaneGeometry(.95,.475)), emblemMaterial, 0, 1.5, -.062);
+  emblem.rotation.x = Math.PI;
 
   let disposed = false;
   return {
@@ -260,6 +269,7 @@ export function createLaptop(): Laptop {
       for (const geometry of geometries) geometry.dispose();
       for (const material of materials) material.dispose();
       legendTexture.dispose();
+      emblemTexture.dispose();
       // The caller owns any texture later assigned to screen.material.map.
       // Releasing the model must not dispose a texture shared by project panels.
       group.clear();

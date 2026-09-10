@@ -23,6 +23,6 @@ const html = await readFile('dist/lab/morph/index.html', 'utf8');
 const expected = ['De la forma,', 'Ahora puedes', 'Explorar el resultado', 'Notas del estudio'];
 const contentComplete = expected.every(text => html.includes(text));
 const home = await readFile('dist/index.html', 'utf8');
-const homeComplete = ['La idea es tuya.', 'Lo que imaginas.', 'Bomberos', 'Taller de EQ', 'WhatsApp', 'Estados Unidos', 'mailto:david@estevezmartinez.com', 'https://wa.me/34609662376'].every(text => home.includes(text));
+const homeComplete = ['La idea es tuya.', 'Lo que imaginas.', 'Bomberos', 'Taller ECU', 'WhatsApp', 'Granada', 'mailto:david@estevezmartinez.es', 'https://wa.me/34609662376'].every(text => home.includes(text));
 console.log(JSON.stringify({ javascript: js, totalGzipBytes: total, budgetGzipBytes: 350_000, modelAndTextureBytes: assetBytes, htmlContentComplete: contentComplete, homeHtmlComplete: homeComplete }, null, 2));
 if (total > 350_000 || assetBytes > 3_000_000 || !contentComplete || !homeComplete) process.exitCode = 1;

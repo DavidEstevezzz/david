@@ -65,18 +65,19 @@ try {
     await go(.84);
     assert.equal(await page.locator('[data-scrambling]').count(), 0);
     assert.equal(await page.locator('.mobile-service-cards h2').first().textContent(), 'Software que encaja contigo.');
-    // The project introduction stays in place through the landing, then joins
-    // normal document scroll without a positional jump.
+    // Sample both sides of the handoff, including the first few pixels after
+    // arrival: projects must never park at the top while scroll keeps moving.
     const end = height * (3.2 * .89 + 1);
-    for (const extra of [10, height * .3, height * .54]) {
-      await page.evaluate(y => scrollTo(0, y), end + extra);
+    let previous;
+    for (const extra of [-20, 1, 15, 30, 50, height * .3, height * .7]) {
+      await page.evaluate(y => scrollTo(0, y), Math.round(end + extra));
       await page.waitForTimeout(80);
       const top = await page.locator('#proyectos').evaluate(e => e.getBoundingClientRect().top);
-      assert.ok(Math.abs(top) < 2, `Landing moved: ${top}`);
+      const y = await page.evaluate(() => scrollY);
+      if (extra > 1) assert.ok(top < 0, 'Projects should have entered normal document scroll');
+      if (previous) assert.ok(Math.abs((top - previous.top) + (y - previous.y)) < 2, 'Projects must track native scroll without a hold or jump');
+      previous = { top, y };
     }
-    await page.evaluate(y => scrollTo(0, y), end + height * .55 + 100);
-    await page.waitForTimeout(80);
-    assert.ok(Math.abs((await page.locator('#proyectos').evaluate(e => e.getBoundingClientRect().top)) + 100) < 2);
     await go(.84);
     await page.screenshot({ path: `.astro/mobile-cards-${width}.png` });
     await go(.48);

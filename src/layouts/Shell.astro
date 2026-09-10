@@ -4,6 +4,9 @@ import '../styles/global.css';
 import '../styles/morph.css';
 import '../styles/home.css';
 import '../styles/portfolio-refinements.css';
+import '../styles/portfolio-editorial.css';
+import '../styles/identity.css';
+import ContactAccess from '../components/ContactAccess.astro';
 import { site, abs } from '../config/site';
 
 interface Props {
@@ -69,6 +72,18 @@ const ogImage = abs(image);
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="preload" href="/fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
 
+    <script is:inline>
+      // Restore the selected card before the incoming transition is captured.
+      // pageshow also covers browsers without cross-document transitions.
+      const restoreProjectAnchor = () => {
+        if (!location.hash.startsWith('#proyecto-')) return;
+        const card = document.getElementById(location.hash.slice(1));
+        card?.scrollIntoView({ block: 'start', behavior: 'instant' });
+      };
+      addEventListener('pagereveal', restoreProjectAnchor);
+      addEventListener('pageshow', restoreProjectAnchor);
+    </script>
+
     {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
   </head>
   <body>
@@ -76,6 +91,7 @@ const ogImage = abs(image);
     <!-- This node is never replaced by the opt-in page router. -->
     <div id="visual-shell" aria-hidden="true"><canvas id="visual-canvas" aria-hidden="true"></canvas></div>
     <main id="page" data-app-page tabindex="-1"><slot /></main>
+    <ContactAccess />
     <div id="route-announcement" class="sr-only" role="status" aria-live="polite"></div>
     <script>
       import '../scripts/app';

@@ -9,6 +9,9 @@ const params = new URL(location.href).searchParams;
 const renderMode = params.get('render');
 let runtime: VisualRuntime | undefined;
 let disabled = renderMode === 'html';
+// A return to a project is an anchored reading view. Mounting the pinned intro
+// here would change the document height beneath the restored gallery position.
+if (/^#(?:proyecto-|proyectos$|contacto$)/.test(location.hash)) disabled = true;
 let starting: Promise<void> | undefined;
 let pendingFetch: AbortController | undefined;
 let navigationId = 0;
@@ -147,6 +150,18 @@ async function navigate(url: URL, pop = false, restore = 0) {
 
 document.addEventListener('click', (event) => {
   const target = event.target instanceof Element ? event.target : null;
+  const projectLink = target?.closest<HTMLAnchorElement>('.work-card a[href]');
+  if (projectLink && !event.defaultPrevented && event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey && !projectLink.target && !projectLink.download) {
+    const card = projectLink.closest<HTMLElement>('.work-card');
+    if (card?.id && new URL(projectLink.href).origin === location.origin) {
+      const returnURL = new URL(location.href);
+      returnURL.hash = card.id;
+      // replaceState preserves a single Back step; the native link still owns
+      // navigation, document assets, modifier keys and view transitions.
+      rememberScroll();
+      history.replaceState({ ...history.state }, '', returnURL);
+    }
+  }
   if (target?.closest('[data-motion-toggle]')) {
     if (runtime && !disabled) void stop();
     else {

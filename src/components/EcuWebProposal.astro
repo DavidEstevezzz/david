@@ -1,6 +1,8 @@
-<section class="ecu-site" aria-label="Propuesta visual de web pública">
+---
+import ArrowUpRight from './ArrowUpRight.astro';
+---<section class="ecu-site" aria-label="Propuesta visual de web pública">
 <header><strong>JM / REPROCARS</strong><span>Reprogramación · Centralitas</span></header>
-<div class="ecu-site-hero"><div><p>Ingeniería para tu vehículo</p><h2>La electrónica.<br/><em>En buenas manos.</em></h2><p>Reprogramación, reparación y clonación de centralitas. Cuéntanos qué necesita tu vehículo y estudiaremos tu caso.</p><a href="#ecu-consulta">Preparar una consulta ↗</a></div><div class="ecu-circuit" aria-hidden="true"><span>ECU</span><small>DIAGNÓSTICO / SOLUCIÓN</small></div></div>
+<div class="ecu-site-hero"><div><p>Ingeniería para tu vehículo</p><h2>La electrónica.<br/><em>En buenas manos.</em></h2><p>Reprogramación, reparación y clonación de centralitas. Cuéntanos qué necesita tu vehículo y estudiaremos tu caso.</p><a href="#ecu-consulta">Preparar una consulta <ArrowUpRight /></a></div><div class="ecu-circuit" aria-hidden="true"><span>ECU</span><small>DIAGNÓSTICO / SOLUCIÓN</small></div></div>
 <div class="ecu-site-services">{['Reprogramación','Reparación','Clonación'].map((s,i)=><article><small>0{i+1}</small><h3>{s}</h3><p>Estudio del vehículo y de las necesidades de cada consulta.</p></article>)}</div>
 <div id="ecu-consulta" class="ecu-site-query"><h3>Todo empieza con tu vehículo.</h3><p>Marca, modelo, año, motor y una descripción de lo que necesitas. Esa información inicia el proceso de atención.</p><details><summary>¿Qué datos necesito para consultar?</summary><p>Los datos del vehículo y, si la tienes, la referencia de la centralita. Puedes describir el servicio o el problema que quieres resolver.</p></details><details><summary>¿Puedo consultar antes de llevar el vehículo?</summary><p>La propuesta contempla iniciar la consulta online y continuar con el equipo del taller.</p></details><small>Propuesta para portfolio · Contacto, horario y conexión con WhatsApp pendientes de confirmar.</small></div>
 </section>

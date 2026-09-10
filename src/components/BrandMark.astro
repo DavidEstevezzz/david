@@ -1,0 +1,8 @@
+---
+import { brandMark } from '../lib/brand';
+interface Props { class?:string; }
+const { class:className } = Astro.props;
+---
+<svg class:list={['brand-mark',className]} xmlns="http://www.w3.org/2000/svg" viewBox={brandMark.viewBox} width="116" height="46" fill="none" stroke="currentColor" stroke-width={brandMark.strokeWidth} stroke-linecap="square" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  {brandMark.paths.map(path=><path d={path}/>)}
+</svg>

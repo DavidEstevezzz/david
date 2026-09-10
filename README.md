@@ -24,7 +24,7 @@ La compilación incluye comprobación de tipos; la medición verifica JS gzip, a
 
 Portátil procedural Three.js con tapa articulada, teclado instanciado, trackpad y materiales propios. La pantalla contiene HTML real proyectado con CSS3D, sincronizado con la cámara del canvas. Al ocupar la ventana, el mismo elemento pasa a maquetación normal; no se sustituye por una captura. Tres superficies con curvatura presentan gestión, web y automatización. En móvil se apilan las superficies y solo se muestra el texto de la delantera; todas las fichas siguen disponibles debajo.
 
-Un canvas persiste entre las rutas: se reemplaza solo `#page`, conservando el body. Cada escena libera recursos, eventos y ScrollTriggers al salir. GSAP y Lenis comparten ticker; entrada de scroll nativa. El renderer se carga después del primer contenido y deja de dibujar cuando la escena está quieta o fuera de pantalla. DPR máximo 2 en escritorio y 1,5 en móvil, con reducción a 1 ante ticks lentos sostenidos.
+Un canvas persiste entre las rutas: se reemplaza solo `#page`, conservando el body. Cada escena libera recursos, eventos y ScrollTriggers al salir. GSAP y Lenis comparten ticker; la rueda se suaviza en escritorio y el gesto táctil conserva el scroll nativo. El renderer se carga después del primer contenido y deja de dibujar cuando la escena está quieta o fuera de pantalla. DPR máximo 2 en escritorio y 3 en móvil, con reducción gradual hasta 1,5 ante ticks lentos sostenidos (sin superar la densidad del dispositivo).
 
 Sin WebGL, sin JavaScript, con movimiento reducido o en ventanas muy bajas, los textos y proyectos conservan una composición estática. En modo animado se puede saltar directamente a proyectos/contacto. No se prepara un interior de ordenador ni la opción 3.
 

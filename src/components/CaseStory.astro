@@ -1,0 +1,79 @@
+---
+import ArrowUpRight from './ArrowUpRight.astro';
+interface Step {
+  label: string;
+  title: string;
+  text: string;
+  image: string;
+  width: number;
+  height: number;
+  alt: string;
+  caption: string;
+  url: string;
+}
+interface Props { steps: Step[]; label: string; note?: string; fit?: 'cover' | 'contain'; }
+const { steps, label, note = 'Abrir imagen para ampliar', fit = 'cover' } = Astro.props;
+---
+<case-story class="story-shots" data-story-shots data-fit={fit} role="region" aria-label={label}>
+  <div class="story-shots__steps">
+    {steps.map((step, i) => <article class="story-step" data-step={i}>
+      <p class="case-label">{step.label}</p>
+      <h2>{step.title.split('\n').map((line, n) => <>{n > 0 && <br />}{line}</>)}</h2>
+      <p>{step.text}</p>
+    </article>)}
+  </div>
+  <div class="story-shots__stage">
+    <div class="story-shots__window" id="vista-proyecto" tabindex="-1">
+      <span class="story-shots__bar" aria-hidden="true"><i></i><i></i><i></i><b data-url>{steps[0].url}</b></span>
+      {steps.map((step, i) => <figure class:list={['story-shot', { 'is-active': i === 0 }]} data-step={i} data-caption={step.caption} data-route={step.url}>
+        <a href={step.image} target="_blank" rel="noopener" aria-label={`Ampliar: ${step.caption}`}>
+          <img src={step.image} width={step.width} height={step.height} alt={step.alt} loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : 'auto'} data-project-image={i === 0 ? Astro.url.pathname.split('/')[2] : undefined} />
+        </a>
+      </figure>)}
+    </div>
+    <p class="story-shots__foot"><span data-story-caption>{steps[0].caption}</span><span>{note} <ArrowUpRight /></span></p>
+  </div>
+</case-story>
+<script>
+  class CaseStory extends HTMLElement {
+    private observer?: IntersectionObserver;
+    private resizeObserver?: ResizeObserver;
+    connectedCallback() {
+      const shots = [...this.querySelectorAll<HTMLElement>('.story-shot')];
+      const steps = [...this.querySelectorAll<HTMLElement>('.story-step')];
+      const caption = this.querySelector<HTMLElement>('[data-story-caption]')!;
+      const url = this.querySelector<HTMLElement>('[data-url]')!;
+      const stage = this.querySelector<HTMLElement>('.story-shots__stage')!;
+      const frame = this.querySelector<HTMLElement>('.story-shots__window')!;
+      let current = -1;
+      const fitFrame = () => {
+        const img = shots[current]?.querySelector('img');
+        if (!img) return;
+        const ratio = Number(img.getAttribute('height')) / Number(img.getAttribute('width'));
+        stage.style.setProperty('--active-frame-height', `${frame.clientWidth * ratio + 40}px`);
+      };
+      const show = (i: number) => {
+        if (current === i || !shots[i]) return;
+        current = i;
+        shots.forEach((shot, n) => {
+          shot.classList.toggle('is-active', n === i);
+          shot.inert = n !== i;
+          shot.setAttribute('aria-hidden', String(n !== i));
+        });
+        steps.forEach((step, n) => step.classList.toggle('is-near', n === i));
+        caption.textContent = shots[i].dataset.caption!;
+        url.textContent = shots[i].dataset.route!;
+        fitFrame();
+      };
+      this.observer = new IntersectionObserver(entries => {
+        entries.filter(entry => entry.isIntersecting).forEach(entry => show(Number((entry.target as HTMLElement).dataset.step)));
+      }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+      steps.forEach(step => this.observer!.observe(step));
+      show(0);
+      this.resizeObserver = new ResizeObserver(fitFrame);
+      this.resizeObserver.observe(frame);
+    }
+    disconnectedCallback() { this.observer?.disconnect(); this.resizeObserver?.disconnect(); }
+  }
+  if (!customElements.get('case-story')) customElements.define('case-story', CaseStory);
+</script>

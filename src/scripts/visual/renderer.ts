@@ -30,7 +30,9 @@ export class SurfaceRenderer {
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
-    this.pixelRatio = Math.min(devicePixelRatio, viewportWidth() < 700 ? 1.5 : 2);
+    // Small high-density screens need their native samples for the closed lid's
+    // shallow diagonals. Desktop keeps a lower cap for its much larger buffer.
+    this.pixelRatio = Math.min(devicePixelRatio, viewportWidth() <= 820 ? 3 : 2);
     this.renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
     this.renderer.outputColorSpace = SRGBColorSpace;
     this.renderer.toneMapping = NoToneMapping;
@@ -128,12 +130,7 @@ export class SurfaceRenderer {
     this.renderer.render(this.scene, this.camera);
     this.draws++;
 
-    // Lower the backing resolution after sustained slow animation ticks.
-    this.slowTicks = deltaMs > 28 && deltaMs < 150 ? this.slowTicks + 1 : Math.max(0, this.slowTicks - 1);
-    if (this.slowTicks > 45 && this.pixelRatio > 1) {
-      this.pixelRatio = 1; this.slowTicks = 0; this.resize();
-      this.canvas.dataset.quality = 'light';
-    }
+    this.adaptQuality(deltaMs);
     if (performance.now() - this.telemetryTime > 1000) {
       this.telemetryTime = performance.now();
       this.canvas.dataset.draws = String(this.draws);
@@ -152,10 +149,18 @@ export class SurfaceRenderer {
     this.canvas.style.transform = `translate3d(0, ${(this.viewportFixed ? 0 : scrollY) - this.pad}px, 0)`;
     this.renderer.render(scene, camera);
     this.cleared = false;
+    this.adaptQuality(deltaMs);
+  }
+
+  private adaptQuality(deltaMs: number) {
     this.slowTicks = deltaMs > 28 && deltaMs < 150 ? this.slowTicks + 1 : Math.max(0, this.slowTicks - 1);
-    if (this.slowTicks > 45 && this.pixelRatio > 1) {
-      this.pixelRatio = 1; this.slowTicks = 0; this.resize();
-      this.canvas.dataset.quality = 'light';
+    // Step down gradually only during sustained slow movement. Retain enough
+    // samples for the thin chassis instead of dropping straight to DPR 1.
+    const floor = Math.min(devicePixelRatio, 1.5);
+    if (this.slowTicks > 90 && this.pixelRatio > floor) {
+      this.pixelRatio = Math.max(floor, this.pixelRatio - .5);
+      this.slowTicks = 0; this.resize();
+      this.canvas.dataset.quality = 'adaptive';
     }
   }
 

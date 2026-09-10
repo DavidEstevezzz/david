@@ -12,7 +12,7 @@
 
 export const site = {
   url: 'https://estevezmartinez.es',
-  name: 'David Estévez',
+  name: 'David Estévez Martínez',
   jobTitle: 'Ingeniero informático',
   // Título por defecto de la portada y sufijo del resto de páginas.
   titleSuffix: 'David Estévez',
@@ -25,7 +25,7 @@ export const site = {
   idioma: 'es',
   // Imagen que se ve al compartir un enlace en WhatsApp, LinkedIn, X…
   ogImage: '/og-default.jpg',
-  ogImageAlt: 'David Estévez — desarrollo web, software a medida y automatización en Granada',
+  ogImageAlt: 'dem — De la idea a lo real. Web, software y automatización.',
   github: 'https://github.com/DavidEstevezzz',
   // Servicios: alimentan los datos estructurados de la portada.
   servicios: [

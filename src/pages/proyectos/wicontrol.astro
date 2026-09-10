@@ -22,6 +22,9 @@ const devices = [
   { serie: 'WC-0161', id: '161', ip: '10.14.3.11', fw: '3.4.1', hw: 'v3', bat: 88, estado: 'Activo', tone: 'ok', msg: '07/09/2026 08:12' },
 ];
 const sensors = ['Carga · gr', 'Presencia', 'Luminosidad · lux', 'Temperatura ambiente · °C', 'Humedad ambiente · %', 'Presión atmosférica', 'CO₂', 'TVOC', 'Temperatura de yacija', 'Humedad de suelo'];
+import ArrowUpRight from '../../components/ArrowUpRight.astro';
+import BrandMark from '../../components/BrandMark.astro';
+import Icon from '../../components/Icon.astro';
 ---
 <Shell
   title="Plataforma IoT para granjas conectadas — David Estévez"
@@ -30,8 +33,8 @@ const sensors = ['Carga · gr', 'Presencia', 'Luminosidad · lux', 'Temperatura 
   image="/projects/covers/wicontrol.jpg"
   schema={projectSchema({ name: 'WiControl · Granjas conectadas', description: 'Plataforma que recoge los datos de dispositivos instalados en granjas y los convierte en análisis de peso, ambiente y actividad. Frontend y backend a medida.', path: '/proyectos/wicontrol/', image: '/projects/covers/wicontrol.jpg', categoria: 'Software a medida y dispositivos conectados' })}
 >
-  <article class="case case--wi" id="contenido">
-    <nav class="case-nav"><a href="/#proyectos">d↗ / Volver a proyectos</a><a href="mailto:david@estevezmartinez.es">Hablemos ↗</a></nav>
+  <article class="case case--wi case--browser" id="contenido">
+    <nav class="case-nav"><a class="case-brand" href="/#proyectos" aria-label="dem, volver a proyectos"><BrandMark /><span class="case-brand__return"><Icon name="back" /> Proyectos</span></a><a href="mailto:david@estevezmartinez.es" data-contact-open>Hablemos <Icon name="plus" /></a></nav>
 
     <header class="case-intro">
       <p class="case-label">03 / Software · Dispositivos conectados</p>
@@ -40,7 +43,15 @@ const sensors = ['Carga · gr', 'Presencia', 'Luminosidad · lux', 'Temperatura 
       <div class="case-tags"><span>React + Vite</span><span>Laravel 12 + Sanctum</span><span>Dispositivos IoT</span></div>
     </header>
 
-    <details class="wi-expand"><summary>Ampliar panel completo ↗</summary><a href="/projects/covers/wicontrol-full.png" target="_blank" rel="noopener">Abrir la vista completa en alta resolución ↗</a><p>Vista de demostración con datos ficticios.</p></details>
+    <figure class="case-hero" id="vista-proyecto" tabindex="-1">
+      <a href="/projects/covers/wicontrol-full.png" data-url="WiControl / Panel de demostración" target="_blank" rel="noopener" aria-label="Ampliar el panel completo de WiControl">
+        <img data-project-image="wicontrol" src="/projects/covers/wicontrol-full.png" width="2592" height="1638" alt="Panel de demostración de WiControl con filtros de granja y camada, indicadores de peso y curva de crecimiento" fetchpriority="high" />
+      </a>
+      <figcaption>01 — Peso y crecimiento <span>Vista de demostración · Datos ficticios</span></figcaption>
+    </figure>
+    <p class="case-note">Vista completa de la recreación de WiControl, con datos ficticios. La imagen conserva sus proporciones y puede ampliarse.</p>
+    <details class="wi-panel-details">
+      <summary>Explorar los datos del panel <ArrowUpRight /></summary>
     <section class="wi-app" aria-label="Recreación de la interfaz de WiControl">
       <div class="wi-bar"><span class="wi-brand"><b>≈</b> WiControl</span><span class="wi-bar-right"><span class="wi-bar-pill">Modo claro</span><span>Ana R. · Responsable de zona</span></span></div>
       <div class="wi-body">
@@ -83,6 +94,7 @@ const sensors = ['Carga · gr', 'Presencia', 'Luminosidad · lux', 'Temperatura 
       </div>
     </section>
     <p class="case-note">Recreación de la interfaz programada para esta ficha a partir del código del proyecto, con datos ficticios. No es una captura de una instalación real ni muestra información de ningún cliente.</p>
+    </details>
 
     <section class="case-context"><p class="case-label">El reto</p><h2>Medir es fácil.<br />Entender lo medido, no.</h2><p>Cada dispositivo envía peso, temperatura, humedad, luz, actividad y calidad del aire durante toda la crianza. El volumen crece solo. El trabajo real es organizar esas medidas por empresa, granja y camada, descartar las lecturas que no sirven y dejar a la vista lo que permite decidir a tiempo.</p></section>
 
@@ -106,7 +118,7 @@ const sensors = ['Carga · gr', 'Presencia', 'Luminosidad · lux', 'Temperatura 
     <section class="wi-proto" aria-label="Cómo se comunica un dispositivo con la plataforma">
       <p class="case-label">Del sensor a la pantalla / El protocolo</p>
       <h2>El dispositivo pregunta.<br />El servidor responde.</h2>
-      <ol class="wi-process"><li><b>01 / Sensor</b><span>Recoge las medidas.</span></li><li><b>02 / Plataforma</b><span>Las organiza por granja y camada.</span></li><li><b>03 / Análisis</b><span>Permite comparar y detectar desviaciones.</span></li><li><b>04 / Acción</b><span>Ayuda a decidir qué revisar.</span></li></ol><details class="case-tech"><summary>Ver el protocolo de comunicación ↗</summary><div class="wi-proto-grid">
+      <ol class="wi-process"><li><b>01 / Sensor</b><span>Recoge las medidas.</span></li><li><b>02 / Plataforma</b><span>Las organiza por granja y camada.</span></li><li><b>03 / Análisis</b><span>Permite comparar y detectar desviaciones.</span></li><li><b>04 / Acción</b><span>Ayuda a decidir qué revisar.</span></li></ol><details class="case-tech"><summary>Ver el protocolo de comunicación <ArrowUpRight /></summary><div class="wi-proto-grid">
         <div class="wi-code"><span class="wi-code-tag">El dispositivo habla</span><code>GET /receive.php?&#123;"dev":"WC-0142","sen":6,"val":24.8&#125;</code><code>GET /heartbeat.php?&#123;"dev":"WC-0142"&#125;</code><p>Cada medida viaja como un JSON dentro de la propia URL, varias por envío. El aviso de vida periódico actualiza la fecha del último mensaje y pregunta si hay algo pendiente.</p></div>
         <div class="wi-code"><span class="wi-code-tag">El servidor contesta</span><code>@&#123;"dev":"WC-0142","cal":1,"sen":2&#125;@</code><code>@&#123;"dev":"WC-0142","rst":1&#125;@</code><p>Calibración pendiente o reinicio programado. Sin canal permanente abierto: la orden viaja en la respuesta y el equipo la ejecuta al recogerla.</p></div>
       </div>
@@ -122,6 +134,6 @@ const sensors = ['Carga · gr', 'Presencia', 'Luminosidad · lux', 'Temperatura 
       <p>La navegación por empresa, granja y camada reúne las consultas en un mismo lugar y facilita el seguimiento del lote.</p>
     </section>
 
-    <footer class="case-end"><p class="case-label">Tus datos, trabajando para ti.</p><h2>¿Tienes datos<br />que nadie mira?</h2><a href="mailto:david@estevezmartinez.es">Cuéntame tu caso ↗</a><a href="/#proyectos">Volver a los proyectos ←</a></footer>
+    <footer class="case-end"><p class="case-label">Tus datos, trabajando para ti.</p><h2>¿Tienes datos<br />que nadie mira?</h2><a href="mailto:david@estevezmartinez.es">Cuéntame tu caso <ArrowUpRight /></a><a href="/#proyectos">Volver a los proyectos <Icon name="back" /></a></footer>
   </article>
 </Shell>

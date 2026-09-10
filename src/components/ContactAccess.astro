@@ -1,0 +1,96 @@
+---
+import BrandMark from './BrandMark.astro';
+import Icon from './Icon.astro';
+import ArrowUpRight from './ArrowUpRight.astro';
+import {site} from '../config/site';
+---
+<contact-access>
+  <a class="contact-tab" href={`mailto:${site.email}`} data-contact-open aria-label="Hablemos: abrir opciones de contacto">
+    <span class="contact-tab__line" aria-hidden="true"></span><span>Hablemos</span><Icon name="plus"/>
+  </a>
+  <dialog class="contact-dialog" aria-labelledby="contact-title" aria-describedby="contact-description" data-lenis-prevent>
+    <div class="contact-dialog__header"><BrandMark/><span>De la idea a lo real.</span><button type="button" data-contact-close aria-label="Cerrar contacto" autofocus><Icon name="close"/></button></div>
+    <div class="contact-dialog__body">
+      <p class="contact-eyebrow">El siguiente proyecto</p>
+      <h2 id="contact-title">Cuéntame<br/><em>la idea.</em></h2>
+      <p id="contact-description">Una web, una herramienta o un proceso que quieres simplificar. Podemos empezar por ahí.</p>
+      <div class="contact-methods">
+        <a href={`mailto:${site.email}`}><Icon name="mail"/><span><small>Por correo</small><strong>{site.email}</strong></span><ArrowUpRight/></a>
+        <a href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noopener noreferrer"><Icon name="message"/><span><small>Si prefieres conversar</small><strong>Escríbeme por WhatsApp</strong></span><ArrowUpRight/></a>
+      </div>
+      <button class="contact-copy" type="button" data-copy-email={site.email}><Icon name="copy"/><span>Copiar correo</span></button>
+      <span class="sr-only" role="status" data-copy-status></span>
+    </div>
+    <div class="contact-dialog__footer"><span>David Estévez Martínez</span><span>Ingeniería independiente · Granada</span></div>
+  </dialog>
+</contact-access>
+<script>
+  class ContactAccess extends HTMLElement {
+    private events?:AbortController;
+    connectedCallback() {
+      this.events=new AbortController();
+      const options={signal:this.events.signal};
+      const dialog=this.querySelector<HTMLDialogElement>('dialog')!;
+      const tab=this.querySelector<HTMLAnchorElement>('[data-contact-open]')!;
+      let opener:HTMLElement|null=null;
+      let copiedTimer:ReturnType<typeof setTimeout>|undefined;
+      tab.setAttribute('aria-haspopup','dialog');
+      tab.setAttribute('aria-expanded','false');
+      const open=(event:MouseEvent)=>{
+        if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.altKey||event.shiftKey)return;
+        const trigger=(event.target as Element)?.closest<HTMLElement>('[data-contact-open]');
+        if(!trigger)return;
+        event.preventDefault();
+        if(dialog.open)return;
+        opener=trigger;
+        document.dispatchEvent(new CustomEvent('contact-visibility',{detail:{open:true}}));
+        document.documentElement.classList.add('contact-is-open');
+        dialog.showModal();
+        tab.setAttribute('aria-expanded','true');
+      };
+      document.addEventListener('click',open,options);
+      this.querySelector('[data-contact-close]')!.addEventListener('click',()=>dialog.close(),options);
+      dialog.addEventListener('keydown',event=>{
+        if(event.key!=='Tab')return;
+        const controls=[...dialog.querySelectorAll<HTMLElement>('a[href],button:not(:disabled)')].filter(e=>e.getClientRects().length);
+        const first=controls[0],last=controls.at(-1);
+        if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus();}
+        else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
+      },options);
+      // Only a press and release on the backdrop closes it; selecting text is safe.
+      let backdrop=false;
+      dialog.addEventListener('pointerdown',event=>{backdrop=event.target===dialog;},options);
+      dialog.addEventListener('click',event=>{if(backdrop&&event.target===dialog)dialog.close();backdrop=false;},options);
+      dialog.addEventListener('close',()=>{
+        document.documentElement.classList.remove('contact-is-open');
+        document.dispatchEvent(new CustomEvent('contact-visibility',{detail:{open:false}}));
+        tab.setAttribute('aria-expanded','false');
+        if(opener?.isConnected)opener.focus({preventScroll:true});
+      },options);
+      const copy=this.querySelector<HTMLButtonElement>('[data-copy-email]')!;
+      copy.addEventListener('click',async()=>{
+        const status=this.querySelector<HTMLElement>('[data-copy-status]')!;
+        try {
+          await navigator.clipboard.writeText(copy.dataset.copyEmail!);
+          copy.querySelector('span')!.textContent='Correo copiado';
+          status.textContent='Correo copiado al portapapeles.';
+        } catch {
+          status.textContent='No se pudo copiar. Puedes seleccionar el correo o abrir el enlace de arriba.';
+          copy.querySelector('span')!.textContent='Selecciona el correo de arriba';
+        }
+        clearTimeout(copiedTimer);
+        copiedTimer=setTimeout(()=>{copy.querySelector('span')!.textContent='Copiar correo';},3000);
+      },options);
+      this.events.signal.addEventListener('abort',()=>{
+        clearTimeout(copiedTimer);
+        if(dialog.open) {
+          dialog.close();
+          document.documentElement.classList.remove('contact-is-open');
+          document.dispatchEvent(new CustomEvent('contact-visibility',{detail:{open:false}}));
+        }
+      });
+    }
+    disconnectedCallback(){this.events?.abort();}
+  }
+  if(!customElements.get('contact-access'))customElements.define('contact-access',ContactAccess);
+</script>

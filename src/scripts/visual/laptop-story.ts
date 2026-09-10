@@ -80,7 +80,13 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
     return { element, marker };
   });
   const display = new CSS3DObject(screenElement); domScene.add(display);
-  display.scale.setScalar(4.42 / 1100);
+  // La pantalla se maqueta siempre a 1100px, pero se pinta ss veces mayor y se
+  // reduce aquí. El navegador rasteriza la capa 3D con al menos un téxel por
+  // pixel final, así el zoom la reduce en lugar de ampliar un bitmap pequeño.
+  const supersample = () => matchMedia('(min-width: 821px)').matches
+    ? Math.min(2.5, Math.max(1.5, document.documentElement.clientWidth / 1100)) : 1;
+  let ss = supersample();
+  display.scale.setScalar(4.42 / (1100 * ss));
   const colors = ['#edf0e7', '#cfdeb9', '#d7e3eb'];
   const cards = cardElements.map((element, i) => {
     const mesh = projectSurface(colors[i]); scene.add(mesh);
@@ -146,6 +152,7 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
   const portalCenter = new Vector3(0, 1.63, -1.305);
   const aspect = () => {
     width = document.documentElement.clientWidth; height = document.documentElement.clientHeight; pad = Math.round(height * .15);
+    ss = supersample(); screenElement.style.setProperty('--ss', String(ss));
     camera.aspect = width / (height + pad * 2); camera.updateProjectionMatrix();
     dom.setSize(width, height + pad * 2);
     viewportWorldHeight = 4.42 * height / width;
@@ -154,9 +161,9 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
       storyTravel = stage.clientHeight * 3.2;
       exitStart = storyTravel * .89;
       // One pixel of native scroll moves the departing scene one pixel. The exit
-      // ramp consumes exactly one viewport; anything past that is scroll that
-      // moves nothing, so the landing is only a rounding buffer.
-      travel = exitStart + height * 1.05;
+      // ramp consumes exactly one viewport. End the pin there too, so projects
+      // continue moving immediately instead of pausing at the top of the screen.
+      travel = exitStart + height;
       track.style.height = `${stage.clientHeight + travel}px`;
       track.dataset.storyTravel = String(storyTravel);
       track.dataset.exitStart = String(exitStart);
@@ -191,7 +198,7 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
     const timeline = mobile ? undefined : gsap.timeline({ scrollTrigger: {
       id: 'laptop-story', trigger: stage, start: 'top top',
       end: () => `+=${document.documentElement.clientHeight * (mobile ? 4.8 : 5.6)}`,
-      pin: true, scrub: .45, anticipatePin: 1, invalidateOnRefresh: true,
+      pin: true, scrub: .18, anticipatePin: 1, invalidateOnRefresh: true,
       onRefresh: aspect,
     } });
     timeline?.to(state, { p: 1, duration: 1, ease: 'none' });
@@ -295,11 +302,11 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
     display.quaternion.copy(screenRotation);
     // The same HTML plane grows into a full viewport, including portrait layouts.
     const displayHeight = mobile ? lerp(660, 1100 * height / width, entry) : lerp(660, 1100 * height / width, expand);
-    screenElement.style.height = `${displayHeight}px`;
+    screenElement.style.height = `${displayHeight * ss}px`;
     screenElement.classList.remove('display--portrait');
     screenElement.style.opacity = String(smooth(phase(facing, .06, .18)) * (1 - smooth(phase(p, mobile ? .80 : .525, mobile ? .85 : .575))));
     display.visible = facing > .06 && p < (mobile ? .85 : .58);
-    display.scale.setScalar(4.42 / 1100);
+    display.scale.setScalar(4.42 / (1100 * ss));
     if (!mobile && p >= .48) { display.position.copy(portalCenter); display.quaternion.identity(); }
 
     const cardW = mobile ? 3.65 : 1.34;
@@ -334,6 +341,7 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
       object.quaternion.copy(mesh.quaternion);
       // Only reveal readable HTML once the underlying curved surface has settled.
       element.style.opacity = String(smooth(phase(p, .64, .71)) * (1-smooth(phase(p, .78, .825))));
+      element.style.setProperty('--object-progress', String(smooth(phase(p, .66, .76))));
       // Rasterize the projected HTML at twice its display size, so perspective
       // and fractional scroll positions downsample text instead of enlarging it.
       const cssWidth = 840;
@@ -395,6 +403,7 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
         element.style.opacity = String(grow);
         scrambles[i].update(p < .70 ? -1 : (p - .70) / .10);
         element.style.setProperty('--copy-reveal', String(smooth(phase(p, .74, .80))));
+        element.style.setProperty('--object-progress', String(smooth(phase(p, .74, .81))));
         if (rect) {
           element.style.position = 'absolute';
           element.style.left = `${rect.x}px`; element.style.top = `${rect.y}px`;
@@ -410,7 +419,7 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
       flatViewport.style.width = `${width}px`; flatViewport.style.height = `${height}px`;
       flatViewport.style.transform = `translate3d(0, ${layerY}px, 0)`;
       flatViewport.append(settled);
-      settled.style.transform = 'none'; settled.style.zoom = String(width / 1100);
+      settled.style.transform = 'none'; settled.style.zoom = String(width / (1100 * ss));
       settled.classList.add('surface--settled');
     }
     // Reveal the actual following section at its final font size. It stays in
