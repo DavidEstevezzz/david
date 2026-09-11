@@ -1,5 +1,5 @@
 ---
-import BrandMark from './BrandMark.astro';
+import BrandSignature from './BrandSignature.astro';
 import Icon from './Icon.astro';
 import ArrowUpRight from './ArrowUpRight.astro';
 import {site} from '../config/site';
@@ -9,7 +9,7 @@ import {site} from '../config/site';
     <span class="contact-tab__line" aria-hidden="true"></span><span>Hablemos</span><Icon name="plus"/>
   </a>
   <dialog class="contact-dialog" aria-labelledby="contact-title" aria-describedby="contact-description" data-lenis-prevent>
-    <div class="contact-dialog__header"><BrandMark/><span>De la idea a lo real.</span><button type="button" data-contact-close aria-label="Cerrar contacto" autofocus><Icon name="close"/></button></div>
+    <div class="contact-dialog__header"><BrandSignature teja="tinta" /><span>De la idea a lo real.</span><button type="button" data-contact-close aria-label="Cerrar contacto" autofocus><Icon name="close"/></button></div>
     <div class="contact-dialog__body">
       <p class="contact-eyebrow">El siguiente proyecto</p>
       <h2 id="contact-title">Cuéntame<br/><em>la idea.</em></h2>

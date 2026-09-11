@@ -1,0 +1,26 @@
+---
+// El bloque con el nombre al lado, alineados por altura de mayúscula.
+// El nombre va como texto vivo en Archivo: se selecciona, se indexa y pesa
+// menos que convertirlo a trazado.
+import BrandMark from './BrandMark.astro';
+import { site } from '../config/site';
+
+interface Props {
+  teja?: 'lima' | 'tinta' | 'plano';
+  /** Añade el oficio bajo el nombre. */
+  role?: boolean;
+  /** Abrevia a «David Estévez» donde no cabe el nombre completo. */
+  short?: boolean;
+  class?: string;
+}
+
+const { teja = 'tinta', role = false, short = false, class: className } = Astro.props;
+const name = short ? site.titleSuffix : site.name;
+---
+<span class:list={['brand-signature', role && 'brand-signature--role', className]}>
+  <BrandMark teja={teja} />
+  <span class="brand-signature__text">
+    <b>{name}</b>
+    {role && <small>{site.jobTitle}</small>}
+  </span>
+</span>

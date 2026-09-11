@@ -1,8 +1,55 @@
 ---
-import { brandMark } from '../lib/brand';
-interface Props { class?:string; }
-const { class:className } = Astro.props;
+// La marca, en sus dos niveles y sus dos tejas.
+//   variant="bloque"  DÉM completo. A partir de 24 px se leen las tres letras.
+//   variant="tilde"   Solo la tilde. El nivel que aguanta cualquier tamaño.
+//   teja="lima"       Sobre fondo oscuro o de color.
+//   teja="tinta"      Sobre fondo claro y neutro.
+//   teja="plano"      Sin caja: hereda currentColor y realza con --brand-accent.
+import { brandBlock, brandTilde, brandTiles } from '../lib/brand';
+
+interface Props {
+  variant?: 'bloque' | 'tilde';
+  teja?: 'lima' | 'tinta' | 'plano';
+  class?: string;
+  /** Texto para lectores de pantalla. Sin él, la marca queda decorativa. */
+  label?: string;
+}
+
+const { variant = 'bloque', teja = 'tinta', class: className, label } = Astro.props;
+const plano = teja === 'plano';
+const c = plano ? null : brandTiles[teja];
+const ink = plano ? 'currentColor' : c!.ink;
+const accent = plano ? 'var(--brand-accent, #526f3c)' : c!.accent;
+const a11y = label
+  ? ({ role: 'img', 'aria-label': label } as const)
+  : ({ 'aria-hidden': 'true' } as const);
+
+// La tilde, encajada en la misma caja que el bloque: 46 % de alto, centrada,
+// y sin pasar del 60 % de ancho para que no toque los lados.
+const [tx0, ty0, tw, th] = brandTilde.viewBox.split(' ').map(Number);
+const ts = Math.min((brandBlock.box * 0.46) / th, (brandBlock.box * 0.6) / tw);
+const tdx = (brandBlock.box - tw * ts) / 2 - tx0 * ts;
+const tdy = (brandBlock.box - th * ts) / 2 - ty0 * ts;
 ---
-<svg class:list={['brand-mark',className]} xmlns="http://www.w3.org/2000/svg" viewBox={brandMark.viewBox} width="116" height="46" fill="none" stroke="currentColor" stroke-width={brandMark.strokeWidth} stroke-linecap="square" stroke-linejoin="round" aria-hidden="true" focusable="false">
-  {brandMark.paths.map(path=><path d={path}/>)}
-</svg>
+{variant === 'tilde' ? (
+  <svg class:list={['brand-mark', 'brand-mark--tilde', className]} xmlns="http://www.w3.org/2000/svg"
+    viewBox={plano ? brandTilde.viewBox : brandBlock.viewBox} focusable="false" {...a11y}>
+    {!plano && <rect width={brandBlock.box} height={brandBlock.box} rx={brandBlock.radius} fill={c!.tile} />}
+    {plano
+      ? <path d={brandTilde.d} fill={accent} />
+      : <g transform={`translate(${tdx.toFixed(3)} ${tdy.toFixed(3)}) scale(${ts.toFixed(5)})`}>
+          <path d={brandTilde.d} fill={c!.accent} />
+        </g>}
+  </svg>
+) : (
+  <svg class:list={['brand-mark', className]} xmlns="http://www.w3.org/2000/svg"
+    viewBox={brandBlock.viewBox} focusable="false" {...a11y}>
+    {!plano && <rect width={brandBlock.box} height={brandBlock.box} rx={brandBlock.radius} fill={c!.tile} />}
+    {brandBlock.letters.map(p => (
+      <g transform={`translate(${p.x} ${p.y}) scale(${p.s})`}><path d={p.d} fill={ink} /></g>
+    ))}
+    <g transform={`translate(${brandBlock.accent.x} ${brandBlock.accent.y}) scale(${brandBlock.accent.s})`}>
+      <path d={brandBlock.accent.d} fill={accent} />
+    </g>
+  </svg>
+)}

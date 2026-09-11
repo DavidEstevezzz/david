@@ -3,6 +3,7 @@ import Shell from '../layouts/Shell.astro';
 import { homeSchema } from '../lib/schema';
 import ServiceObject from '../components/ServiceObject.astro';
 import BrandMark from '../components/BrandMark.astro';
+import BrandSignature from '../components/BrandSignature.astro';
 import Icon from '../components/Icon.astro';
 const previews: Record<string, {src:string; width:number; height:number; url:string}> = {
   bomberos: {src:'/projects/bomberos/calendario.png', width:2880, height:1860, url:'gestion.bomberosgranada.es'},
@@ -29,7 +30,7 @@ import ArrowUpRight from '../components/ArrowUpRight.astro';
     <div class="journey" data-journey>
     <section class="story-stage" data-story-stage aria-label="De la idea a tus proyectos">
     <header class="home-nav">
-      <a class="home-brand" href="/" data-nav aria-label="dem, inicio"><BrandMark /></a>
+      <a class="home-brand" href="/" data-nav aria-label="David Estévez Martínez, inicio"><BrandSignature teja="lima" /></a>
       <span class="nav-caption">Ingeniería digital independiente</span>
       <nav aria-label="Principal"><a href="#proyectos" data-skip-story>Proyectos</a><a href="mailto:david@estevezmartinez.es" data-contact-open>Hablemos <Icon name="plus" /></a></nav>
     </header>
@@ -45,7 +46,7 @@ import ArrowUpRight from '../components/ArrowUpRight.astro';
     <div class="scene-source" data-scene-source>
       <article class="laptop-display" data-laptop-screen>
         <div class="display-frame">
-        <div class="display-toolbar"><span class="display-brand" aria-label="dem"><BrandMark /></span><span>Software con sentido.</span><span>Granada / España</span></div>
+        <div class="display-toolbar"><span class="display-brand"><BrandMark teja="tinta" label="DÉM" /></span><span>Software con sentido.</span><span>Granada / España</span></div>
         <div class="display-body"><span class="display-eyebrow">Diseñado para tu forma de trabajar</span><h2>Lo que imaginas.<br /><em>Lo que construimos.</em></h2><p>Del primer boceto a la herramienta<br />que usas cada día.</p>
           <div class="display-services"><div><span>01 / SOFTWARE</span><strong>Tu equipo.<br />Tus herramientas.</strong></div><div><span>02 / WEB</span><strong>Experiencias<br />que conectan.</strong></div><div><span>03 / AUTOMATIZACIÓN</span><strong>Menos tareas.<br />Más posibilidades.</strong></div></div>
         </div><div class="display-footer"><span>Ingeniería independiente</span><span>Explora el trabajo <Icon name="down" /></span></div>
@@ -91,11 +92,11 @@ import ArrowUpRight from '../components/ArrowUpRight.astro';
       <p class="work-note">Cinco proyectos, distintas formas de resolver una necesidad. Todas las fichas están abiertas: entra en la que te interese.</p>
     </section>
     <section class="contact-section" id="contacto" tabindex="-1">
-      <div class="contact-signature"><BrandMark /><span>De la idea a lo real.</span></div>
+      <div class="contact-signature"><BrandSignature teja="tinta" role /><span>De la idea a lo real.</span></div>
       <div class="section-kicker"><span>El siguiente proyecto</span><span>Podría ser el tuyo <Icon name="down" /></span></div>
       <h2>¿Qué tienes<br /><em>en mente?</em></h2>
       <div class="contact-bottom"><p>Soy David, ingeniero informático.<br />Cuéntame qué necesitas construir.</p><div class="contact-channels"><a class="contact-link" href="mailto:david@estevezmartinez.es">david@estevezmartinez.es <span aria-hidden="true"><ArrowUpRight /></span></a><a href="https://wa.me/34609662376" class="whatsapp-link" target="_blank" rel="noopener noreferrer">Hablamos por WhatsApp <ArrowUpRight /></a></div></div>
     </section>
-    <footer class="home-footer"><BrandMark /><span>© {new Date().getFullYear()}</span><a href="/lab/morph/" data-nav rel="nofollow">Laboratorio de movimiento <ArrowUpRight /></a><button class="text-button" data-motion-toggle hidden>Usar vista estática</button><span>Hecho desde Granada.</span></footer>
+    <footer class="home-footer"><BrandMark teja="lima" label="DÉM" /><span>© {new Date().getFullYear()}</span><a href="/lab/morph/" data-nav rel="nofollow">Laboratorio de movimiento <ArrowUpRight /></a><button class="text-button" data-motion-toggle hidden>Usar vista estática</button><span>Hecho desde Granada.</span></footer>
   </div>
 </Shell>

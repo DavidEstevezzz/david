@@ -1,7 +1,5 @@
 .home { --home-dark:#111512; --home-lime:#dcf89c; background:var(--home-dark); color:#f0f1e9; }
 .home-nav { position:relative; z-index:5; height:90px; margin:0 var(--gutter); display:flex; align-items:center; gap:2rem; border-bottom:1px solid #ffffff26; }
-.home-brand { font-size:3rem; font-weight:700; text-decoration:none; letter-spacing:-.12em; line-height:1; }
-.home-brand span { color:var(--home-lime); font-size:1.9rem; margin-left:.2rem; }
 .nav-caption { font-size:.875rem; }
 .home-nav nav { margin-left:auto; display:flex; gap:2.5rem; font-size:.9375rem; }
 .home-nav nav a { padding:.7rem 0; text-decoration:none; }
