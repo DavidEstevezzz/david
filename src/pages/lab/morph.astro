@@ -1,0 +1,64 @@
+---
+import Shell from '../../layouts/Shell.astro';
+import Notes from '../../content/lab-notes.mdx';
+import ArrowUpRight from '../../components/ArrowUpRight.astro';
+import BrandMark from '../../components/BrandMark.astro';
+import Icon from '../../components/Icon.astro';
+---
+<Shell
+  title="Forma → función · Laboratorio de movimiento"
+  description="Estudio de movimiento: una superficie que se transforma en contenido utilizable."
+  noindex={true}
+>
+  <div data-morph-page>
+    <header class="lab-header">
+      <a class="wordmark" href="/" data-nav aria-label="dem, volver a la portada"><BrandMark /></a>
+      <span class="lab-header__label">Ingeniería de software</span>
+      <button class="text-button" data-motion-toggle hidden>Usar vista estática</button>
+    </header>
+
+    <section class="lab-intro" id="inicio" aria-labelledby="lab-title">
+      <div class="eyebrow"><span class="signal-dot" aria-hidden="true"></span> Laboratorio de movimiento <span>— 01</span></div>
+      <div class="lab-intro__grid">
+        <h1 id="lab-title">De la forma,<br /><span>a la función.</span></h1>
+        <div class="lab-intro__aside">
+          <p>Una superficie que cambia.<br />Una herramienta que aparece.</p>
+          <a class="arrow-link" href="#contenido" data-jump-result>Ir al resultado <span aria-hidden="true"><ArrowUpRight /></span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="morph-section" aria-label="Transformación de la superficie" data-morph-section>
+      <div class="morph-stage" data-morph-stage>
+        <div class="stage-coordinate stage-coordinate--left" aria-hidden="true">ESTUDIO / 001</div>
+        <div class="stage-coordinate stage-coordinate--right" aria-hidden="true">SUPERFICIE → INTERFAZ</div>
+        <div class="morph-frame" data-morph-frame>
+          <article class="result-panel" id="contenido" tabindex="-1" data-result-panel>
+            <div class="result-panel__inner" data-panel-content>
+              <div class="result-panel__top"><span>El resultado</span><span>01 / HTML</span></div>
+              <h2>Ahora puedes<br />hacer algo con ella.</h2>
+              <p>La superficie se convierte en contenido. Selecciona este texto o abre el detalle: el gesto termina en una herramienta real.</p>
+              <details>
+                <summary>Explorar el resultado <span aria-hidden="true">+</span></summary>
+                <p>Este panel es HTML, no una imagen. Funciona con teclado y conserva todo su contenido sin animaciones ni WebGL.</p>
+              </details>
+            </div>
+          </article>
+        </div>
+        <div class="stage-guide" aria-hidden="true"><span data-stage-caption>Desplaza para transformar</span><span><Icon name="down" /></span></div>
+        <ol class="stage-progress" aria-label="Estados de la transformación">
+          <li data-step="0"><span>01</span> Forma</li>
+          <li data-step="1"><span>02</span> Transformación</li>
+          <li data-step="2"><span>03</span> Función</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="lab-notes" id="observaciones">
+      <div class="eyebrow">Notas del estudio</div>
+      <div class="lab-notes__body"><Notes /></div>
+      <a class="arrow-link" href="#inicio" data-replay>Volver al inicio <span aria-hidden="true">↑</span></a>
+    </section>
+    <footer class="lab-footer"><BrandMark /><span>Desarrollo web · Software · Automatización</span><span>Estudio en curso, 2026</span></footer>
+  </div>
+</Shell>

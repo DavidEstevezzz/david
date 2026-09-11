@@ -1,23 +1,35 @@
 # Web profesional de David
 
-Proyecto de web pública de servicios y proyectos de desarrollo de software. Su objetivo es presentar experiencia real, demostrar capacidad técnica mediante una experiencia cuidada y facilitar el contacto de nuevas empresas.
+Portfolio local en Astro + TypeScript. Trabajo en `feat/base-web`; futuro alojamiento en VPS.
 
-## Estado
+## Arranque
 
-Fase de definición técnica. Todavía no hay una aplicación ejecutable.
+```sh
+npm install
+npm run dev
+```
 
-- Desarrollo inicialmente en local.
-- Control de versiones con Git; repositorio remoto de GitHub pendiente de identificar.
-- Alojamiento futuro en un VPS, con dominio y correo profesionales por concretar.
-- Sin despliegue público en esta fase.
+- `/`: portátil que se abre, entrada en su pantalla y despliegue de proyectos.
+- `/lab/morph`: prueba independiente de curvatura y relevo a HTML.
+- `/?render=html`: versión estática completa.
 
-Las decisiones y propuestas se recogen en [docs/arquitectura.md](docs/arquitectura.md).
+```sh
+npm run build
+npm run measure
+```
 
-## Próximos pasos
+La compilación incluye comprobación de tipos; la medición verifica JS gzip, assets y contenido presente en el HTML de ambas rutas.
 
-1. Identificar el repositorio de GitHub y conectar la rama de trabajo.
-2. Definir la estructura de páginas, los proyectos destacados y una primera experiencia interactiva.
-3. Inicializar Astro con TypeScript y preparar la ejecución local.
-4. Diseñar y desarrollar una primera sección para validar la dirección visual y la interacción.
-5. Completar contenido, navegación, contacto y comprobaciones de calidad.
-6. Preparar el despliegue en el VPS cuando se concrete su configuración.
+## Experiencia y arquitectura
+
+Portátil procedural Three.js con tapa articulada, teclado instanciado, trackpad y materiales propios. La pantalla contiene HTML real proyectado con CSS3D, sincronizado con la cámara del canvas. Al ocupar la ventana, el mismo elemento pasa a maquetación normal; no se sustituye por una captura. Tres superficies con curvatura presentan gestión, web y automatización. En móvil se apilan las superficies y solo se muestra el texto de la delantera; todas las fichas siguen disponibles debajo.
+
+Un canvas persiste entre las rutas: se reemplaza solo `#page`, conservando el body. Cada escena libera recursos, eventos y ScrollTriggers al salir. GSAP y Lenis comparten ticker; la rueda se suaviza en escritorio y el gesto táctil conserva el scroll nativo. El renderer se carga después del primer contenido y deja de dibujar cuando la escena está quieta o fuera de pantalla. DPR máximo 2 en escritorio y 3 en móvil, con reducción gradual hasta 1,5 ante ticks lentos sostenidos (sin superar la densidad del dispositivo).
+
+Sin WebGL, sin JavaScript, con movimiento reducido o en ventanas muy bajas, los textos y proyectos conservan una composición estática. En modo animado se puede saltar directamente a proyectos/contacto. No se prepara un interior de ordenador ni la opción 3.
+
+Correo y WhatsApp reales facilitados por David. Capturas, métricas y permisos se revisarán más adelante proyecto por proyecto; las superficies actuales son presentaciones editoriales, no interfaces de clientes.
+
+Sin publicación en esta fase. Se mantiene `noindex`.
+
+Ver [guion visual](docs/guion-visual.md), [dirección de arte](docs/direccion-arte.md) y [validación](docs/validacion-portatil.md).

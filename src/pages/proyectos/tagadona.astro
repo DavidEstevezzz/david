@@ -1,0 +1,83 @@
+---
+import Shell from '../../layouts/Shell.astro';
+import { projectSchema } from '../../lib/schema';
+import '../../styles/case.css';
+const facturas = [
+  { fecha: '12/08/2026', num: 'RB2026-014', moto: 'Yamaha MT-07', cliente: 'Laura M.', tipo: 'REBU', tone: 'rebu', total: '6.450,00 €' },
+  { fecha: '09/08/2026', num: 'FA2026-007', moto: 'Honda CB500F', cliente: 'Talleres Vega S.L.', tipo: 'IVA 21%', tone: 'iva', total: '7.139,00 €' },
+  { fecha: '04/08/2026', num: 'RB2026-013', moto: 'Kymco Agility 125', cliente: 'Diego R.', tipo: 'REBU', tone: 'rebu', total: '1.850,00 €' },
+];
+const pasos = [
+  { n: '01', title: 'Llega la factura', text: 'Una foto del papel o el PDF del proveedor. Se sube desde el mismo panel, sin salir a ninguna otra herramienta.' },
+  { n: '02', title: 'La lee un modelo de visión', text: 'Una función en el servidor envía el documento a un modelo de IA y devuelve proveedor, NIF, fecha, base, IVA y total. La clave nunca llega al navegador.' },
+  { n: '03', title: 'El formulario llega relleno', text: 'Los campos aparecen cumplimentados y solo hay que revisarlos. Si el servicio falla o se agota la cuota, la lectura ocurre en el propio navegador: baja la precisión, no se rompe nada.' },
+];
+import CaseStory from '../../components/CaseStory.astro';
+import ArrowUpRight from '../../components/ArrowUpRight.astro';
+import BrandMark from '../../components/BrandMark.astro';
+import Icon from '../../components/Icon.astro';
+---
+<Shell
+  title="Web de compraventa de motos en Granada — David Estévez"
+  description="Catálogo de motos con datos validados, una landing por intención de búsqueda y un panel privado de facturación con lectura de facturas por IA."
+  type="article"
+  image="/projects/covers/tagadona.jpg"
+  schema={projectSchema({ name: 'Tagadona Racing', description: 'Catálogo de motos con datos validados, una landing por intención de búsqueda y un panel privado de facturación con lectura de facturas por IA.', path: '/proyectos/tagadona/', image: '/projects/covers/tagadona.jpg', categoria: 'Desarrollo web y SEO local' })}
+>
+  <article class="case case--tg" id="contenido">
+    <nav class="case-nav"><a class="case-brand" href="/#proyectos" aria-label="dem, volver a proyectos"><BrandMark /><span class="case-brand__return"><Icon name="back" /> Proyectos</span></a><a href="mailto:david@estevezmartinez.es" data-contact-open>Hablemos <Icon name="plus" /></a></nav>
+
+    <header class="case-intro">
+      <p class="case-label">05 / Desarrollo web · Motor</p>
+      <h1>Una web que<br /><em>mueve el negocio.</em></h1>
+      <div class="case-lead"><h2>Tagadona Racing</h2><p>La web de una compraventa de motos en Granada. Por delante, un catálogo que atrae y convence. Por detrás, el panel que lleva las facturas, los gastos y el margen de cada venta.</p></div>
+      <div class="case-tags"><span>Astro + Supabase</span><span>SEO local</span><span>Proyecto propio</span></div>
+    </header>
+
+
+    <CaseStory label="Recorrido por el sitio" note="Capturas del sitio en producción · Ampliar" steps={[
+      { label: '01 / La portada', title: 'Lo primero\nque ve el comprador.', text: 'Quién eres, qué garantía das y dos caminos claros: ver el catálogo o vender tu moto. Sin rodeos y sin depender de un portal ajeno.', image: '/projects/tagadona/tagadona-home.jpg', width: 2880, height: 1800, alt: 'Portada de tagadonaracing.es con el logotipo, el titular y los accesos al catálogo y a la venta de motos', caption: '01 — Portada', url: 'tagadonaracing.es' },
+      { label: '02 / El escaparate', title: 'El stock,\nsiempre al día.', text: 'Filtros por tipo, carnet y precio sobre el inventario real. Cada moto lleva sus fotos, sus kilómetros y su ficha técnica; las vendidas se quedan a la vista como prueba de rotación.', image: '/projects/tagadona/tagadona-catalogo.jpg', width: 2880, height: 2454, alt: 'Catálogo con filtros por tipo, carnet y precio, y tres motos disponibles con su precio y kilómetros', caption: '02 — Catálogo y filtros', url: 'tagadonaracing.es/motos' },
+      { label: '03 / La ficha', title: 'Todo lo que hay\nque saber antes de venir.', text: 'Galería, precio, datos técnicos y descripción escrita a mano. Con la llamada y el mensaje siempre a un toque, y la tasación de la moto usada como parte del pago.', image: '/projects/tagadona/tagadona-moto.jpg', width: 2880, height: 1754, alt: 'Ficha de una Harley-Davidson Sportster con galería, precio, datos técnicos y botones de contacto', caption: '03 — Ficha de moto', url: 'tagadonaracing.es/motos/sportster-1200' },
+    ]} />
+
+    <section class="case-context"><p class="case-label">El reto</p><h2>Un anuncio no basta.<br />Hace falta un negocio.</h2><p>Publicar motos en un portal ajeno es alquilar la clientela. La web propia tenía que hacer dos trabajos a la vez: aparecer cuando alguien busca una moto concreta en Granada, y sostener la parte que nadie ve —facturas, gastos y margen— sin depender de hojas de cálculo sueltas.</p></section>
+
+
+
+
+    <section class="tg-admin" aria-label="El panel privado de facturación">
+      <div class="tg-admin-head"><p class="case-label">03 / La trastienda</p><h2>El panel que<br />nadie ve.</h2><p>Detrás de un acceso privado, la parte administrativa del negocio: facturación, gastos, proveedores y la rentabilidad real de cada moto vendida.</p></div>
+      <div class="tg-panel">
+        <div class="tg-panel-bar"><span>Panel de facturas</span><span class="tg-panel-user">Sesión iniciada · Cerrar sesión</span></div>
+        <div class="tg-panel-tabs"><span class="is-active">Ventas</span><span>Gastos</span><span>Rentabilidad</span><span>Proveedores</span></div>
+        <div class="tg-stats"><div><b>15.439 €</b><span>Total facturado</span></div><div><b>14.239 €</b><span>Base imponible</span></div><div><b>1.200 €</b><span>IVA repercutido</span></div><div><b>2</b><span>REBU</span></div><div><b>1</b><span>Con IVA</span></div></div>
+        <div class="tg-panel-bar tg-panel-tools"><span class="tg-btn">+ Nueva factura</span><span class="tg-input">Buscar moto, cliente o matrícula…</span><span class="tg-mini">Excel (.xlsx)</span><span class="tg-mini">ZIP de PDFs</span></div>
+        <div class="tg-table-wrap"><table class="tg-table">
+          <thead><tr><th>Fecha</th><th>Nº</th><th>Moto</th><th>Cliente</th><th>Tipo</th><th>Total</th></tr></thead>
+          <tbody>{facturas.map(f => <tr><td>{f.fecha}</td><td><code>{f.num}</code></td><td>{f.moto}</td><td>{f.cliente}</td><td><span class={`tg-tag is-${f.tone}`}>{f.tipo}</span></td><td class="tg-total">{f.total}</td></tr>)}</tbody>
+        </table></div>
+      </div>
+      <p class="case-note">El panel es privado, así que esta pieza es una recreación de su estructura programada para esta ficha, con motos, clientes e importes ficticios. Las tres capturas anteriores sí son del sitio público, tal y como está publicado.</p>
+      <p class="tg-legal">Cada factura sale en PDF con su numeración por serie y su nota legal: las de particular llevan el régimen especial de bienes usados; las de empresa, el 21 % desglosado.</p>
+    </section>
+
+    <section class="tg-flow" aria-label="Lectura automática de facturas de gasto">
+      <p class="case-label">04 / La automatización</p>
+      <h2>Una foto del papel.<br />El resto lo pone el sistema.</h2>
+      <div class="tg-flow-grid">{pasos.map(p => <article><span>{p.n}</span><h3>{p.title}</h3><p>{p.text}</p></article>)}</div>
+      <p class="tg-flow-note">Con los gastos ya cargados, la pestaña de rentabilidad cruza cada venta con lo que costó dejar la moto lista y muestra el margen que realmente dejó.</p>
+    </section>
+
+    <section class="case-brief">
+      <p class="case-label">Briefing / De la necesidad a la solución</p>
+      <h2>La web de un negocio<br />es parte del negocio.</h2>
+      <p>El sitio es estático: se compila y se sube, sin base de datos que atender ni servidor que mantener. El catálogo vive en un archivo de datos con instrucciones escritas para quien lo va a tocar cada semana —yo mismo, con prisa— y un comando de validación que se niega a publicar si algo no cuadra.</p>
+      <p>La parte privada añade lo que un negocio necesita de verdad: emitir facturas correctas según a quién se venda, registrar los gastos con su proveedor y su categoría, y saber, moto por moto, qué margen quedó. La autenticación y los datos van sobre Supabase; los PDF y las exportaciones se generan en el propio navegador.</p>
+      <p>Es mi propio negocio, así que también es el banco de pruebas: lo que funciona aquí —el patrón de acceso, la validación de datos, la arquitectura de landings— acaba en los proyectos de clientes.</p>
+    </section>
+
+    <footer class="case-end"><p class="case-label">Vender es solo la mitad.</p><h2>¿Tu web trabaja<br />para tu negocio?</h2><a href="mailto:david@estevezmartinez.es">Hablemos de lo tuyo <ArrowUpRight /></a><a href="https://tagadonaracing.es" target="_blank" rel="noopener">Ver el sitio en vivo <ArrowUpRight /></a><a href="/#proyectos">Volver a los proyectos <Icon name="back" /></a></footer>
+  </article>
+
+</Shell>

@@ -1,0 +1,75 @@
+/* Case studies keep their own mobile rhythm without changing the home scene. */
+@media (max-width: 700px) {
+  .case.case { padding-inline: max(18px, env(safe-area-inset-left)) max(18px, env(safe-area-inset-right)); }
+  .case .case-nav { align-items: center; gap: 12px; padding-block: 12px; }
+  .case .case-nav a { display: inline-flex; align-items: center; min-height: 44px; font-size: 13px; }
+  .case .case-nav a:last-child { justify-content: flex-end; flex: none; }
+  .case .case-intro { padding: 44px 0 36px; }
+  .case.case h1 { font-size: clamp(36px, 10.8vw, 60px); line-height: 1.05; margin-block: 24px 30px; }
+  .case.case h1, .case.case h2 { text-wrap: balance; overflow-wrap: anywhere; }
+  .case .case-lead { gap: 18px; }
+  .case .case-lead p { line-height: 1.65; }
+  .case .case-tags { gap: 8px; margin-top: 24px; }
+  .case .case-tags span { padding: 7px 12px; }
+  .case .case-context { gap: 20px; padding-block: 64px 36px; }
+  .case .case-intro + .case-context { padding-top: 24px; }
+  .case .case-chapter { gap: 36px; padding-block: 16px 36px; }
+  .case .case-chapter .case-chapter { padding: 0; }
+  .case .case-context > p:last-child, .case .case-chapter p:last-child { font-size: 16px; line-height: 1.75; }
+  .case .case-hero, .case .case-image, .case .bt-web-shot { padding: 8px; border-radius: 12px; }
+  .case.case figure img { border-radius: 7px; }
+  .case.case figcaption { padding: 14px 4px 4px; font-size: 12px; line-height: 1.6; }
+  .case .case-note { font-size: 13px; line-height: 1.65; margin-top: 18px; overflow-wrap: anywhere; }
+  .case .case-brief { margin-top: 60px; padding-top: 32px; }
+  .case .case-brief > p:not(.case-label) { line-height: 1.75; }
+  .case .case-end { margin-top: 64px; padding-block: 40px max(28px, env(safe-area-inset-bottom)); }
+  .case .case-end a { display: flex; align-items: center; width: fit-content; min-height: 44px; margin: 0 0 8px; }
+  .case .case-tech summary, .case .wi-expand summary { min-height: 44px; padding-block: 10px; line-height: 1.5; }
+  .case .case-tech { padding-block: 12px; }
+  .case .wi-expand a { min-height: 44px; padding-block: 8px; margin-top: 8px; }
+
+  .case--ecu .ecu-demo { padding: 16px; }
+  .case--ecu .ecu-demo-top { gap: 8px; padding-bottom: 22px; }
+  .case--ecu .ecu-demo-grid { padding-top: 28px; gap: 32px; }
+  .case--ecu .ecu-chat { gap: 16px; }
+  .case--ecu .ecu-bubble { max-width: 92%; padding: 16px; line-height: 1.6; }
+  .case--ecu .ecu-record { padding: 18px; }
+  .case--ecu .ecu-record dl div { display: grid; gap: 5px; padding-block: 13px; }
+  .case--ecu .ecu-record dd { text-align: left; }
+  .case--ecu .ecu-flow summary { gap: 14px; padding-block: 20px; }
+  .case--ecu .ecu-flow summary h2 { font-size: 23px; text-wrap: pretty; }
+  .case--ecu .ecu-flow details > p { padding: 0 0 24px; font-size: 16px; line-height: 1.75; }
+  .case--ecu .ecu-status { padding: 20px; margin-top: 48px; }
+  .case--ecu .ecu-status > div { gap: 24px; font-size: 16px; line-height: 1.75; }
+
+  .case--wi .wi-app .wi-chart figcaption { padding: 0 0 12px; }
+  .case--wi .wi-chart .wi-axis-x text, .case--wi .wi-chart .wi-axis-y text { font-size: 30px; fill: #677588; letter-spacing: 0; }
+  .case--wi .wi-chart .wi-axis-y text { transform: translate(58px, -9px); paint-order: stroke; stroke: white; stroke-width: 5px; stroke-linejoin: round; }
+  .case--wi .wi-chart .wi-line-real { stroke-width: 4px; }
+  .case--wi .wi-chart .wi-line-ref { stroke-width: 3px; }
+  .case--wi .wi-app .wi-kpi { min-width: 0; }
+  .case--wi .wi-app .wi-kpi small { font-size: 11px; }
+  .case--wi .wi-devices-top { flex-direction: column; gap: 8px; }
+  .case--wi .wi-process { grid-template-columns: 1fr; gap: 10px; }
+  .case--wi .wi-process li { display: grid; grid-template-columns: 110px minmax(0, 1fr); align-items: start; gap: 14px; padding: 16px; }
+  .case--wi .wi-process b { font-size: 16px; line-height: 1.55; }
+  .case--wi .wi-process span { margin: 0; font-size: 15px; line-height: 1.6; }
+  .case--wi .wi-code { padding: 16px; }
+  .case--wi .wi-sensors span { max-width: 100%; font-size: 12px; padding-inline: 12px; }
+
+  /* Keep genuine table columns available with a visible scroll hint and fixed identifier. */
+  .case .wi-table-wrap, .case .tg-table-wrap { overscroll-behavior-x: contain; scrollbar-width: thin; scrollbar-color: #819382 #ffffff15; }
+  .case .wi-table-wrap::before, .case .tg-table-wrap::before { content: 'Desliza para ver todos los datos →'; display: block; position: sticky; left: 0; width: fit-content; max-width: 100%; padding: 12px 14px; color: #bac7b4; font-size: 12px; }
+  .case .wi-table th:first-child, .case .wi-table td:first-child { position: sticky; left: 0; z-index: 1; background: #18201c; box-shadow: 5px 0 10px #0002; }
+  .case .tg-table th:first-child, .case .tg-table td:first-child { position: sticky; left: 0; z-index: 1; background: #1a1614; box-shadow: 5px 0 10px #0002; }
+  .case .wi-table th, .case .wi-table td, .case .tg-table th, .case .tg-table td { padding: 14px; }
+  .case--tg .tg-panel-bar { padding: 14px; gap: 10px; }
+  .case--tg .tg-panel-tabs { padding-inline: 6px; }
+  .case--tg .tg-stats div { padding: 16px 14px; }
+  .case--tg .tg-stats div:first-child { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; gap: 14px; }
+  .case--tg .tg-stats div:first-child span { margin: 0; text-align: right; }
+  .case--tg .tg-input { flex-basis: 100%; min-width: 0; }
+  .case--tg .tg-flow-grid article { padding: 22px; }
+  .case--bt .bt-web-gallery { gap: 44px; }
+  .case--bt .bt-web-copy { gap: 16px; }
+}

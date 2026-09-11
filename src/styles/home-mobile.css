@@ -1,0 +1,87 @@
+/* Keep services in native document flow, including static / reduced-motion mode. */
+@media (max-width:820px) {
+  .home .home-nav { height:72px; gap:16px; }
+  .home .nav-caption { display:none; }
+  .home .home-nav nav { gap:22px; font-size:14px; }
+  .home .home-nav nav a { display:inline-flex; align-items:center; min-height:44px; }
+  .home h1 { font-size:clamp(44px,10.8vw,78px); }
+  .home .scene-source:not(.scene-source--projected) { display:flex; flex-direction:column; gap:20px; padding:40px var(--gutter) 56px; }
+  .home .scene-source:not(.scene-source--projected) .project-surface { margin:0; padding:24px; min-height:0; border-radius:18px; }
+  .home .scene-source .surface-meta { font-size:11px; align-items:center; gap:12px; }
+  .home .scene-source .surface-symbol { font-size:66px; padding:22px 0; }
+  .home .scene-source .surface-copy { margin-top:0; }
+  .home .scene-source .surface-location { font-size:12px; }
+  .home .scene-source .project-surface h2 { font-size:clamp(32px,8.5vw,44px); margin:12px 0 18px; }
+  .home .scene-source .project-surface p { font-size:16px; line-height:1.65; max-width:50ch; }
+  .home .scene-source .surface-bottom { margin-top:26px; font-size:11px; line-height:1.5; }
+  .home .scene-source:not(.scene-source--projected) .laptop-display h2 { font-size:clamp(26px,7vw,44px); }
+  .home .scene-source:not(.scene-source--projected) .display-body { padding:24px; }
+  .home .scene-source:not(.scene-source--projected) .display-toolbar { padding:16px 24px; }
+  .home .scene-source:not(.scene-source--projected) .display-toolbar>span:last-child { display:none; }
+  .home .scene-source:not(.scene-source--projected) .display-services { grid-template-columns:1fr; }
+  .home .scene-source:not(.scene-source--projected) .display-services>div+div { padding-left:0; border-left:0; border-top:1px solid #20351c25; }
+  .home .work-grid { grid-template-columns:1fr; margin-top:32px; gap:20px; }
+  .home .work-card { padding:20px; min-width:0; }
+  .home .work-card:first-child { display:flex; }
+  .home .work-card:first-child .work-card-art { margin:20px 0; width:100%; }
+  .home .work-card h3 { font-size:28px; overflow-wrap:anywhere; }
+  .home .work-card-foot { gap:12px; }
+  .home .work-card-foot a { display:inline-flex; align-items:center; min-height:44px; padding:8px 0; }
+  .home .work-heading { flex-direction:column; align-items:flex-start; gap:22px; margin-bottom:32px; }
+  .home .work-section h2 { font-size:clamp(40px,9.5vw,66px); }
+  .home .section-kicker { margin-bottom:32px; }
+  .home .contact-bottom { flex-direction:column; align-items:flex-start; gap:24px; margin-top:32px; }
+  .home .contact-link { max-width:100%; overflow-wrap:anywhere; font-size:clamp(14px,3.75vw,23px); gap:10px; }
+  .home .whatsapp-link { display:inline-flex; align-items:center; min-height:44px; }
+  .home .home-footer { gap:12px 24px; padding-block:24px; }
+  .home .home-footer a { display:inline-flex; align-items:center; min-height:44px; }
+}
+
+.home[data-native-story] .story-stage { position:sticky; top:0; }
+.home[data-native-story] .work-section { border-radius:0; }
+.home[data-native-story][data-light-story] .journey { background:#e9edde; }
+.home[data-native-story][data-light-story] .story-guide,
+.home[data-native-story][data-light-story] .story-skip { visibility:hidden; }
+.mobile-service-cards [data-scrambling] { position:relative; }
+.scramble-layout { visibility:hidden; }
+.scramble-ink { position:absolute; inset:0; overflow:hidden; overflow-wrap:anywhere; }
+.home .mobile-service-cards .surface-copy > p { opacity:var(--copy-reveal,1); }
+
+/* Interpolate the existing screen layout, never switch its typography at a
+   scroll threshold. At --entry:0 these values equal the projected screen. */
+.laptop-display.display--entry .display-toolbar { padding:calc(20px + 25px * var(--entry)) calc(40px + 5px * var(--entry)); font-size:calc(15px + 15px * var(--entry)); }
+.laptop-display.display--entry .display-brand { font-size:calc(30px + 40px * var(--entry)); }
+.laptop-display.display--entry .display-toolbar > span:last-child { opacity:calc(1 - var(--entry)); }
+.laptop-display.display--entry .display-body { padding:calc(30px + 40px * var(--entry)) calc(48px + 22px * var(--entry)) calc(20px + 50px * var(--entry)); }
+.laptop-display.display--entry .display-eyebrow { font-size:calc(12px + 16px * var(--entry)); }
+.laptop-display.display--entry h2 { font-size:calc(72px + 30px * var(--entry)); white-space:nowrap; }
+.laptop-display.display--entry .display-body > p { font-size:calc(18px + 26px * var(--entry)); }
+.laptop-display.display--entry .display-services { margin-top:calc(28px + 32px * var(--entry)); }
+.laptop-display.display--entry .display-services span { font-size:calc(11px + 13px * var(--entry)); }
+.laptop-display.display--entry .display-services strong { font-size:calc(24px + 12px * var(--entry)); white-space:nowrap; }
+.laptop-display.display--entry .display-footer { padding:calc(16px + 19px * var(--entry)) calc(40px + 15px * var(--entry)); font-size:calc(12px + 12px * var(--entry)); }
+
+.screen-service-row { position:absolute; box-sizing:border-box; border-radius:calc(24px * var(--spread)); background:rgb(237 240 231 / var(--spread)); }
+.screen-service-row:nth-last-child(2) { background:rgb(207 222 185 / var(--spread)); }
+.screen-service-row:last-child { background:rgb(215 227 235 / var(--spread)); }
+.screen-service-row > span { display:block; font:24px var(--font-mono); margin-bottom:12px; color:#5f7155; opacity:calc(1 - var(--handoff)); }
+.screen-service-row strong { display:block; font-size:var(--row-font); font-weight:450; line-height:1.15; letter-spacing:-.025em; white-space:nowrap; opacity:calc(1 - var(--handoff)); }
+.screen-service-row .service-detail { margin-top:12px; font-size:var(--detail-font); line-height:1.3; opacity:calc(var(--spread) * (1 - var(--handoff))); }
+.mobile-service-cards { position:fixed; top:0; left:0; overflow:hidden; pointer-events:none; }
+.home .mobile-service-cards .project-surface { position:relative; width:auto; height:auto; min-height:0; margin:0; padding:18px 20px; border-radius:18px; overflow:hidden; }
+.home .mobile-service-cards .project-surface--management { background:#edf0e7; }
+.home .mobile-service-cards .project-surface--web { background:#cfdeb9; }
+.home .mobile-service-cards .project-surface--automation { background:#d7e3eb; }
+.home .mobile-service-cards .surface-symbol,.home .mobile-service-cards .surface-location,.home .mobile-service-cards .surface-bottom { display:none; }
+.home .mobile-service-cards .surface-meta { padding-bottom:8px; font-size:10px; }
+.home .mobile-service-cards .surface-meta > span:last-child { font-size:20px; }
+.home .mobile-service-cards .surface-copy { margin:0; }
+.home .mobile-service-cards .project-surface h2 { font-size:26px; line-height:1.06; margin:10px 0; }
+.home .mobile-service-cards .project-surface h2 br { display:none; }
+.home .mobile-service-cards .project-surface p { font-size:14px; line-height:1.4; }
+@media (max-height:720px) {
+  .home .mobile-service-cards .project-surface { padding:10px 14px; }
+  .home .mobile-service-cards .project-surface h2 { font-size:21px; margin:7px 0; }
+  .home .mobile-service-cards .project-surface p { font-size:12px; line-height:1.35; }
+  .home .mobile-service-cards .surface-meta { padding-bottom:4px; }
+}
