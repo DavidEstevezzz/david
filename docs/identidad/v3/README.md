@@ -8,6 +8,43 @@ La versión leíble está en `propuesta.html`.
 
 **Nada de esto está aplicado al sitio.** Faltan dos decisiones (ver abajo).
 
+## Estado: el bloque, afinado
+
+La primera versión del bloque justificaba las filas por su **avance tipográfico**,
+que incluye los espacios laterales del glifo. Dos filas con el mismo avance tienen
+manchas distintas: DÉ y M se llevaban 11,95 px de ancho sobre 141 (un 8,5 %), y el
+bloque quedaba descentrado 12,8 px. Ahora todo se mide sobre la tinta:
+`fit_ink()` busca el valor del eje de anchura que hace que la mancha de cada fila
+mida exactamente lo mismo. Medido sobre el SVG a 1024 px: 0,29 px de diferencia
+entre filas y 0,24 px de desviación horizontal.
+
+En vertical las letras van un 4,8 % por debajo del centro matemático, a propósito:
+la tilde añade masa arriba y el ojo lo compensa. El desplazamiento es un tercio del
+alto de la tilde.
+
+**El bloque solo sale en Anybody.** Para que la M mida lo mismo que la DÉ hay que
+estirarla por el eje de anchura, y:
+
+| Fuente | Eje wdth | La M alcanza | |
+|---|---|---|---|
+| Anybody | 50–150 | 1,76:1 | llega |
+| Bricolage Grotesque | 75–100 | 1,12:1 | se queda corta |
+| Archivo (la que ya sirves) | no tiene | 1,03:1 | la DÉ se comprime y las letras se solapan |
+
+Cuesta un `woff2` más. Y como la M no pasa de 1,76:1 y dos filas apiladas piden
+2,1:1, el bloque es un rectángulo vertical, no un cuadrado a sangre: hay más aire
+a los lados que arriba y abajo. Forzarlo sería deformar la M.
+
+## Las dos tejas
+
+| Teja | Fondo | Teja | Letras | Tilde |
+|---|---|---|---|---|
+| **Lima** | oscuro o de color | `#dcf89c` | `#17231c` | `#526f3c` |
+| **Tinta** | claro y neutro | `#17231c` | `#edf0e7` | `#dcf89c` |
+
+Sobre papel funcionan las dos: la lima cuando la marca lleva la voz, la tinta
+cuando acompaña a un texto. Sobre tinta y sobre oliva, siempre la lima.
+
 ## Las tres piezas
 
 | Pieza | Qué es | Dónde |
@@ -33,9 +70,9 @@ invisible.
 
 ## Pendiente de decidir
 
-1. **Qué corte.** Instrument Serif, Bricolage Grotesque o Anybody. Archivo también
-   aguanta el bloque, y es la opción de no añadir ningún `woff2`.
-2. **Qué va en el favicon.** El bloque o la tilde.
+1. **Qué va en el favicon.** El bloque (se ve a 24 px, a 16 px es silueta) o la
+   tilde sola (legible a cualquier tamaño, pero no dice «DÉM»).
+2. **Si se acepta el `woff2` de Anybody.** Sin él no hay bloque.
 
 ## Pendiente en el código, independiente de lo anterior
 
