@@ -4,7 +4,7 @@ import {
   Object3D, PlaneGeometry, BufferAttribute, CanvasTexture, SRGBColorSpace,
 } from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { brandMark } from '../../lib/brand';
+import { brandBlock, type BrandPath } from '../../lib/brand';
 
 export interface Laptop {
   group: Group;
@@ -241,19 +241,28 @@ export function createLaptop(): Laptop {
   part(lid, 'camera-sensor', sensor, insetMaterial, -.11, 2.89, .065);
   part(lid, 'camera-indicator', sensor, graphite, .11, 2.89, .065);
 
-  // The same small signature as the interface, etched onto the aluminium lid.
+  // The same mark as the interface, etched square onto the aluminium lid.
+  // The block is a filled shape, not a stroke, so the letters and the accent
+  // are painted as two passes over the shared 64-unit box.
+  const EMBLEM = 256;
+  const scale = EMBLEM / brandBlock.box;
   const emblemCanvas = document.createElement('canvas');
-  emblemCanvas.width = 512; emblemCanvas.height = 256;
+  emblemCanvas.width = EMBLEM; emblemCanvas.height = EMBLEM;
   const emblemContext = emblemCanvas.getContext('2d')!;
-  emblemContext.translate(24, 36); emblemContext.scale(4, 4);
-  emblemContext.strokeStyle = '#58655d';
-  emblemContext.lineWidth = brandMark.strokeWidth;
-  emblemContext.lineCap = 'square'; emblemContext.lineJoin = 'round';
-  brandMark.paths.forEach(path => emblemContext.stroke(new Path2D(path)));
+  const etch = (piece: BrandPath, tone: string) => {
+    emblemContext.save();
+    emblemContext.translate(piece.x * scale, piece.y * scale);
+    emblemContext.scale(piece.s * scale, piece.s * scale);
+    emblemContext.fillStyle = tone;
+    emblemContext.fill(new Path2D(piece.d));
+    emblemContext.restore();
+  };
+  brandBlock.letters.forEach(piece => etch(piece, '#6d7a70'));
+  etch(brandBlock.accent, '#8fa07d');
   const emblemTexture = new CanvasTexture(emblemCanvas);
   emblemTexture.colorSpace = SRGBColorSpace;
   const emblemMaterial = keepMaterial(new MeshStandardMaterial({map:emblemTexture,transparent:true,depthWrite:false,roughness:.65,metalness:.25}));
-  const emblem = part(lid, 'lid-dem-signature', keepGeometry(new PlaneGeometry(.95,.475)), emblemMaterial, 0, 1.5, -.062);
+  const emblem = part(lid, 'lid-brand-mark', keepGeometry(new PlaneGeometry(.44,.44)), emblemMaterial, 0, 1.5, -.062);
   emblem.rotation.x = Math.PI;
 
   let disposed = false;

@@ -25,7 +25,7 @@ export const site = {
   idioma: 'es',
   // Imagen que se ve al compartir un enlace en WhatsApp, LinkedIn, X…
   ogImage: '/og-default.jpg',
-  ogImageAlt: 'dem — De la idea a lo real. Web, software y automatización.',
+  ogImageAlt: 'DÉM — David Estévez Martínez. De la idea a lo real: web, software y automatización.',
   github: 'https://github.com/DavidEstevezzz',
   // Servicios: alimentan los datos estructurados de la portada.
   servicios: [
