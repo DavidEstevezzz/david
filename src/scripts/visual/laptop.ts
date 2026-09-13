@@ -13,12 +13,17 @@ export interface Laptop {
   dispose(): void;
 }
 
+export interface LaptopOptions {
+  /** Renderer maximum, from WebGLRenderer.capabilities.getMaxAnisotropy(). */
+  anisotropy?: number;
+}
+
 /**
  * Model space: the keyboard faces +Y; its front edge is +Z.
  * The screen faces +Z when open. Rotating the hinge to PI / 2 closes it.
  * Geometry stays in model space, leaving the entire camera choreography to the caller.
  */
-export function createLaptop(): Laptop {
+export function createLaptop({ anisotropy = 1 }: LaptopOptions = {}): Laptop {
   const group = new Group();
   group.name = 'laptop';
   const base = new Group();
@@ -165,7 +170,7 @@ export function createLaptop(): Laptop {
     labelIndices.push(start,start+1,start+2, start,start+2,start+3);
   });
   const legendTexture = new CanvasTexture(atlas);
-  legendTexture.colorSpace = SRGBColorSpace; legendTexture.anisotropy = 4;
+  legendTexture.colorSpace = SRGBColorSpace; legendTexture.anisotropy = Math.max(anisotropy, 4);
   const legendGeometry = keepGeometry(new BufferGeometry());
   legendGeometry.setAttribute('position', new BufferAttribute(new Float32Array(labelPositions),3));
   legendGeometry.setAttribute('uv', new BufferAttribute(new Float32Array(labelUvs),2));
@@ -241,19 +246,59 @@ export function createLaptop(): Laptop {
   part(lid, 'camera-sensor', sensor, insetMaterial, -.11, 2.89, .065);
   part(lid, 'camera-indicator', sensor, graphite, .11, 2.89, .065);
 
-  // The same small signature as the interface, etched onto the aluminium lid.
-  const emblemCanvas = document.createElement('canvas');
-  emblemCanvas.width = 512; emblemCanvas.height = 256;
-  const emblemContext = emblemCanvas.getContext('2d')!;
-  emblemContext.translate(24, 36); emblemContext.scale(4, 4);
-  emblemContext.strokeStyle = '#58655d';
-  emblemContext.lineWidth = brandMark.strokeWidth;
-  emblemContext.lineCap = 'square'; emblemContext.lineJoin = 'round';
-  brandMark.paths.forEach(path => emblemContext.stroke(new Path2D(path)));
-  const emblemTexture = new CanvasTexture(emblemCanvas);
-  emblemTexture.colorSpace = SRGBColorSpace;
-  const emblemMaterial = keepMaterial(new MeshStandardMaterial({map:emblemTexture,transparent:true,depthWrite:false,roughness:.65,metalness:.25}));
-  const emblem = part(lid, 'lid-dem-signature', keepGeometry(new PlaneGeometry(.95,.475)), emblemMaterial, 0, 1.5, -.062);
+  // The same signature as the interface, machined into the aluminium lid rather
+  // than printed on it. Two canvases carry it, both drawn from the shared
+  // vector mark so the engraving never disagrees with the logo in the header.
+  //
+  // The first is pure coverage: opaque white strokes on opaque black, read as
+  // an alpha map. Three.js samples the green channel there, so the mask keeps
+  // the exact antialiased coverage Canvas2D produced — a transparent canvas
+  // would instead bleed its own black into every edge as mipmaps average it,
+  // which is what made the mark look printed and ragged at a distance.
+  //
+  // The second is the groove profile, at half the linear resolution: bright at
+  // the walls, sinking to dark along the centre line. Fed to the bump map it
+  // gives each stroke two lit flanks, so the key light rakes the engraving the
+  // way it rakes the chassis instead of leaving a flat decal on the lid.
+  const markPaths = brandMark.paths.map(path => new Path2D(path));
+  const markSurface = (width: number) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = width; canvas.height = Math.round(width * 46 / 116);
+    const context = canvas.getContext('2d')!;
+    context.scale(width / 116, width / 116);
+    context.lineCap = 'square'; context.lineJoin = 'round';
+    return context;
+  };
+  const strokeMark = (context: CanvasRenderingContext2D, width: number, color: string) => {
+    context.lineWidth = width; context.strokeStyle = color;
+    for (const path of markPaths) context.stroke(path);
+  };
+  // Closed, the lid is read at a grazing angle: without anisotropic samples the
+  // hardware picks a mip from the compressed axis and softens both of them.
+  const markTexture = (context: CanvasRenderingContext2D) => {
+    const texture = new CanvasTexture(context.canvas);
+    texture.anisotropy = anisotropy;
+    return texture;
+  };
+  const coverage = markSurface(1024);
+  coverage.fillStyle = '#000'; coverage.fillRect(0, 0, 116, 46);
+  strokeMark(coverage, brandMark.strokeWidth, '#fff');
+  const groove = markSurface(512);
+  groove.fillStyle = '#fff'; groove.fillRect(0, 0, 116, 46);
+  for (const [width, tone] of [[3.5, '#f2f2f2'], [2.8, '#bdbdbd'], [2.1, '#7e7e7e'], [1.4, '#454545'], [.8, '#161616']] as const)
+    strokeMark(groove, width, tone);
+  const emblemCoverage = markTexture(coverage);
+  const emblemGroove = markTexture(groove);
+  // Blasted aluminium: the same metal as the lid, left rougher by the cutter.
+  const emblemMaterial = keepMaterial(new MeshStandardMaterial({
+    color: '#9caaad', metalness: .58, roughness: .52,
+    alphaMap: emblemCoverage, transparent: true, depthWrite: false,
+    bumpMap: emblemGroove, bumpScale: .85,
+    polygonOffset: true, polygonOffsetFactor: -1,
+  }));
+  // The plane now matches the mark's own 116:46 ratio, so no texture area is
+  // spent on padding and the engraving keeps the size it had on the lid.
+  const emblem = part(lid, 'lid-dem-signature', keepGeometry(new PlaneGeometry(.861, .341)), emblemMaterial, 0, 1.5, -.062);
   emblem.rotation.x = Math.PI;
 
   let disposed = false;
@@ -269,7 +314,8 @@ export function createLaptop(): Laptop {
       for (const geometry of geometries) geometry.dispose();
       for (const material of materials) material.dispose();
       legendTexture.dispose();
-      emblemTexture.dispose();
+      emblemCoverage.dispose();
+      emblemGroove.dispose();
       // The caller owns any texture later assigned to screen.material.map.
       // Releasing the model must not dispose a texture shared by project panels.
       group.clear();
