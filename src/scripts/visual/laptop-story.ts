@@ -62,7 +62,8 @@ export async function mountHome(surface: SurfaceRenderer): Promise<MorphStudy | 
   let storyTravel = 1, exitStart = 0;
   const scene = new Scene(), domScene = new Scene();
   const camera = new PerspectiveCamera(38, 1, .06, 80);
-  const laptop = createLaptop(); scene.add(laptop.group);
+  const laptop = createLaptop({ anisotropy: surface.renderer.capabilities.getMaxAnisotropy() });
+  scene.add(laptop.group);
   scene.add(new AmbientLight('#c4d3e2', 2.1));
   const key = new DirectionalLight('#f7f3e5', 5); key.position.set(-4, 7, 5); scene.add(key);
   const rim = new DirectionalLight('#b6d9ff', 3.8); rim.position.set(4, 3, -3); scene.add(rim);
