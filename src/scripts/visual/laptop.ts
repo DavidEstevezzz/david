@@ -1,10 +1,11 @@
 import {
   BufferGeometry, CircleGeometry, CylinderGeometry, Group,
   InstancedMesh, Material, Mesh, MeshBasicMaterial, MeshStandardMaterial,
-  Object3D, PlaneGeometry, BufferAttribute, CanvasTexture, SRGBColorSpace, Vector2,
+  Object3D, PlaneGeometry, BufferAttribute, CanvasTexture, SRGBColorSpace,
 } from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { brandBlock, brandTiles, type BrandPath } from '../../lib/brand';
+import { brandBlock, brandTiles } from '../../lib/brand';
+import { createEngraving } from './engraving';
 
 export interface Laptop {
   group: Group;
@@ -246,121 +247,40 @@ export function createLaptop({ anisotropy = 1 }: LaptopOptions = {}): Laptop {
   part(lid, 'camera-sensor', sensor, insetMaterial, -.11, 2.89, .065);
   part(lid, 'camera-indicator', sensor, graphite, .11, 2.89, .065);
 
-  // The same mark as the interface, machined square into the aluminium lid.
-  // The block is a filled shape, not a stroke, so every pass over the shared
-  // 64-unit box is painted twice: once flat as coverage, once as the relief of
-  // the cut.
-  //
-  // Coverage is opaque white on opaque black and feeds the alpha map, whose
-  // green channel three.js samples. That preserves the antialiased contour
-  // Canvas2D drew. The translucent canvas it replaces averaged its own
-  // transparent black into every edge while the mipmap chain was built, which
-  // is what left the letters looking printed and ragged as the lid turned.
-  //
-  // The relief is a height field: the floor of each letter sits dark and the
-  // strokes straddling its contour climb back to the lid surface. It is baked
-  // into a tangent-space normal map rather than driving a bump map, because a
-  // bump map leans on screen-space derivatives and this mark spends the whole
-  // opening minified hard and read at a grazing angle — the one place those
-  // derivatives are worth least.
-  const COVERAGE = 1024, RELIEF = 512;
-  const emblemContext = (size: number) => {
-    const canvas = document.createElement('canvas');
-    canvas.width = canvas.height = size;
-    const context = canvas.getContext('2d')!;
-    context.scale(size / brandBlock.box, size / brandBlock.box);
-    context.lineJoin = 'round'; context.lineCap = 'round';
-    return context;
-  };
-  const paint = (
-    context: CanvasRenderingContext2D, pieces: readonly BrandPath[],
-    draw: (path: Path2D, piece: BrandPath) => void,
-  ) => {
-    for (const piece of pieces) {
-      context.save();
-      context.translate(piece.x, piece.y);
-      context.scale(piece.s, piece.s);
-      draw(new Path2D(piece.d), piece);
-      context.restore();
-    }
-  };
-  const emblemCoverage = (pieces: readonly BrandPath[]) => {
-    const context = emblemContext(COVERAGE);
-    context.fillStyle = '#000'; context.fillRect(0, 0, brandBlock.box, brandBlock.box);
-    context.fillStyle = '#fff';
-    paint(context, pieces, path => context.fill(path));
-    return context.canvas;
-  };
-  const emblemRelief = (pieces: readonly BrandPath[]) => {
-    const context = emblemContext(RELIEF);
-    context.fillStyle = '#fff'; context.fillRect(0, 0, brandBlock.box, brandBlock.box);
-    context.fillStyle = '#0e0e0e';
-    paint(context, pieces, path => context.fill(path));
-    // Widest and darkest first: every pass is centred on the contour, so only
-    // its inner half shows, and the narrowest lands against the top of a wall
-    // wide enough to still be a couple of pixels once the lid is far away.
-    for (const [width, tone] of [[1.6, '#3b3b3b'], [1.05, '#8c8c8c'], [.55, '#dcdcdc']] as const)
-      paint(context, pieces, (path, piece) => {
-        // Widths are box units; the accent carries its own scale into them.
-        context.lineWidth = width / piece.s; context.strokeStyle = tone;
-        context.stroke(path);
-      });
-    return context.getImageData(0, 0, RELIEF, RELIEF);
-  };
-  const emblemNormals = (pieces: readonly BrandPath[], slope: number) => {
-    const height = emblemRelief(pieces).data;
-    const edge = RELIEF - 1;
-    const at = (x: number, y: number) =>
-      height[(Math.min(edge, Math.max(0, y)) * RELIEF + Math.min(edge, Math.max(0, x))) * 4] / 255;
-    const context = document.createElement('canvas').getContext('2d')!;
-    context.canvas.width = context.canvas.height = RELIEF;
-    const image = context.createImageData(RELIEF, RELIEF);
-    for (let y = 0; y < RELIEF; y++) for (let x = 0; x < RELIEF; x++) {
-      const dx = (at(x + 1, y) - at(x - 1, y)) * slope;
-      const dy = (at(x, y + 1) - at(x, y - 1)) * slope;
-      const length = Math.hypot(dx, dy, 1), index = (y * RELIEF + x) * 4;
-      // Negated: the emblem plane is mounted face-down on the lid, which
-      // mirrors its tangent frame. Without this the walls catch the key light
-      // on the near side and the mark reads as a boss instead of a cut.
-      image.data[index] = (dx / length * .5 + .5) * 255;
-      image.data[index + 1] = (-dy / length * .5 + .5) * 255;
-      image.data[index + 2] = (1 / length * .5 + .5) * 255;
-      image.data[index + 3] = 255;
-    }
-    context.putImageData(image, 0, 0);
-    return context.canvas;
-  };
-  // Closed, the lid is read at a grazing angle: without anisotropic samples
-  // the hardware picks a mip from the compressed axis and softens both.
-  const emblemTexture = (canvas: HTMLCanvasElement) => {
-    const texture = new CanvasTexture(canvas);
-    texture.anisotropy = anisotropy;
-    return texture;
-  };
-  const letterCoverage = emblemTexture(emblemCoverage(brandBlock.letters));
-  const letterNormals = emblemTexture(emblemNormals(brandBlock.letters, 5));
-  const accentCoverage = emblemTexture(emblemCoverage([brandBlock.accent]));
-  const accentNormals = emblemTexture(emblemNormals([brandBlock.accent], 3.5));
-  // Blasted aluminium: the lid's own metal, left rougher by the cutter.
-  const letterMaterial = keepMaterial(new MeshStandardMaterial({
-    color: '#8d9b9f', metalness: .6, roughness: .5,
-    alphaMap: letterCoverage, transparent: true, depthWrite: false,
-    normalMap: letterNormals, normalScale: new Vector2(1, 1),
-    polygonOffset: true, polygonOffsetFactor: -1,
-  }));
-  // The tilde keeps the one colour the identity gives it, filled into its cut
-  // like enamel: no metal, and smooth enough to hold a highlight of its own.
-  const accentMaterial = keepMaterial(new MeshStandardMaterial({
-    color: brandTiles.lima.tile, metalness: .14, roughness: .44,
-    alphaMap: accentCoverage, transparent: true, depthWrite: false,
-    normalMap: accentNormals, normalScale: new Vector2(.7, .7),
-    polygonOffset: true, polygonOffsetFactor: -2,
-  }));
+  // The same mark as the interface, cut into the aluminium lid. Everything
+  // about how that cut is built lives in ./engraving: the block arrives here
+  // as a signed distance field, so neither the contour nor the wall of the cut
+  // is ever baked into a bitmap that could show its own resolution. Letters and
+  // accent are cut separately because they are not the same operation — one
+  // leaves blasted metal at the bottom, the other is filled.
+  const ALUMINIUM = { color: '#727b80', roughness: .28 };
+  const engravings = [
+    createEngraving(brandBlock.letters, {
+      box: brandBlock.box, wall: 1.1, depth: 2.4,
+      surface: ALUMINIUM,
+      // What the cutter leaves: the same alloy, its polish taken off.
+      floor: { color: '#8a9498', roughness: .78 },
+      metalness: .84, anisotropy, mirrored: true,
+      maps: 384,
+    }),
+    createEngraving([brandBlock.accent], {
+      box: brandBlock.box, wall: .4, depth: 1.1,
+      surface: ALUMINIUM,
+      // The tilde keeps the one colour the identity gives it, filled into its
+      // cut like enamel: smooth, and barely metal at all.
+      floor: { color: brandTiles.lima.tile, roughness: .42 },
+      metalness: .1, anisotropy, mirrored: true,
+      // A stroke this small needs nothing like the block's resolution.
+      field: 128, maps: 256,
+    }),
+  ];
   const emblemGeometry = keepGeometry(new PlaneGeometry(.6, .6));
-  for (const [name, material] of [['lid-brand-mark', letterMaterial], ['lid-brand-accent', accentMaterial]] as const) {
-    const mesh = part(lid, name, emblemGeometry, material, 0, 1.5, -.062);
+  engravings.forEach((engraving, index) => {
+    const mesh = part(lid, index ? 'lid-brand-accent' : 'lid-brand-mark',
+      emblemGeometry, engraving.material, 0, 1.5, -.062);
     mesh.rotation.x = Math.PI;
-  }
+    mesh.renderOrder = index;
+  });
 
   let disposed = false;
   return {
@@ -375,8 +295,7 @@ export function createLaptop({ anisotropy = 1 }: LaptopOptions = {}): Laptop {
       for (const geometry of geometries) geometry.dispose();
       for (const material of materials) material.dispose();
       legendTexture.dispose();
-      letterCoverage.dispose(); letterNormals.dispose();
-      accentCoverage.dispose(); accentNormals.dispose();
+      for (const engraving of engravings) engraving.dispose();
       // The caller owns any texture later assigned to screen.material.map.
       // Releasing the model must not dispose a texture shared by project panels.
       group.clear();
