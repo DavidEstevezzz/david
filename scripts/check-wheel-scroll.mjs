@@ -36,16 +36,18 @@ try {
   assert.ok(Math.abs(await page.evaluate(() => scrollY) - jumped) <= 1, 'Anchor must cancel wheel momentum');
   assert.ok(await page.locator('#proyectos').evaluate(el => Math.abs(el.getBoundingClientRect().top) < 2));
 
-  await page.locator('[data-motion-toggle]').click();
-  await page.waitForFunction(() => document.documentElement.dataset.runtime === 'html');
-  assert.equal(await page.evaluate(() => document.documentElement.classList.contains('lenis')), false);
-  await page.locator('[data-motion-toggle]').click();
+  await page.goto('http://127.0.0.1:4321/?render=html#proyecto-bomberos');
   await page.waitForFunction(() => document.documentElement.dataset.runtime === 'ready');
+  assert.equal(new URL(page.url()).searchParams.has('render'), false);
+  assert.equal(await page.locator('[data-motion-toggle]').count(), 0);
+  assert.equal(await page.locator('.home[data-enhanced]').count(), 1);
+  await page.waitForTimeout(300);
+  assert.ok(await page.locator('#proyecto-bomberos').evaluate(el => Math.abs(el.getBoundingClientRect().top - 40) < 2), 'Legacy static links restore the card with animation enabled');
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.waitForFunction(() => document.documentElement.dataset.runtime === 'html');
   assert.equal(await page.evaluate(() => document.documentElement.classList.contains('lenis')), false);
   assert.deepEqual(errors, []);
-  console.log(`Desktop: ${intermediate.size} intermediate wheel positions; anchor, static toggle and reduced motion passed.`);
+  console.log(`Desktop: ${intermediate.size} intermediate wheel positions; anchors, animated legacy links and reduced motion passed.`);
   await page.close();
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });

@@ -5,13 +5,14 @@ const mobileViewport = matchMedia('(max-width: 820px)');
 const shortViewport = matchMedia('(max-height: 499px)');
 const canvas = document.querySelector<HTMLCanvasElement>('#visual-canvas')!;
 const params = new URL(location.href).searchParams;
-// WebGL is the single animated experience. Keep the explicit static fallback.
-const renderMode = params.get('render');
+// Old preview URLs use the same animated experience as the normal home page.
+if (params.has('render')) {
+  const url = new URL(location.href);
+  url.searchParams.delete('render');
+  history.replaceState(history.state, '', url);
+}
 let runtime: VisualRuntime | undefined;
-let disabled = renderMode === 'html';
-// A return to a project is an anchored reading view. Mounting the pinned intro
-// here would change the document height beneath the restored gallery position.
-if (/^#(?:proyecto-|proyectos$|contacto$)/.test(location.hash)) disabled = true;
+let disabled = false;
 let starting: Promise<void> | undefined;
 let pendingFetch: AbortController | undefined;
 let navigationId = 0;
@@ -21,24 +22,21 @@ let disposed = false;
 const listeners = new AbortController();
 const options = { signal: listeners.signal };
 
-function updateButton() {
-  const button = document.querySelector<HTMLButtonElement>('[data-motion-toggle]');
-  if (!button) return;
-  button.hidden = false;
-  button.textContent = runtime && !disabled && !reduceMotion.matches ? 'Usar vista estática' : 'Activar movimiento';
-  button.disabled = reduceMotion.matches || canvas.dataset.context === 'lost';
-  if (reduceMotion.matches) button.textContent = 'Movimiento reducido';
-  else if (canvas.dataset.context === 'lost') button.textContent = 'Vista estática';
+function restorePosition(hash: string, top: number) {
+  const target = hash ? document.getElementById(decodeURIComponent(hash.slice(1))) : null;
+  if (runtime && !disabled && !reduceMotion.matches) runtime.scrollTo(target ?? top);
+  else if (target) target.scrollIntoView({ block: 'start', behavior: 'instant' });
+  else window.scrollTo({ top, behavior: 'instant' });
 }
 
 async function start() {
-  if (disposed || disabled || reduceMotion.matches || canvas.dataset.context === 'lost') { updateButton(); return; }
+  if (disposed || disabled || reduceMotion.matches || canvas.dataset.context === 'lost') { return; }
   if (starting) return starting;
   // Case pages have no animated scene. Avoid creating an idle GPU renderer.
   const isHome = Boolean(document.querySelector('[data-home]'));
   if (!isHome && !document.querySelector('[data-morph-page]')) {
     runtime?.dispose(); runtime = undefined;
-    canvas.style.display = 'none'; updateButton(); return;
+    canvas.style.display = 'none'; return;
   }
   const activation = ++activationId;
   starting = (async () => {
@@ -57,7 +55,7 @@ async function start() {
       document.documentElement.dataset.runtime = 'html';
       disabled = true;
       console.warn('La página conserva su versión HTML.', error);
-    } finally { starting = undefined; updateButton(); }
+    } finally { starting = undefined; }
   })();
   return starting;
 }
@@ -68,7 +66,6 @@ async function stop() {
   await starting;
   await unmounting;
   document.documentElement.dataset.runtime = 'html';
-  updateButton();
 }
 
 function onMotionChange() {
@@ -76,7 +73,6 @@ function onMotionChange() {
     ++activationId;
     void runtime?.unmount();
     document.documentElement.dataset.runtime = 'html';
-    updateButton();
   } else if (!disabled) {
     // A previous activation may still be compiling when the preference changes.
     void (async () => { await starting; if (!disabled && !navigating) await start(); })();
@@ -99,8 +95,8 @@ shortViewport.addEventListener('change', onViewportModeChange, options);
 canvas.addEventListener('surface-unavailable', () => { void stop(); }, options);
 canvas.addEventListener('surface-error', () => { void stop(); }, options);
 canvas.addEventListener('surface-restored', () => {
-  // Do not unexpectedly restart movement while the reader is using the fallback.
-  document.documentElement.dataset.runtime = 'html'; updateButton();
+  disabled = false;
+  void (async () => { await starting; if (!navigating && !disposed) await start(); })();
 }, options);
 
 function rememberScroll() {
@@ -135,11 +131,9 @@ async function navigate(url: URL, pop = false, restore = 0) {
     window.scrollTo({ top: 0, behavior: 'instant' });
     if (!disabled && !reduceMotion.matches) await start();
     if (id !== navigationId) return;
-    window.scrollTo({ top: restore, behavior: 'instant' });
-    if (url.hash) document.getElementById(decodeURIComponent(url.hash.slice(1)))?.scrollIntoView();
+    restorePosition(url.hash, restore);
     next.focus({ preventScroll: true });
     document.querySelector('#route-announcement')!.textContent = html.title;
-    updateButton();
   } catch (error) {
     if (id !== navigationId || (error instanceof DOMException && error.name === 'AbortError')) return;
     location.assign(url.href);
@@ -161,15 +155,6 @@ document.addEventListener('click', (event) => {
       rememberScroll();
       history.replaceState({ ...history.state }, '', returnURL);
     }
-  }
-  if (target?.closest('[data-motion-toggle]')) {
-    if (runtime && !disabled) void stop();
-    else {
-      disabled = false;
-      scrollTo({ top: 0, behavior: 'instant' });
-      void (async () => { await starting; if (!disabled && !navigating) await start(); })();
-    }
-    return;
   }
   const link = target?.closest<HTMLAnchorElement>('a[data-nav]');
   if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.target || link.download) return;
@@ -200,9 +185,12 @@ function queueVisual() {
     if (disposed) return;
     const load = () => {
       if (disposed || navigating) return;
-      // Avoid turning a static document into a pinned one after the user moved on.
-      if (scrollY > 80) { disabled = true; updateButton(); return; }
-      void start();
+      const hash = location.hash;
+      const top = scrollY;
+      const id = navigationId;
+      void start().then(() => {
+        if (!disposed && !navigating && id === navigationId) restorePosition(hash, top);
+      });
     };
     if ('requestIdleCallback' in window) idleHandle = window.requestIdleCallback(load, { timeout: 1800 });
     else fallbackTimer = setTimeout(load, 100);
@@ -213,7 +201,6 @@ if (document.readyState === 'complete') fallbackTimer = setTimeout(queueVisual, 
 else addEventListener('load', () => { fallbackTimer = setTimeout(queueVisual, 150); }, { ...options, once: true });
 // iOS Safari has no remote console from Windows: ?probe=1 paints the numbers instead.
 if (params.get('probe') === '1') void import('./probe').then(module => module.mountProbe());
-updateButton();
 history.scrollRestoration = 'manual';
 rememberScroll();
 

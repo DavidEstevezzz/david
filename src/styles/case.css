@@ -188,13 +188,13 @@
    La captura deja de ser un póster: vive dentro de una ventana con su barra y su
    URL, así el ojo la lee a la escala real de una app en pantalla. */
 .case--browser .case-hero,.case--browser .case-image{background:none;padding:0;border-radius:0;width:min(75vw,1440px);max-width:100%;margin:0 auto}
-.case--browser figure>a{display:block;position:relative;padding-top:40px;border-radius:14px;overflow:hidden;background:#0f1512;box-shadow:0 34px 80px #000a,0 0 0 1px #ffffff1f}
-.case--browser figure>a::before{content:'';position:absolute;inset:0 0 auto;height:40px;background:#1d2a20;border-bottom:1px solid #ffffff14;background-image:radial-gradient(circle 5px at 20px 20px,#e26a5a 96%,#0000),radial-gradient(circle 5px at 40px 20px,#dcb45c 96%,#0000),radial-gradient(circle 5px at 60px 20px,#8fbe74 96%,#0000)}
-.case--browser figure>a::after{content:attr(data-url);position:absolute;inset:0 0 auto;height:40px;display:grid;place-items:center;font:11px var(--font-mono);letter-spacing:.04em;color:#a9bba4}
-.case--browser figure>a img{width:100%;height:auto;border-radius:0}
-.case--browser figure>a:hover{box-shadow:0 40px 90px #000c,0 0 0 1px #dcf89c55}
+.case--browser .case-screen{display:block;position:relative;padding-top:40px;border-radius:14px;overflow:hidden;background:#0f1512;box-shadow:0 34px 80px #000a,0 0 0 1px #ffffff1f}
+.case--browser .case-screen::before{content:'';position:absolute;inset:0 0 auto;height:40px;background:#1d2a20;border-bottom:1px solid #ffffff14;background-image:radial-gradient(circle 5px at 20px 20px,#e26a5a 96%,#0000),radial-gradient(circle 5px at 40px 20px,#dcb45c 96%,#0000),radial-gradient(circle 5px at 60px 20px,#8fbe74 96%,#0000)}
+.case--browser .case-screen::after{content:attr(data-url);position:absolute;inset:0 0 auto;height:40px;display:grid;place-items:center;font:11px var(--font-mono);letter-spacing:.04em;color:#a9bba4}
+.case--browser .case-screen img{width:100%;height:auto;border-radius:0}
+
 .case--browser figcaption{margin:0}
-@media(max-width:700px){.case--browser figure>a::after{padding-left:76px;padding-right:12px;font-size:8px;letter-spacing:0;overflow-wrap:anywhere}}
+@media(max-width:700px){.case--browser .case-screen::after{padding-left:76px;padding-right:12px;font-size:8px;letter-spacing:0;overflow-wrap:anywhere}}
 
 /* === Diseño B · Panel fijo con recorrido (Tagadona) ===
    Tres capturas en un solo bloque: el texto pasa por la izquierda y la ventana,
@@ -214,7 +214,7 @@
 .story-shots__bar b{flex:1;text-align:center;font:11px var(--font-mono);font-weight:400;letter-spacing:.04em;color:#a9bba4}
 .story-shot{position:absolute;inset:40px 0 0;margin:0;opacity:0;transform:scale(1.04);transition:opacity .6s ease,transform .9s ease;pointer-events:none}
 .story-shot.is-active{opacity:1;transform:none;pointer-events:auto}
-.story-shot a,.story-shot img{display:block;width:100%;height:100%}
+.story-shot img{display:block;width:100%;height:100%}
 .story-shot img{object-fit:cover;object-position:center top;border-radius:0}
 .case case-story .story-shot img{height:auto;object-fit:contain;object-position:center top;border-radius:0}
 .case case-story:not(:defined) .story-shots__stage{position:static}

@@ -47,6 +47,19 @@ export function createRuntime() {
   document.addEventListener('contact-visibility', onContact);
 
   const api = {
+    scrollTo(target: number | HTMLElement) {
+      // Settle the pinned scene before measuring the destination again: its
+      // outgoing transform can otherwise displace a restored project anchor.
+      for (let pass = 0; pass < 2; pass++) {
+        lenis?.resize();
+        const top = typeof target === 'number' ? target : target.getBoundingClientRect().top + window.scrollY - (parseFloat(getComputedStyle(target).scrollMarginTop) || 0);
+        if (lenis) lenis.scrollTo(top, { immediate: true, force: true });
+        else window.scrollTo({ top, behavior: 'instant' });
+        ScrollTrigger.update();
+        ScrollTrigger.getAll().forEach(trigger => trigger.getTween()?.progress(1));
+        study?.draw(0);
+      }
+    },
     mount() {
       const request = ++revision;
       const operation = mounting.then(async () => {

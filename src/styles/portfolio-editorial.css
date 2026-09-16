@@ -12,59 +12,44 @@
 #vista-proyecto:focus { outline:none; }
 .work-card[id] { scroll-margin-top:40px; }
 
-.home .work-grid { grid-template-columns:repeat(12,minmax(0,1fr)); gap:80px 40px; margin-top:64px; align-items:start; }
-.home .work-card,.home .work-card:first-child { display:flex; flex-direction:column; grid-column:span 6; padding:0; border:0; border-radius:0; background:none; min-width:0; }
-.home .work-card .work-card-meta { padding-bottom:16px; margin-bottom:22px; border-bottom:1px solid #27321d30; font-size:11px; letter-spacing:.045em; }
-.home .work-card .work-card-art { display:block; position:relative; width:100%; height:auto; aspect-ratio:auto; padding:clamp(16px,2.3vw,36px); margin:20px 0 26px; border-radius:12px; background:#dce3d4; color:inherit; text-decoration:none; isolation:isolate; }
-.home .work-card .work-card-art img { width:100%; height:auto; object-fit:contain; border-radius:0 0 5px 5px; box-shadow:0 18px 32px #10181026; }
-.home .work-card-art>.work-preview-bar { display:flex; align-items:center; gap:4px; height:23px; padding:0 9px; border-radius:5px 5px 0 0; background:#26352a; color:#c5d0be; font:8px var(--font-mono); letter-spacing:0; }
-.work-preview-bar i { width:4px; height:4px; border-radius:50%; background:#d0d8c3; opacity:.55; }
-.work-preview-bar span { margin:auto; padding-right:20px; }
-.home .work-card-art>.work-preview-open { position:absolute; right:14px; bottom:14px; width:38px; height:38px; padding:0; font-size:18px; display:grid; place-items:center; color:#edf0e7; background:#23321fed; border:1px solid #d7e8c54d; border-radius:50%; transition:transform .3s,background .3s; }
+.home .work-inner { width:100%; max-width:1200px; margin-inline:auto; }
+.home .work-section h2 { font-size:clamp(40px,4.5vw,68px); }
+.home .work-heading { margin-bottom:40px; }
+.home .work-heading>p { max-width:290px; font-size:14px; line-height:1.6; color:#59624f; }
+.home .work-grid { display:grid; grid-template-columns:1fr; gap:0; margin:0; }
+.home .work-card { display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.4fr); gap:clamp(28px,4vw,64px); align-items:center; min-width:0; padding:28px 0; border-top:1px solid #27321d30; }
+.home .work-card:last-child { border-bottom:1px solid #27321d30; }
+.home .work-card-info { min-width:0; }
+.home .work-card-meta { display:flex; align-items:baseline; gap:12px; margin-bottom:12px; }
+.home .work-card-meta>span { font:11px var(--font-mono); color:#67705f; }
+.home .work-card h3 { margin:0; font-size:17px; font-weight:500; letter-spacing:-.02em; line-height:1.35; }
+.home .work-card-impact { max-width:28ch; margin-bottom:12px; font-size:clamp(24px,2.3vw,32px); font-weight:450; letter-spacing:-.04em; line-height:1.12; text-wrap:balance; }
+.home .work-card-description { max-width:58ch; font-size:15px; color:#404c38; line-height:1.6; }
+.home .work-card-foot { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px 20px; margin-top:14px; }
+.home .work-card-foot>span { font-size:11px; color:#59624f; }
+.home .work-card-foot a { display:inline-flex; align-items:center; gap:8px; min-height:44px; font-size:14px; color:#263a20; text-underline-offset:5px; }
+/* The frame follows each screenshot with proportional padding. */
+.home .work-card-art { display:grid; place-items:center; position:relative; width:100%; padding:clamp(12px,1.2vw,18px); border-radius:10px; background:#dce3d4; color:inherit; text-decoration:none; }
+.home .work-preview-window { display:block; width:100%; max-width:100%; border-radius:5px; overflow:hidden; box-shadow:0 8px 20px #1018101c; }
+.home .work-card-art img { display:block; width:100%; height:auto; }
+.home .work-preview-bar { display:flex; align-items:center; gap:4px; height:14px; padding:0 7px; background:#26352a; color:#c5d0be; font:7px var(--font-mono); }
+.work-preview-bar i { flex-shrink:0; width:3px; height:3px; border-radius:50%; background:#d0d8c3; opacity:.55; }
+.work-preview-bar span { min-width:0; margin:auto; padding-right:17px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.home .work-card-art>.work-preview-open { position:absolute; right:10px; bottom:10px; width:36px; height:36px; font-size:16px; display:grid; place-items:center; color:#edf0e7; background:#23321fed; border:1px solid #d7e8c54d; border-radius:8px; transition:transform .3s,background .3s; }
 .home .work-card-art:focus-visible { outline:3px solid #4c7037; outline-offset:6px; }
-.home .work-card h3 { font-size:clamp(28px,2.5vw,40px); margin:0 0 16px; max-width:20ch; }
-.home .work-card-info>p { font-size:16px; max-width:48ch; color:#404c38; line-height:1.65; }
-.home .work-card .work-card-foot { padding-top:24px; gap:16px; align-items:center; }
-.home .work-card-foot a { min-height:44px; display:inline-flex; align-items:center; gap:8px; text-underline-offset:5px; }
-.home .work-card:nth-child(2) { grid-column:1 / 7; }
-.home .work-card:nth-child(3) { grid-column:8 / -1; padding-top:100px; }
 .home .work-card:nth-child(2) .work-card-art { background:#c7d4c9; }
 .home .work-card:nth-child(3) .work-card-art { background:#cfdfe4; }
-.home .work-card:first-child,.home .work-card:last-child { display:grid; grid-column:1 / -1; grid-template-columns:repeat(12,minmax(0,1fr)); column-gap:40px; align-items:center; }
-.home .work-card:first-child .work-card-art { grid-column:1 / 9; grid-row:1; margin:0; padding:clamp(20px,3vw,48px); }
-.home .work-card:first-child .work-card-info { grid-column:9 / -1; grid-row:1; }
-.home .work-card:first-child .work-card-meta,.home .work-card:last-child .work-card-meta { margin-bottom:26px; }
-.home .work-card:first-child .work-card-foot,.home .work-card:last-child .work-card-foot { flex-direction:column; align-items:flex-start; }
-.home .work-card:nth-child(4) { grid-column:1 / -1; }
-.home .work-card:nth-child(4) .work-card-info { display:grid; grid-template-columns:1fr 1fr; column-gap:40px; }
-.home .work-card:nth-child(4) .work-card-meta { grid-column:1 / -1; }
-.home .work-card:nth-child(4) .work-card-art { grid-column:1 / -1; padding:0; background:#112025; overflow:hidden; }
-.home .work-card:nth-child(4) .work-card-art img { aspect-ratio:2.2; object-fit:cover; object-position:center; }
-.home .work-card:nth-child(4) .work-card-art>.work-preview-bar { display:none; }
-.home .work-card:nth-child(4) .work-card-foot { grid-column:1 / -1; }
-.home .work-card:last-child .work-card-art { grid-column:5 / -1; grid-row:1; margin:0; padding:clamp(24px,3.5vw,55px); background:#d9cec0; }
-.home .work-card:last-child .work-card-info { grid-column:1 / 5; grid-row:1; }
-.home .work-note { margin-top:64px; padding-top:24px; border-top:1px solid #27321d30; }
+.home .work-card:nth-child(4) .work-card-art { background:#cbd3ce; }
+.home .work-card:nth-child(5) .work-card-art { background:#d9cec0; }
 @media(hover:hover) and (prefers-reduced-motion:no-preference) {
   .home .work-card-art:hover .work-preview-open { transform:rotate(45deg); background:#405835; }
 }
-@media(max-width:1000px) and (min-width:821px) {
-  .home .work-grid { gap:64px 24px; }
-  .home .work-card:first-child,.home .work-card:last-child { column-gap:24px; }
-  .home .work-card:first-child .work-card-art { grid-column:1 / 8; }
-  .home .work-card:first-child .work-card-info { grid-column:8 / -1; }
-}
-@media(max-width:820px) {
-  .home .work-grid { display:flex; flex-direction:column; gap:48px; margin-top:36px; }
-  .home .work-card,.home .work-card:first-child,.home .work-card:nth-child(4),.home .work-card:last-child { display:flex; padding:0; }
-  .home .work-card .work-card-art,.home .work-card:first-child .work-card-art,.home .work-card:last-child .work-card-art { order:0; margin:18px 0 22px; padding:20px; }
-  .home .work-card .work-card-meta,.home .work-card:first-child .work-card-meta,.home .work-card:last-child .work-card-meta { margin:0 0 20px; font-size:10px; }
-  .home .work-card:nth-child(4) .work-card-info { display:block; }
-  .home .work-card:nth-child(4) .work-card-art { padding:0; }
-  .home .work-card:nth-child(4) .work-card-art img { aspect-ratio:1.6; }
-  .home .work-card h3 { font-size:30px; }
-  .home .work-card .work-card-foot { padding-top:18px; flex-direction:row; align-items:center; }
-  .home .work-card .work-card-foot>span { max-width:24ch; }
+@media(max-width:700px) {
+  .home .work-heading { margin-bottom:28px; }
+  .home .work-card { grid-template-columns:1fr; gap:22px; padding-block:24px; }
+  .home .work-card-art { max-width:420px; justify-self:center; padding:16px; }
+  .home .work-card-impact { font-size:27px; }
+  .home .work-card-foot { margin-top:12px; }
 }
 
 /* Diagrams inherit story progress: assembly and routing reverse with scroll.

@@ -20,13 +20,6 @@
   .home .scene-source:not(.scene-source--projected) .display-toolbar>span:last-child { display:none; }
   .home .scene-source:not(.scene-source--projected) .display-services { grid-template-columns:1fr; }
   .home .scene-source:not(.scene-source--projected) .display-services>div+div { padding-left:0; border-left:0; border-top:1px solid #20351c25; }
-  .home .work-grid { grid-template-columns:1fr; margin-top:32px; gap:20px; }
-  .home .work-card { padding:20px; min-width:0; }
-  .home .work-card:first-child { display:flex; }
-  .home .work-card:first-child .work-card-art { margin:20px 0; width:100%; }
-  .home .work-card h3 { font-size:28px; overflow-wrap:anywhere; }
-  .home .work-card-foot { gap:12px; }
-  .home .work-card-foot a { display:inline-flex; align-items:center; min-height:44px; padding:8px 0; }
   .home .work-heading { flex-direction:column; align-items:flex-start; gap:22px; margin-bottom:32px; }
   .home .work-section h2 { font-size:clamp(40px,9.5vw,66px); }
   .home .section-kicker { margin-bottom:32px; }

@@ -11,7 +11,7 @@ npm run dev
 
 - `/`: portátil que se abre, entrada en su pantalla y despliegue de proyectos.
 - `/lab/morph`: prueba independiente de curvatura y relevo a HTML.
-- `/?render=html`: versión estática completa.
+- La portada mantiene la animación al volver desde los proyectos; los enlaces antiguos con `?render=html` abren la misma experiencia animada.
 
 ```sh
 npm run build

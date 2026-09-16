@@ -13,11 +13,11 @@ const previews: Record<string, {src:string; width:number; height:number; url:str
   tagadona: {src:'/projects/tagadona/tagadona-home.jpg', width:2880, height:1800, url:'tagadonaracing.es'},
 };
 const projects = [
-  { n: '01', title: 'Bomberos de Granada', kind: 'Software a medida', text: 'Guardias, cambios de turno, horas extras y recursos: una aplicación alrededor de la operativa del parque.', note: 'Coordinar personas y recursos.', href: '/proyectos/bomberos/', cover: 'bomberos' },
-  { n: '02', title: 'Taller ECU · JMReprocars', kind: 'Web · Automatización', text: 'De una conversación a una solicitud organizada, con datos del vehículo y transferencia a atención humana.', note: 'De la consulta a la solicitud, automatizado.', href: '/proyectos/taller-ecu/', cover: 'ecu' },
-  { n: '03', title: 'WiControl · Granjas conectadas', kind: 'Software · Dispositivos conectados', text: 'Gestión de granjas y dispositivos, seguimiento del peso y visualización de las condiciones ambientales.', note: 'Frontend y backend de una misma solución.', href: '/proyectos/wicontrol/', cover: 'wicontrol' },
-  { n: '04', title: 'Black Tides: Draga’s Wake', kind: 'Frontend · Web de videojuego', text: 'Una presentación cinematográfica por capítulos, con escenas visuales y una experiencia guiada por el scroll.', note: 'Una web que se recorre como una historia.', href: '/proyectos/black-tides/', cover: 'black-tides' },
-  { n: '05', title: 'Tagadona Racing', kind: 'Desarrollo web · Motor', text: 'Catálogo de motos, fichas de vehículos y una presencia digital orientada a la compraventa en Granada.', note: 'Conectar el catálogo con el cliente.', href: '/proyectos/tagadona/', cover: 'tagadona' },
+  { n: '01', title: 'Bomberos de Granada', kind: 'Software a medida', impact: 'Del papeleo a una gestión más ágil.', text: 'Turnos, solicitudes y recursos en un solo lugar. Menos coordinación manual y más autonomía para cada bombero.', href: '/proyectos/bomberos/', cover: 'bomberos' },
+  { n: '02', title: 'Taller ECU · JMReprocars', kind: 'Web · Automatización', impact: 'Menos mensajes. Más tiempo para el taller.', text: 'Las consultas llegan con los datos del vehículo y lo que necesita el cliente, listas para atenderlas sin empezar de cero.', href: '/proyectos/taller-ecu/', cover: 'ecu' },
+  { n: '03', title: 'WiControl · Granjas conectadas', kind: 'Software · Dispositivos conectados', impact: 'Saber qué pasa. Actuar a tiempo.', text: 'Seguimiento en tiempo real y alertas ante incidencias para controlar las granjas a distancia y responder cuando hace falta.', href: '/proyectos/wicontrol/', cover: 'wicontrol' },
+  { n: '04', title: 'Black Tides: Draga’s Wake', kind: 'Web de videojuego', impact: 'El potencial del juego, a primera vista.', text: 'Una presentación inmersiva que transmite la identidad del juego y facilita mostrarlo a posibles socios e inversores.', href: '/proyectos/black-tides/', cover: 'black-tides' },
+  { n: '05', title: 'Tagadona Racing', kind: 'Desarrollo web · Motor', impact: 'Un escaparate abierto más allá de Granada.', text: 'Más visibilidad para las motos y más alcance para el negocio. El comprador puede descubrir, comparar y consultar antes de visitar la tienda.', href: '/proyectos/tagadona/', cover: 'tagadona' },
 ];
 import ArrowUpRight from '../components/ArrowUpRight.astro';
 ---
@@ -32,7 +32,7 @@ import ArrowUpRight from '../components/ArrowUpRight.astro';
     <header class="home-nav">
       <a class="home-brand" href="/" data-nav aria-label="David Estévez Martínez, inicio"><BrandSignature teja="lima" /></a>
       <span class="nav-caption">Ingeniería digital independiente</span>
-      <nav aria-label="Principal"><a href="#proyectos" data-skip-story>Proyectos</a><a href="mailto:david@estevezmartinez.es" data-contact-open>Hablemos <Icon name="plus" /></a></nav>
+      <nav aria-label="Principal"><a href="#proyectos" data-skip-story>Proyectos</a><a href="/sobre-mi/">Sobre mí</a><a href="mailto:david@estevezmartinez.es" data-contact-open>Hablemos <Icon name="plus" /></a></nav>
     </header>
     <a class="story-skip" href="#proyectos" data-skip-story>Saltar a proyectos <ArrowUpRight /></a>
       <div class="home-hero" id="contenido" tabindex="-1" data-hero-copy>
@@ -73,23 +73,27 @@ import ArrowUpRight from '../components/ArrowUpRight.astro';
     </div>
     </div>
     <section class="work-section" id="proyectos" tabindex="-1">
+      <div class="work-inner">
       <div class="section-kicker"><span>03 — Trabajo seleccionado</span><span>Web / Software / Automatización</span></div>
-      <div class="work-heading"><h2>Ideas que ya<br /><em>están en marcha.</em></h2><p>Cada proyecto parte de una necesidad distinta. La solución también.</p></div>
+      <div class="work-heading"><h2>Ideas que ya<br /><em>están en marcha.</em></h2><p>Menos tareas, más oportunidades.<br />Así cambia el día a día de cada negocio.</p></div>
       <div class="work-grid">
         {projects.map(project => <article class="work-card" id={`proyecto-${project.href.split('/')[2]}`}>
           <a class="work-card-art" href={`${project.href}#vista-proyecto`} aria-label={`Explorar ${project.title}`}>
-            <span class="work-preview-bar" aria-hidden="true"><i></i><i></i><i></i><span>{previews[project.cover].url}</span></span>
-            <img src={previews[project.cover].src} width={previews[project.cover].width} height={previews[project.cover].height} loading="lazy" alt="" data-project-image={project.href.split('/')[2]} />
+            <span class="work-preview-window">
+              <span class="work-preview-bar" aria-hidden="true"><i></i><i></i><i></i><span>{previews[project.cover].url}</span></span>
+              <img src={previews[project.cover].src} width={previews[project.cover].width} height={previews[project.cover].height} loading="lazy" alt="" data-project-image={project.href.split('/')[2]} />
+            </span>
             <span class="work-preview-open" aria-hidden="true"><ArrowUpRight /></span>
           </a>
           <div class="work-card-info">
-          <div class="work-card-meta"><span>{project.n} / {project.kind}</span><span aria-hidden="true"><ArrowUpRight /></span></div>
-          <h3>{project.title}</h3><p>{project.text}</p>
-          <div class="work-card-foot"><span>{project.note}</span>{project.href && <a href={project.href}>Ver proyecto <span class="sr-only">{project.title}</span> <ArrowUpRight /></a>}</div>
+          <div class="work-card-meta"><span>{project.n}</span><h3>{project.title}</h3></div>
+          <p class="work-card-impact">{project.impact}</p>
+          <p class="work-card-description">{project.text}</p>
+          <div class="work-card-foot"><span>{project.kind}</span><a href={project.href}>Ver proyecto <span class="sr-only">{project.title}</span> <ArrowUpRight /></a></div>
           </div>
         </article>)}
       </div>
-      <p class="work-note">Cinco proyectos, distintas formas de resolver una necesidad. Todas las fichas están abiertas: entra en la que te interese.</p>
+      </div>
     </section>
     <section class="contact-section" id="contacto" tabindex="-1">
       <div class="contact-signature"><BrandSignature teja="tinta" role /><span>De la idea a lo real.</span></div>
@@ -97,6 +101,6 @@ import ArrowUpRight from '../components/ArrowUpRight.astro';
       <h2>¿Qué tienes<br /><em>en mente?</em></h2>
       <div class="contact-bottom"><p>Soy David, ingeniero informático.<br />Cuéntame qué necesitas construir.</p><div class="contact-channels"><a class="contact-link" href="mailto:david@estevezmartinez.es">david@estevezmartinez.es <span aria-hidden="true"><ArrowUpRight /></span></a><a href="https://wa.me/34609662376" class="whatsapp-link" target="_blank" rel="noopener noreferrer">Hablamos por WhatsApp <ArrowUpRight /></a></div></div>
     </section>
-    <footer class="home-footer"><BrandMark teja="lima" label="DÉM" /><span>© {new Date().getFullYear()}</span><a href="/lab/morph/" data-nav rel="nofollow">Laboratorio de movimiento <ArrowUpRight /></a><button class="text-button" data-motion-toggle hidden>Usar vista estática</button><span>Hecho desde Granada.</span></footer>
+    <footer class="home-footer"><BrandMark teja="lima" label="DÉM" /><span>© {new Date().getFullYear()}</span><a href="/sobre-mi/">Sobre mí</a><a href="/lab/morph/" data-nav rel="nofollow">Laboratorio de movimiento <ArrowUpRight /></a><span>Hecho desde Granada.</span></footer>
   </div>
 </Shell>
