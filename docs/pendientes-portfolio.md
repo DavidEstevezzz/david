@@ -7,6 +7,10 @@ Revisión inicial del 7 de septiembre de 2026. Actualizado el 8 de septiembre de
 - [x] **Black Tides: aportar evidencia visual.** Sustituir o enriquecer la recreación principal, actualmente demasiado vacía, con una secuencia del proyecto o una escena representativa con movimiento. Mostrar la experiencia cinematográfica que describe la ficha. Mantener una alternativa estática para movimiento reducido.
 - [x] **WiControl: compactar la demostración en móvil.** Mostrar primero indicadores esenciales y gráfico, evitando apilar todo el menú, filtros e indicadores. Permitir ampliar la vista completa del panel.
 
+## Portada · Logo del portátil
+
+- [ ] **Afinar el reflejo metálico del grabado.** El acabado satinado actual es más limpio, pero todavía se percibe algo plano y gris. Buscar un reflejo más definido que cambie con el ángulo, cercano al acabado de los logos metálicos de HP, conservando el logo propio, el grabado superficial y la tilde en el mismo metal. Revisar con la tapa cerrada y durante la apertura. El usuario pide dejarlo pendiente; mantener el acabado actual hasta retomarlo.
+
 ## Black Tides
 
 - [x] Reorientar la ficha al trabajo frontend por indicación del usuario: retirado el vídeo del estudio, las imágenes aisladas del juego y las muestras de color. Incorporadas tres capturas reales de la web local (portada, Infection y comparador de producción), ampliables y con explicación de la aportación web. Actualizada la portada del listado. Esta selección sustituye la propuesta audiovisual anterior.

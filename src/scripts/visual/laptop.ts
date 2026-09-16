@@ -4,7 +4,7 @@ import {
   Object3D, PlaneGeometry, BufferAttribute, CanvasTexture, SRGBColorSpace,
 } from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { brandBlock, brandTiles } from '../../lib/brand';
+import { brandBlock } from '../../lib/brand';
 import { createEngraving } from './engraving';
 
 export interface Laptop {
@@ -247,31 +247,26 @@ export function createLaptop({ anisotropy = 1 }: LaptopOptions = {}): Laptop {
   part(lid, 'camera-sensor', sensor, insetMaterial, -.11, 2.89, .065);
   part(lid, 'camera-indicator', sensor, graphite, .11, 2.89, .065);
 
-  // The same mark as the interface, cut into the aluminium lid. Everything
-  // about how that cut is built lives in ./engraving: the block arrives here
-  // as a signed distance field, so neither the contour nor the wall of the cut
-  // is ever baked into a bitmap that could show its own resolution. Letters and
-  // accent are cut separately because they are not the same operation — one
-  // leaves blasted metal at the bottom, the other is filled.
+  // A shallow, satin-metal engraving. Letters and accent share one finish;
+  // the narrow bevel catches the scene lighting without a deep embossed rim.
+  // The smaller accent keeps its own field so its fine contour stays defined.
   const ALUMINIUM = { color: '#727b80', roughness: .28 };
+  const SATIN_ENGRAVING = { color: '#a1aaad', roughness: .34 };
   const engravings = [
     createEngraving(brandBlock.letters, {
-      box: brandBlock.box, wall: 1.1, depth: 2.4,
+      box: brandBlock.box, wall: .4, depth: .18,
       surface: ALUMINIUM,
-      // What the cutter leaves: the same alloy, its polish taken off.
-      floor: { color: '#8a9498', roughness: .78 },
+      floor: SATIN_ENGRAVING,
       metalness: .84, anisotropy, mirrored: true,
-      maps: 384,
+      field: 384, maps: 512,
     }),
     createEngraving([brandBlock.accent], {
-      box: brandBlock.box, wall: .4, depth: 1.1,
+      box: brandBlock.box, wall: .28, depth: .12,
       surface: ALUMINIUM,
-      // The tilde keeps the one colour the identity gives it, filled into its
-      // cut like enamel: smooth, and barely metal at all.
-      floor: { color: brandTiles.lima.tile, roughness: .42 },
-      metalness: .1, anisotropy, mirrored: true,
+      floor: SATIN_ENGRAVING,
+      metalness: .84, anisotropy, mirrored: true,
       // A stroke this small needs nothing like the block's resolution.
-      field: 128, maps: 256,
+      field: 256, maps: 384,
     }),
   ];
   const emblemGeometry = keepGeometry(new PlaneGeometry(.6, .6));

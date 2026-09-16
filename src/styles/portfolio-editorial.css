@@ -67,24 +67,46 @@
   .home .work-card .work-card-foot>span { max-width:24ch; }
 }
 
-/* Vector objects use the laptop's sage aluminium, soft edges and lime accents.
-   Their assembly follows story progress, with no background animation loop. */
-.service-object { flex:0 1 auto; min-height:0; width:min(100%,360px); height:180px; margin:12px auto 20px; }
-.service-object svg { width:100%; height:100%; overflow:visible; }
-.object-part { transform-box:fill-box; transform-origin:center; }
-.object-part--one { transform:translate(calc((1 - var(--object-progress,1)) * -24px),calc((1 - var(--object-progress,1)) * 12px)); }
-.object-part--two { transform:translate(0,calc((1 - var(--object-progress,1)) * -25px)); }
-.object-part--three { transform:translate(calc((1 - var(--object-progress,1)) * 20px),calc((1 - var(--object-progress,1)) * -40px)); }
-.object-connection { stroke-dasharray:1; stroke-dashoffset:calc(1 - var(--object-progress,1)); }
-.scene-source--projected .service-object { width:100%; height:260px; margin:12px auto 20px; }
-.home .mobile-service-cards .service-object { position:absolute; top:2px; right:12px; width:76px; height:44px; margin:0; opacity:var(--copy-reveal,1); }
-.home .mobile-service-cards .surface-meta { padding-right:72px; }
+/* Diagrams inherit story progress: assembly and routing reverse with scroll.
+   No timers, extra renderer, external assets or duplicate SVG IDs are needed. */
+.service-object { --diagram-ink:#263b30; --diagram-line:#819080; --diagram-paper:#f2f5eb; --diagram-wash:#dbe3d1; flex:0 1 auto; min-height:0; width:min(100%,360px); height:180px; margin:12px auto 20px; color:var(--diagram-ink); }
+.service-object--web { --diagram-paper:#e9f0de; --diagram-wash:#ccdcba; }
+.service-object--automation { --diagram-ink:#29424b; --diagram-line:#859ba2; --diagram-paper:#edf3f4; --diagram-wash:#ccdce0; }
+.service-object svg { display:block; width:100%; height:100%; overflow:visible; stroke-linecap:round; stroke-linejoin:round; }
+.service-object .service-glyph { display:none; }
+.diagram-guides { color:var(--diagram-line); stroke:currentColor; stroke-width:.65; opacity:.45; }
+.diagram-construction { stroke:var(--diagram-line); stroke-width:.75; stroke-dasharray:2 4; opacity:.45; }
+.diagram-ink { stroke:var(--diagram-ink); stroke-width:1.1; }
+.diagram-rule { stroke:var(--diagram-line); stroke-width:.8; }
+.diagram-paper { fill:var(--diagram-paper); stroke:var(--diagram-ink); stroke-width:1.1; }
+.diagram-dark { fill:var(--diagram-ink); stroke:var(--diagram-ink); stroke-width:1.1; }
+.diagram-accent { fill:#dcf89c; stroke:var(--diagram-ink); stroke-width:1.1; }
+.diagram-offset { fill:var(--diagram-ink); opacity:.09; }
+.diagram-wash { fill:var(--diagram-wash); }
+.diagram-slot { stroke:var(--diagram-line); stroke-width:.8; stroke-dasharray:3 3; }
+.diagram-bars { stroke:var(--diagram-ink); stroke-width:5; }
+.diagram-heading { stroke:var(--diagram-ink); stroke-width:3.5; }
+.diagram-flow { stroke:var(--diagram-ink); stroke-width:1.6; }
+.diagram-ports { fill:#dcf89c; stroke:var(--diagram-ink); stroke-width:1.1; opacity:var(--object-progress,1); }
+.diagram-address { fill:#dce9d0; font:7px var(--font-mono); letter-spacing:.3px; }
+.diagram-assembly { transform-box:fill-box; transform-origin:center; }
+.diagram-assembly--base { transform:translateY(calc((1 - var(--object-progress,1)) * 10px)); }
+.diagram-assembly--module { transform:translate(calc((1 - var(--object-progress,1)) * 18px),calc((1 - var(--object-progress,1)) * -20px)); }
+.diagram-assembly--device { transform:translate(calc((1 - var(--object-progress,1)) * 15px),calc((1 - var(--object-progress,1)) * 12px)); }
+.diagram-assembly--input { transform:translateX(calc((1 - var(--object-progress,1)) * -10px)); }
+.diagram-assembly--output { transform:translateX(calc((1 - var(--object-progress,1)) * 10px)); }
+.diagram-trace { stroke-dasharray:1; stroke-dashoffset:calc(1 - var(--object-progress,1)); }
+.scene-source--projected .service-object { width:100%; height:340px; margin:12px auto 20px; }
+.home .mobile-service-cards .service-object { position:absolute; top:8px; right:18px; width:45px; height:30px; margin:0; opacity:var(--copy-reveal,1); }
+.home .mobile-service-cards .service-diagram { display:none; }
+.home .mobile-service-cards .service-glyph { display:block; }
+.home .mobile-service-cards .surface-meta { padding-right:48px; }
 .home .mobile-service-cards .surface-meta>span:last-child { display:none; }
-@media(min-height:800px) { .home .mobile-service-cards .service-object { top:auto; bottom:6px; right:18px; width:110px; height:62px; } }
-@media(max-height:720px) { .home .mobile-service-cards .service-object { width:64px; height:35px; right:9px; top:0; } }
+@media(max-height:740px) { .home .mobile-service-cards .service-object { width:36px; height:24px; right:14px; top:3px; } }
 @media(prefers-reduced-motion:reduce) {
   @view-transition { navigation:none; }
   [data-project-image] { view-transition-name:none; }
-  .object-part { transform:none; }
-  .object-connection { stroke-dashoffset:0; }
+  .diagram-assembly { transform:none; }
+  .diagram-trace { stroke-dashoffset:0; }
+  .diagram-ports { opacity:1; }
 }
