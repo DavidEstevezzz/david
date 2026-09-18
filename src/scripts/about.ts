@@ -66,10 +66,6 @@ class AboutStory extends HTMLElement {
         '--process-progress': 1, ease: 'none',
         scrollTrigger: { trigger: '.about-process', start: 'top 90%', end: 'bottom 55%', scrub: true },
       });
-      gsap.fromTo(this.querySelector('.about-data'), { '--data-offset': 1 }, {
-        '--data-offset': 0, ease: 'none',
-        scrollTrigger: { trigger: '.about-data', start: 'top 85%', end: 'center 55%', scrub: .4 },
-      });
     }, this);
     update();
     void document.fonts.ready.then(() => { if (!signal.aborted) { ScrollTrigger.refresh(); schedule(); } });
