@@ -1,0 +1,100 @@
+---
+import '../styles/tokens.css';
+import '../styles/global.css';
+import '../styles/morph.css';
+import '../styles/home.css';
+import '../styles/portfolio-refinements.css';
+import '../styles/portfolio-editorial.css';
+import '../styles/identity.css';
+import ContactAccess from '../components/ContactAccess.astro';
+import { site, abs } from '../config/site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Ruta de la imagen para redes sociales. Por defecto, la del sitio. */
+  image?: string;
+  /** 'website' para la portada, 'article' para las fichas de proyecto. */
+  type?: 'website' | 'article';
+  /** true = pedir a los buscadores que no indexen esta página. */
+  noindex?: boolean;
+  /** Datos estructurados adicionales (JSON-LD) de la página. */
+  schema?: unknown;
+}
+
+const {
+  title,
+  description,
+  image = site.ogImage,
+  type = 'website',
+  noindex = false,
+  schema,
+} = Astro.props;
+
+// URL canónica sin parámetros de consulta ni barra final duplicada.
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const ogImage = abs(image);
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex
+      ? <meta name="robots" content="noindex, nofollow" />
+      : <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />}
+
+    <meta name="author" content={site.name} />
+    <meta name="theme-color" content="#f5f6f3" />
+    <meta name="color-scheme" content="light" />
+
+    <!-- Redes sociales -->
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={site.ogImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preload" href="/fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+
+    <script is:inline>
+      // Restore the selected card before the incoming transition is captured.
+      // pageshow also covers browsers without cross-document transitions.
+      const restoreProjectAnchor = () => {
+        if (!location.hash.startsWith('#proyecto-')) return;
+        const card = document.getElementById(location.hash.slice(1));
+        card?.scrollIntoView({ block: 'start', behavior: 'instant' });
+      };
+      addEventListener('pagereveal', restoreProjectAnchor);
+      addEventListener('pageshow', restoreProjectAnchor);
+    </script>
+
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <!-- This node is never replaced by the opt-in page router. -->
+    <div id="visual-shell" aria-hidden="true"><canvas id="visual-canvas" aria-hidden="true"></canvas></div>
+    <main id="page" data-app-page tabindex="-1"><slot /></main>
+    <ContactAccess />
+    <div id="route-announcement" class="sr-only" role="status" aria-live="polite"></div>
+    <script>
+      import '../scripts/app';
+    </script>
+  </body>
+</html>

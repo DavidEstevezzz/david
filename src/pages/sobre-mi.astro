@@ -1,0 +1,108 @@
+---
+import Shell from '../layouts/Shell.astro';
+import BrandSignature from '../components/BrandSignature.astro';
+import BrandMark from '../components/BrandMark.astro';
+import ArrowUpRight from '../components/ArrowUpRight.astro';
+import Icon from '../components/Icon.astro';
+import { site, abs } from '../config/site';
+import '../styles/about.css';
+
+const chapters = [
+  { id: 'mi-forma-de-trabajar', n: '01', label: 'Mi forma de trabajar', short: 'Mi enfoque' },
+  { id: 'fuera-de-la-pantalla', n: '02', label: 'Fuera de la pantalla', short: 'Curiosidad' },
+  { id: 'otros-lugares', n: '03', label: 'Idiomas y formación', short: 'Idiomas' },
+  { id: 'ahora', n: '04', label: 'En qué estoy ahora', short: 'Ahora' },
+];
+const schema = {
+  '@context': 'https://schema.org', '@type': 'AboutPage',
+  name: 'Sobre mí — David Estévez Martínez', url: abs('/sobre-mi/'),
+  mainEntity: { '@type': 'Person', '@id': abs('/#david'), name: site.name, jobTitle: site.jobTitle, image: abs('/about/retrato.webp'), url: site.url },
+};
+---
+<Shell title="Sobre mí — David Estévez, ingeniero informático en Granada" description="Soy David. Ingeniero informático, freelance y curioso por naturaleza. Mi forma de trabajar empieza por entender a las personas y sus procesos." schema={schema}>
+  <about-story class="about">
+    <header class="about-nav">
+      <a href="/" class="about-brand" aria-label="David Estévez Martínez, inicio"><BrandSignature teja="tinta" /></a>
+      <nav aria-label="Principal"><a href="/#proyectos">Proyectos</a><a href="/sobre-mi/" aria-current="page">Sobre mí</a><a href={`mailto:${site.email}`} data-contact-open>Hablemos <Icon name="plus" /></a></nav>
+    </header>
+
+    <div class="about-width">
+      <section class="about-hero" id="contenido" tabindex="-1" aria-labelledby="about-title">
+        <div class="about-hero-copy">
+          <p class="about-label">Sobre mí / David Estévez Martínez</p>
+          <h1 id="about-title">La curiosidad<br />es el punto<br /><em>de partida.</em></h1>
+          <div class="about-intro"><p>Soy David, ingeniero informático freelance en Granada.</p><p>Me involucro en el trabajo de las personas para encontrar dónde el software puede ayudarles. Cada proyecto empieza por conocer una realidad distinta y buscar una solución que encaje en ella.</p></div>
+          <a class="about-start" href="#mi-forma-de-trabajar">Un poco de mi historia <Icon name="down" /></a>
+        </div>
+        <figure class="about-portrait">
+          <div class="portrait-frame" data-about-photo><img src="/about/retrato.webp" width="640" height="813" alt="Retrato de David Estévez Martínez" fetchpriority="high" /></div>
+          <figcaption><span>David Estévez Martínez</span><span>Ingeniero informático · Granada</span></figcaption>
+          <span class="portrait-cross portrait-cross--top" aria-hidden="true">+</span><span class="portrait-cross portrait-cross--bottom" aria-hidden="true">+</span>
+        </figure>
+      </section>
+    </div>
+
+    <nav class="about-index" aria-label="En esta página">
+      <div class="about-width"><a class="about-index-home" href="/" aria-label="Volver al inicio" title="Volver al inicio"><BrandMark teja="tinta" /><span>Inicio</span></a>{chapters.map(chapter => <a href={`#${chapter.id}`}><span>{chapter.n}</span><span class="chapter-long">{chapter.label}</span><span class="chapter-short">{chapter.short}</span></a>)}</div>
+      <span class="about-progress" aria-hidden="true"></span>
+    </nav>
+
+    <section class="about-method about-chapter" id="mi-forma-de-trabajar" aria-labelledby="method-title" tabindex="-1">
+      <div class="about-width">
+        <p class="about-label">01 / Mi forma de trabajar</p>
+        <div class="about-method-grid">
+          <h2 id="method-title" data-about-reveal>Para mejorar algo,<br />primero hay<br />que <em>entenderlo.</em></h2>
+          <div class="about-prose" data-about-reveal>
+            <p>Lo que más me gusta de este trabajo es acercarme a un sector y descubrir dónde la informática puede facilitar el día a día de quienes están dentro.</p>
+            <p>Uno de mis primeros pasos fue presentarme en el parque de Bomberos de Granada con una propuesta. Pasé meses aprendiendo su organización, sus procedimientos y su funcionamiento interno antes de dar forma al sistema que utilizan actualmente.</p>
+            <p>Ese conocimiento permitió transformar procesos en papel y coordinación manual en una gestión más sencilla y automatizada, con menos tareas repetitivas y menos margen para errores manuales.</p>
+            <a class="about-link" href="/proyectos/bomberos/">Así tomó forma en Bomberos de Granada <ArrowUpRight /></a>
+          </div>
+        </div>
+        <ol class="about-process" aria-label="Cómo abordo un proyecto">
+          <li><span>01</span><h3>Escuchar.</h3><p>A quienes conocen el trabajo desde dentro.</p></li>
+          <li><span>02</span><h3>Entender.</h3><p>Los procesos, las necesidades y lo que se puede mejorar.</p></li>
+          <li><span>03</span><h3>Construir.</h3><p>Una solución que encaje con esa forma de trabajar.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="about-hands about-chapter about-width" id="fuera-de-la-pantalla" aria-labelledby="hands-title" tabindex="-1">
+      <div class="about-hands-photo">
+        <figure><div class="about-photo about-photo--moto" data-about-photo><img src="/about/moto.webp" width="940" height="1299" alt="Arreglando mi moto en el taller" loading="lazy" /></div><figcaption>Aprendiendo a reparar mi propia moto.</figcaption></figure>
+      </div>
+      <div class="about-hands-copy">
+        <p class="about-label">02 / Fuera de la pantalla</p>
+        <h2 id="hands-title" data-about-reveal>Si no sé hacerlo,<br /><em>aprendo a hacerlo.</em></h2>
+        <div class="about-prose" data-about-reveal><p>Cuando me encuentro con algo que no sé hacer, suelo empezar por investigar. Busco información, pregunto y pruebo hasta tener criterio para decidir cómo resolverlo. Disfruto ganando esa autonomía, también fuera del trabajo.</p><p>Reparar mi moto o dar mis primeros pasos con la soldadura son ejemplos de esa forma de ser. Me acostumbran a tener paciencia, reconocer lo que todavía no sé y buscar otra vía cuando algo no funciona. Esa disposición a aprender me acompaña cuando un proyecto me plantea un problema nuevo.</p></div>
+        <figure class="about-weld"><div class="about-photo" data-about-photo><img src="/about/soldadura.webp" width="480" height="640" alt="Placa de metal con mis primeras prácticas de soldadura" loading="lazy" /></div><figcaption>Mis primeras pruebas aprendiendo a soldar.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="about-places about-chapter" id="otros-lugares" aria-labelledby="places-title" tabindex="-1">
+      <div class="about-width about-places-grid">
+        <div class="about-places-copy">
+          <p class="about-label">03 / Idiomas y formación</p>
+          <h2 id="places-title" data-about-reveal>Aprender un idioma.<br /><em>Usarlo cada día.</em></h2>
+          <div class="about-prose" data-about-reveal><p>Viví un año en Italia y otro en Inglaterra para formarme en idiomas y ponerlos en práctica en el día a día. Durante esas etapas seguí trabajando en mis proyectos y formándome en informática.</p><p>Me interesa poder comunicarme y trabajar con soltura en otros idiomas. Es algo que he puesto en práctica en proyectos como la web del videojuego Black Tides.</p><a class="about-link" href="/proyectos/black-tides/">Conoce la web de Black Tides <ArrowUpRight /></a></div>
+        </div>
+        <figure class="about-england"><div class="about-photo" data-about-photo><img src="/about/inglaterra.webp" width="730" height="880" alt="Durante mi estancia en Inglaterra, junto a una escultura de piedra en un entorno natural" loading="lazy" /></div><figcaption>Un recuerdo de mi etapa de formación en Inglaterra.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="about-now about-chapter about-width" id="ahora" aria-labelledby="now-title" tabindex="-1">
+      <div class="about-now-copy"><p class="about-label"><span class="about-status" aria-hidden="true"></span>04 / En qué estoy ahora</p><h2 id="now-title" data-about-reveal>El siguiente paso.<br /><em>Seguir aprendiendo.</em></h2><div class="about-prose" data-about-reveal><p>Hoy trabajo como freelance en software de gestión, webs y automatizaciones. He desarrollado proyectos para bomberos, talleres, granjas y videojuegos: contextos distintos que requieren soluciones diferentes.</p><p>A la vez, profundizo en ingeniería de datos. He obtenido la certificación SnowPro Core de Snowflake y completado dbt Fundamentals, la formación oficial de dbt. Es una línea de aprendizaje que complementa mi trabajo con software y automatización.</p></div></div>
+      <div class="about-data">
+        <p class="about-label">Formación / Ingeniería de datos</p><h3 class="about-certifications-title">Una base para<br />seguir creciendo.</h3>
+        <div class="about-credential"><div><h3>SnowPro Core</h3><p>Snowflake · Certificación obtenida</p></div><a href="https://www.snowflake.com/en/resources/learn/certifications/" target="_blank" rel="noopener noreferrer" aria-label="Información oficial sobre las certificaciones de Snowflake"><ArrowUpRight /></a></div>
+        <div class="about-credential"><div><h3>dbt Fundamentals</h3><p>dbt Labs · Formación oficial completada</p></div><a href="https://learn.getdbt.com/courses/dbt-fundamentals" target="_blank" rel="noopener noreferrer" aria-label="Información oficial sobre dbt Fundamentals"><ArrowUpRight /></a></div>
+      </div>
+    </section>
+
+    <section class="about-contact"><div class="about-width"><p class="about-label">Ahora que me conoces un poco más</p><div><h2>Cuéntame qué<br /><em>quieres mejorar.</em></h2><a class="about-contact-link" href={`mailto:${site.email}`} data-contact-open>Empecemos por una conversación <ArrowUpRight /></a></div></div></section>
+    <footer class="about-footer about-width"><a href="/" aria-label="Volver al inicio"><BrandMark teja="tinta" /></a><span>© {new Date().getFullYear()} David Estévez Martínez</span><a href="/#proyectos">Ver proyectos <ArrowUpRight /></a><a href={site.github} target="_blank" rel="noopener noreferrer">GitHub <ArrowUpRight /></a><span>Hecho desde Granada.</span></footer>
+  </about-story>
+</Shell>
+<script>
+  import '../scripts/about';
+</script>

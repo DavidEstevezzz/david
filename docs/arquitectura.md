@@ -23,7 +23,7 @@ La generación de HTML permite añadir JavaScript interactivo: las páginas púb
 ## Desarrollo e infraestructura
 
 - Trabajar en local durante esta fase.
-- Usar Git y una rama de trabajo conectada a GitHub; el repositorio remoto aún está pendiente de identificar.
+- Repositorio de GitHub: [DavidEstevezzz/david](https://github.com/DavidEstevezzz/david). Rama principal: `main`; rama de trabajo inicial: `feat/base-web`.
 - Destino previsto: VPS del propietario. Se descarta la propuesta anterior de Cloudflare como alojamiento.
 - Dominio, DNS, HTTPS, correo profesional y configuración del VPS se decidirán más adelante.
 - Mantener la aplicación sin dependencias obligatorias de un proveedor de alojamiento.
@@ -57,7 +57,6 @@ Priorizar una primera experiencia bien terminada para validar la dirección. Inc
 
 ## Decisiones abiertas
 
-- Repositorio y cuenta de GitHub.
 - Estructura de páginas e idiomas de lanzamiento.
 - Dirección visual y primera interacción a desarrollar.
 - Material publicable de cada proyecto.

@@ -1,0 +1,37 @@
+@font-face {
+  font-family: 'Archivo';
+  src: url('/fonts/archivo-latin-wght-normal.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: light;
+  --font-sans: 'Archivo', Arial, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, monospace;
+  --color-paper: #f5f6f3;
+  --color-ink: #19221f;
+  --color-muted: #5b645e;
+  --color-line: #d5d9d2;
+  --color-accent: #b94326;
+  --color-surface: #26332e;
+  --color-on-surface: #f0f3ec;
+  --text-small: .8125rem;
+  --text-body: 1rem;
+  --text-intro: clamp(1.125rem, 1.6vw, 1.5rem);
+  --text-display: clamp(3.1rem, 7.5vw, 7rem);
+  --space-1: .25rem;
+  --space-2: .5rem;
+  --space-3: .75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+  --gutter: clamp(1.25rem, 4.5vw, 5rem);
+  --radius-small: .25rem;
+  --radius-panel: 1.5rem;
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+}
